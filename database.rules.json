@@ -1,0 +1,110 @@
+{
+  "rules": {
+    "users": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || root.child('admin/config/admins/' + auth.uid).val() === true)",
+        ".write": "auth != null && (auth.uid === $uid || root.child('admin/config/admins/' + auth.uid).val() === true)"
+      }
+    },
+    "profiles": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth != null && (auth.uid === $uid || root.child('admin/config/admins/' + auth.uid).val() === true)"
+      }
+    },
+    "listenerProfiles": {
+      ".read": true,
+      "$uid": {
+        ".write": "auth != null && (auth.uid === $uid || root.child('admin/config/admins/' + auth.uid).val() === true)"
+      }
+    },
+    "listenerAvailability": {
+      ".read": true,
+      "$uid": {
+        ".write": "auth != null && (auth.uid === $uid || root.child('admin/config/admins/' + auth.uid).val() === true)"
+      }
+    },
+    "listenerSchedules": {
+      ".read": true,
+      "$uid": {
+        ".write": "auth != null && (auth.uid === $uid || root.child('admin/config/admins/' + auth.uid).val() === true)"
+      }
+    },
+    "appointments": {
+      ".read": "auth != null",
+      "$appointmentId": {
+        ".write": "auth != null"
+      }
+    },
+    "sessions": {
+      ".read": "auth != null",
+      "$sessionId": {
+        ".write": "auth != null"
+      }
+    },
+    "sessionMessages": {
+      "$sessionId": {
+        ".read": "auth != null && (root.child('sessions/' + $sessionId + '/talkerId').val() === auth.uid || root.child('sessions/' + $sessionId + '/listenerId').val() === auth.uid || root.child('admin/config/admins/' + auth.uid).val() === true)",
+        ".write": "auth != null && (root.child('sessions/' + $sessionId + '/talkerId').val() === auth.uid || root.child('sessions/' + $sessionId + '/listenerId').val() === auth.uid || root.child('admin/config/admins/' + auth.uid).val() === true)"
+      }
+    },
+    "typingIndicators": {
+      "$sessionId": {
+        ".read": "auth != null",
+        "$uid": {
+          ".write": "auth != null && auth.uid === $uid"
+        }
+      }
+    },
+    "presence": {
+      ".read": true,
+      "$uid": {
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "wallets": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || root.child('admin/config/admins/' + auth.uid).val() === true)",
+        ".write": "auth != null && (root.child('admin/config/admins/' + auth.uid).val() === true || (!data.exists() && auth.uid === $uid))"
+      }
+    },
+    "walletLedger": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || root.child('admin/config/admins/' + auth.uid).val() === true)",
+        ".write": "auth != null && (root.child('admin/config/admins/' + auth.uid).val() === true || auth.uid === $uid)"
+      }
+    },
+    "topups": {
+      ".read": "auth != null",
+      "$topupId": {
+        ".write": "auth != null"
+      }
+    },
+    "withdrawals": {
+      ".read": "auth != null",
+      "$withdrawalId": {
+        ".write": "auth != null"
+      }
+    },
+    "reviews": {
+      ".read": true,
+      "$listenerUid": {
+        ".write": "auth != null"
+      }
+    },
+    "notifications": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || root.child('admin/config/admins/' + auth.uid).val() === true)",
+        ".write": "auth != null"
+      }
+    },
+    "admin": {
+      ".read": "auth != null && root.child('admin/config/admins/' + auth.uid).val() === true",
+      ".write": "auth != null && root.child('admin/config/admins/' + auth.uid).val() === true",
+      "config": {
+        ".read": true,
+        ".write": "auth != null && root.child('admin/config/admins/' + auth.uid).val() === true"
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+import React from 'react';
+
+export const Skeleton: React.FC<{ className?: string }> = ({ className = '' }) => {
+  return (
+    <div
+      className={`animate-pulse bg-slate-200/80 dark:bg-slate-800 rounded-xl ${className}`}
+    />
+  );
+};
