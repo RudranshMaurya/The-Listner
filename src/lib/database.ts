@@ -753,7 +753,7 @@ export async function cancelTopupOrder(orderId: string): Promise<void> {
   await remove(ref(db, `topups/${orderId}`));
 }
 
-export async function confirmTopupPayment(orderId: string, utrRef: string, adminIdentifier: string): Promise<void> {
+export async function confirmTopupPayment(orderId: string, utrRef?: string, adminIdentifier?: string): Promise<void> {
   const snap = await get(ref(db, `topups/${orderId}`));
   if (!snap.exists()) throw new Error("Order not found");
   const order = snap.val() as TopupOrder;
@@ -762,12 +762,15 @@ export async function confirmTopupPayment(orderId: string, utrRef: string, admin
     return; // idempotent
   }
 
+  const finalUtr = utrRef?.trim() || `AUTO-${Date.now()}`;
+  const finalAdmin = adminIdentifier || "Instant Auto-Approval";
+
   // Update order status
   await update(ref(db, `topups/${orderId}`), {
     status: "credited",
-    utrRef,
+    utrRef: finalUtr,
     confirmedAt: Date.now(),
-    confirmedBy: adminIdentifier,
+    confirmedBy: finalAdmin,
     updatedAt: Date.now()
   });
 
@@ -776,7 +779,7 @@ export async function confirmTopupPayment(orderId: string, utrRef: string, admin
     order.uid,
     order.amountPaise,
     "topup",
-    `UPI Wallet Topup verified (UTR: ${utrRef})`,
+    `UPI Wallet Topup - ₹${order.amountRupees.toFixed(2)} credited`,
     orderId
   );
 

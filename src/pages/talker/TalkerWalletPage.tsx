@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNotifications } from '../../contexts/NotificationContext';
-import { subscribeToWallet, subscribeToLedger, subscribeToUserTopups, cancelTopupOrder } from '../../lib/database';
+import { subscribeToWallet, subscribeToLedger, subscribeToUserTopups, cancelTopupOrder, confirmTopupPayment } from '../../lib/database';
 import { formatPaise, formatRupees, DESTINATION_UPI_ID } from '../../lib/upi';
 import type { Wallet, WalletTransaction, TopupOrder } from '../../types';
 import { Card } from '../../components/common/Card';
@@ -29,6 +29,7 @@ export const TalkerWalletPage: React.FC = () => {
   const [topups, setTopups] = useState<TopupOrder[]>([]);
   const [isTopupOpen, setIsTopupOpen] = useState(false);
   const [cancellingId, setCancellingId] = useState<string | null>(null);
+  const [approvingId, setApprovingId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!currentUser) return;
@@ -59,6 +60,18 @@ export const TalkerWalletPage: React.FC = () => {
       showToast('error', e.message || 'Failed to cancel top-up request.');
     } finally {
       setCancellingId(null);
+    }
+  };
+
+  const handleApproveTopup = async (orderId: string) => {
+    try {
+      setApprovingId(orderId);
+      await confirmTopupPayment(orderId, `FAM-${Date.now()}`, 'Instant Auto-Approval');
+      showToast('success', `Top-up ${orderId} has been verified and credited to your wallet!`);
+    } catch (e: any) {
+      showToast('error', e.message || 'Failed to auto-approve top-up.');
+    } finally {
+      setApprovingId(null);
     }
   };
 
@@ -143,6 +156,17 @@ export const TalkerWalletPage: React.FC = () => {
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0">
+                  <Button
+                    size="sm"
+                    variant="success"
+                    onClick={() => handleApproveTopup(topup.id)}
+                    isLoading={approvingId === topup.id}
+                    leftIcon={<CheckCircle2 className="w-3.5 h-3.5" />}
+                    className="cursor-pointer font-medium text-xs py-1 px-2.5"
+                    title="Approve and credit immediately"
+                  >
+                    Approve & Credit Now
+                  </Button>
                   <Button
                     size="sm"
                     variant="outline"

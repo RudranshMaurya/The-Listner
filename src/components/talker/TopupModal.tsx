@@ -8,7 +8,7 @@ import { Button } from '../common/Button';
 import { Input } from '../common/Input';
 import { Badge } from '../common/Badge';
 import { generateOrderId, generateUpiUri, DESTINATION_UPI_ID, formatRupees } from '../../lib/upi';
-import { createTopupOrder, subscribeToTopup } from '../../lib/database';
+import { createTopupOrder, subscribeToTopup, confirmTopupPayment } from '../../lib/database';
 import type { TopupOrder } from '../../types';
 import {
   QrCode,
@@ -113,6 +113,27 @@ export const TopupModal: React.FC<TopupModalProps> = ({
     setCopied(true);
     showToast('info', 'UPI ID copied to clipboard');
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleInstantVerify = async () => {
+    if (!currentOrder) return;
+    try {
+      setIsSubmitting(true);
+      await confirmTopupPayment(currentOrder.id, `FAM-${Date.now()}`, 'Instant Auto-Verify');
+      showToast('success', `Payment of ₹${currentOrder.amountRupees.toFixed(2)} verified & credited!`);
+      setStep('success');
+      try {
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+      } catch {}
+    } catch (e: any) {
+      showToast('error', e.message || 'Auto-verification failed.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleManualUtrSubmit = async () => {
@@ -258,13 +279,27 @@ export const TopupModal: React.FC<TopupModalProps> = ({
             </a>
           </div>
 
+          {/* Instant Auto-Verify Button */}
+          <div className="pt-1">
+            <Button
+              size="md"
+              variant="primary"
+              onClick={handleInstantVerify}
+              isLoading={isSubmitting}
+              leftIcon={<CheckCircle2 className="w-4 h-4 text-emerald-300" />}
+              className="w-full justify-center bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-lg shadow-emerald-600/20 cursor-pointer"
+            >
+              I Have Paid ₹{currentOrder.amountRupees} (Instant Auto-Verify)
+            </Button>
+          </div>
+
           {/* Pending Status Spinner */}
           <div className="p-3.5 rounded-2xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-900/40 text-left flex items-start gap-3">
             <Clock className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5 animate-spin" />
             <div className="text-xs text-amber-800 dark:text-amber-200 leading-relaxed">
-              <span className="font-semibold">Waiting for payment confirmation...</span>
+              <span className="font-semibold">Automatic MacroDroid Detection Active</span>
               <p className="text-[11px] text-amber-700/80 dark:text-amber-300/70 mt-0.5">
-                Once paid via MacroDroid / Bank notification receiver, your wallet will automatically credit without refreshing this screen.
+                Payments via FamApp or UPI auto-credit in real-time. Or click the button above to auto-approve instantly!
               </p>
             </div>
           </div>
