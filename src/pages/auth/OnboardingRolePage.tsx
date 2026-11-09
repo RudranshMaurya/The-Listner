@@ -65,24 +65,24 @@ export const OnboardingRolePage: React.FC = () => {
           onDoubleClick={() => proceedWithRole('talker')}
           className={`p-6 sm:p-8 cursor-pointer transition-all relative ${
             selectedRole === 'talker'
-              ? 'border-2 border-indigo-600 bg-indigo-50/40 dark:bg-indigo-950/30 ring-2 ring-indigo-500/20 shadow-md'
-              : 'border border-slate-200 dark:border-slate-800 hover:border-indigo-300'
+              ? 'border-2 border-[#D4A373] bg-[#FAF6F0] dark:bg-[#272420] ring-2 ring-[#D4A373]/20 shadow-md'
+              : 'border border-[#EFEBE4] dark:border-[#332E28] hover:border-[#D4A373]/50'
           }`}
         >
-          <div className="w-12 h-12 rounded-2xl bg-indigo-100 dark:bg-indigo-900/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mb-4">
-            <MessageSquareHeart className="w-6 h-6" />
+          <div className="w-12 h-12 rounded-2xl bg-[#D4A373]/15 text-[#875C34] dark:text-[#DEC6A5] flex items-center justify-center mb-4">
+            <MessageSquareHeart className="w-6 h-6 text-[#D4A373]" />
           </div>
 
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+          <h3 className="text-lg font-bold text-stone-900 dark:text-white">
             I want someone to talk to
           </h3>
-          <p className="mt-2 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+          <p className="mt-2 text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
             Role: <strong>Talker</strong>
             <br />
             Share what's on your mind, unburden everyday stress, or chat freely with someone ready to listen without judgment.
           </p>
 
-          <div className="mt-6 flex items-center justify-between text-xs font-semibold text-indigo-600 dark:text-indigo-400">
+          <div className="mt-6 flex items-center justify-between text-xs font-semibold text-[#875C34] dark:text-[#DEC6A5]">
             <button
               type="button"
               onClick={(e) => {
@@ -97,8 +97,8 @@ export const OnboardingRolePage: React.FC = () => {
             <div
               className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
                 selectedRole === 'talker'
-                  ? 'border-indigo-600 bg-indigo-600 text-white'
-                  : 'border-slate-300 dark:border-slate-600'
+                  ? 'border-[#D4A373] bg-[#D4A373] text-white'
+                  : 'border-stone-300 dark:border-stone-600'
               }`}
             >
               {selectedRole === 'talker' && <div className="w-2 h-2 rounded-full bg-white" />}
@@ -113,24 +113,24 @@ export const OnboardingRolePage: React.FC = () => {
           onDoubleClick={() => proceedWithRole('listener')}
           className={`p-6 sm:p-8 cursor-pointer transition-all relative ${
             selectedRole === 'listener'
-              ? 'border-2 border-teal-600 bg-teal-50/40 dark:bg-teal-950/30 ring-2 ring-teal-500/20 shadow-md'
-              : 'border border-slate-200 dark:border-slate-800 hover:border-teal-300'
+              ? 'border-2 border-[#166534] bg-[#F0FDF4] dark:bg-[#1F2E22] ring-2 ring-[#166534]/20 shadow-md'
+              : 'border border-[#EFEBE4] dark:border-[#332E28] hover:border-[#166534]/50'
           }`}
         >
-          <div className="w-12 h-12 rounded-2xl bg-teal-100 dark:bg-teal-900/60 text-teal-600 dark:text-teal-400 flex items-center justify-center mb-4">
-            <Headphones className="w-6 h-6" />
+          <div className="w-12 h-12 rounded-2xl bg-[#DCFCE7] dark:bg-[#166534]/30 text-[#166534] dark:text-[#4ADE80] flex items-center justify-center mb-4">
+            <Headphones className="w-6 h-6 text-[#166534] dark:text-[#4ADE80]" />
           </div>
 
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+          <h3 className="text-lg font-bold text-stone-900 dark:text-white">
             I want to listen and earn
           </h3>
-          <p className="mt-2 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+          <p className="mt-2 text-xs text-stone-600 dark:text-stone-300 leading-relaxed">
             Role: <strong>Listener</strong>
             <br />
             Provide supportive conversation sessions on your own schedule. Earn ₹2.50/min with direct bank UPI withdrawals.
           </p>
 
-          <div className="mt-6 flex items-center justify-between text-xs font-semibold text-teal-600 dark:text-teal-400">
+          <div className="mt-6 flex items-center justify-between text-xs font-semibold text-[#166534] dark:text-[#4ADE80]">
             <button
               type="button"
               onClick={(e) => {
@@ -145,8 +145,8 @@ export const OnboardingRolePage: React.FC = () => {
             <div
               className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
                 selectedRole === 'listener'
-                  ? 'border-teal-600 bg-teal-600 text-white'
-                  : 'border-slate-300 dark:border-slate-600'
+                  ? 'border-[#166534] bg-[#166534] text-white'
+                  : 'border-stone-300 dark:border-stone-600'
               }`}
             >
               {selectedRole === 'listener' && <div className="w-2 h-2 rounded-full bg-white" />}
@@ -162,7 +162,7 @@ export const OnboardingRolePage: React.FC = () => {
           onClick={handleContinue}
           isLoading={isSubmitting}
           rightIcon={<ArrowRight className="w-4 h-4" />}
-          className="min-w-60 justify-center shadow-lg shadow-indigo-600/15 cursor-pointer font-semibold"
+          className="min-w-60 justify-center shadow-md cursor-pointer font-semibold"
         >
           Continue as {selectedRole === 'listener' ? 'Listener' : 'Talker'}
         </Button>

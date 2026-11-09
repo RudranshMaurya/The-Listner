@@ -299,19 +299,19 @@ export const ListenerVerificationPage: React.FC = () => {
         {questions.map((q, idx) => (
           <Card key={q.id} className="p-6 space-y-4">
             <div className="flex items-center gap-2">
-              <span className="w-6 h-6 rounded-full bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-xs">
+              <span className="w-6 h-6 rounded-full bg-[#FAF6F0] dark:bg-[#272420] text-[#875C34] dark:text-[#DEC6A5] flex items-center justify-center font-bold text-xs border border-[#EFEBE4] dark:border-[#332E28]">
                 {idx + 1}
               </span>
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+              <span className="text-xs font-semibold uppercase tracking-wider text-stone-400">
                 Scenario {idx + 1}
               </span>
             </div>
 
-            <p className="text-xs bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl text-slate-700 dark:text-slate-300 italic border border-slate-100 dark:border-slate-800">
+            <p className="text-xs bg-[#FAF6F0]/70 dark:bg-[#272420]/50 p-3 rounded-xl text-stone-700 dark:text-stone-300 italic border border-[#EFEBE4] dark:border-[#332E28]">
               "{q.scenario}"
             </p>
 
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+            <h3 className="text-sm font-bold text-stone-900 dark:text-white">
               {q.question}
             </h3>
 
@@ -327,23 +327,23 @@ export const ListenerVerificationPage: React.FC = () => {
                     type="button"
                     disabled={submitted}
                     onClick={() => handleSelectOption(q.id, opt.label)}
-                    className={`w-full text-left p-3.5 rounded-2xl border text-xs transition-all flex items-start gap-3 ${
+                    className={`w-full text-left p-3.5 rounded-2xl border text-xs transition-all duration-200 active:scale-[0.98] ease-[cubic-bezier(0.16,1,0.3,1)] flex items-start gap-3 ${
                       isSelected
                         ? showFeedback
                           ? isCorrectOption
-                            ? 'border-teal-500 bg-teal-50/60 dark:bg-teal-950/40 text-teal-900 dark:text-teal-200 ring-1 ring-teal-500'
+                            ? 'border-[#166534] bg-[#DCFCE7]/70 dark:bg-[#166534]/30 text-[#166534] dark:text-[#4ADE80] ring-1 ring-[#166534]'
                             : 'border-rose-500 bg-rose-50/60 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200'
-                          : 'border-indigo-600 bg-indigo-50/50 dark:bg-indigo-950/40 text-indigo-900 dark:text-indigo-200 font-semibold ring-1 ring-indigo-500'
-                        : 'border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/40'
+                          : 'border-[#D4A373] bg-[#FAF6F0] dark:bg-[#272420] text-[#875C34] dark:text-[#DEC6A5] font-semibold ring-1 ring-[#D4A373]'
+                        : 'border-[#EFEBE4] dark:border-[#332E28] text-stone-700 dark:text-stone-300 hover:bg-[#FAF6F0] dark:hover:bg-[#272420]'
                     }`}
                   >
-                    <span className="w-5 h-5 rounded-full border flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">
+                    <span className="w-5 h-5 rounded-full border border-current flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">
                       {opt.label}
                     </span>
                     <div className="flex-1">
                       <span>{opt.text}</span>
                       {showFeedback && isSelected && (
-                        <p className={`mt-1.5 text-[11px] font-normal ${isCorrectOption ? 'text-teal-600 dark:text-teal-300' : 'text-rose-600 dark:text-rose-300'}`}>
+                        <p className={`mt-1.5 text-[11px] font-normal ${isCorrectOption ? 'text-[#166534] dark:text-[#4ADE80]' : 'text-rose-600 dark:text-rose-300'}`}>
                           {opt.explanation}
                         </p>
                       )}

@@ -48,36 +48,36 @@ export const Navbar: React.FC = () => {
   const dashboardPath = role === 'listener' ? '/listener/dashboard' : '/talker/dashboard';
 
   return (
-    <nav className="sticky top-0 z-40 w-full glass-card border-b border-slate-200/80 dark:border-slate-800/80 transition-colors">
+    <nav className="sticky top-0 z-40 w-full glass-card border-b border-[#EFEBE4] dark:border-[#332E28] transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo & Brand */}
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-indigo-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform">
-              <Headphones className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#D4A373] to-[#C49160] flex items-center justify-center text-white shadow-md shadow-[#D4A373]/25 group-hover:scale-105 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]">
+              <Headphones className="w-5 h-5 text-white" />
             </div>
             <div className="flex flex-col text-left">
-              <span className="text-base font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
+              <span className="text-base font-bold tracking-tight text-stone-900 dark:text-stone-100 leading-tight">
                 The Listener
               </span>
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium tracking-wide">
+              <span className="text-[10px] text-stone-500 dark:text-stone-400 font-medium tracking-wide">
                 Speak freely. Be heard.
               </span>
             </div>
           </Link>
 
           {/* Desktop Nav Links */}
-          <div className="hidden md:flex items-center gap-1 bg-slate-100/70 dark:bg-slate-800/60 p-1 rounded-full border border-slate-200/50 dark:border-slate-700/50">
+          <div className="hidden md:flex items-center gap-1 bg-[#FAF6F0] dark:bg-[#272420] p-1 rounded-full border border-[#EFEBE4] dark:border-[#332E28]">
             {navLinks.map((link) => {
               const isActive = location.pathname === link.path;
               return (
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`text-xs font-medium px-4 py-1.5 rounded-full transition-all ${
+                  className={`text-xs font-medium px-4 py-1.5 rounded-full transition-all duration-200 ${
                     isActive
-                      ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs'
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                      ? 'bg-white dark:bg-[#161412] text-[#875C34] dark:text-[#E9D9C3] shadow-xs font-semibold'
+                      : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
                   }`}
                 >
                   {link.label}
@@ -91,7 +91,7 @@ export const Navbar: React.FC = () => {
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-full text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="p-2 rounded-full text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-white hover:bg-[#FAF6F0] dark:hover:bg-[#272420] transition-colors"
               title="Toggle theme"
             >
               {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
@@ -102,11 +102,11 @@ export const Navbar: React.FC = () => {
                 {/* Notification Bell */}
                 <Link
                   to={role === 'listener' ? '/listener/dashboard' : '/talker/notifications'}
-                  className="relative p-2 rounded-full text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                  className="relative p-2 rounded-full text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-white hover:bg-[#FAF6F0] dark:hover:bg-[#272420] transition-colors"
                 >
                   <Bell className="w-4 h-4" />
                   {unreadCount > 0 && (
-                    <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-white dark:ring-slate-900" />
+                    <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-white dark:ring-[#161412]" />
                   )}
                 </Link>
 
@@ -115,7 +115,7 @@ export const Navbar: React.FC = () => {
                   onClick={() => navigate(dashboardPath)}
                   variant="secondary"
                   size="sm"
-                  leftIcon={<Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />}
+                  leftIcon={<Sparkles className="w-3.5 h-3.5 text-[#D4A373] dark:text-[#DEC6A5]" />}
                 >
                   Dashboard
                 </Button>
@@ -124,7 +124,7 @@ export const Navbar: React.FC = () => {
                 <div className="relative">
                   <button
                     onClick={() => setDropdownOpen(!dropdownOpen)}
-                    className="flex items-center gap-2 p-1 rounded-full hover:ring-2 hover:ring-indigo-500/20 transition-all"
+                    className="flex items-center gap-2 p-1 rounded-full hover:ring-2 hover:ring-[#D4A373]/40 transition-all"
                   >
                     <img
                       src={
@@ -133,7 +133,7 @@ export const Navbar: React.FC = () => {
                         `https://api.dicebear.com/7.x/avataaars/svg?seed=${currentUser.uid}`
                       }
                       alt={currentUser.displayName || "User"}
-                      className="w-8 h-8 rounded-full object-cover border border-slate-200 dark:border-slate-700"
+                      className="w-8 h-8 rounded-full object-cover border border-[#EFEBE4] dark:border-[#332E28]"
                     />
                   </button>
 
@@ -143,15 +143,15 @@ export const Navbar: React.FC = () => {
                         className="fixed inset-0 z-10"
                         onClick={() => setDropdownOpen(false)}
                       />
-                      <div className="absolute right-0 mt-2 w-60 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl py-2 z-20 text-left animate-in fade-in zoom-in-95">
-                        <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-800">
-                          <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">
+                      <div className="absolute right-0 mt-2 w-60 rounded-2xl bg-white dark:bg-[#1F1D1A] border border-[#EFEBE4] dark:border-[#332E28] shadow-xl py-2 z-20 text-left animate-apple-fade-in">
+                        <div className="px-4 py-2 border-b border-[#EFEBE4] dark:border-[#332E28]">
+                          <p className="text-sm font-semibold text-stone-900 dark:text-stone-100 truncate">
                             {currentUser.displayName || "User"}
                           </p>
-                          <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                          <p className="text-xs text-stone-500 dark:text-stone-400 truncate">
                             {currentUser.email}
                           </p>
-                          <span className="inline-block mt-1 text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300">
+                          <span className="inline-block mt-1 text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#FAF6F0] text-[#875C34] dark:bg-[#272420] dark:text-[#DEC6A5] border border-[#EFEBE4] dark:border-[#332E28]">
                             Role: {role || 'User'}
                           </span>
                         </div>
@@ -160,27 +160,27 @@ export const Navbar: React.FC = () => {
                           <Link
                             to={dashboardPath}
                             onClick={() => setDropdownOpen(false)}
-                            className="flex items-center gap-2.5 px-4 py-2 text-xs text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"
+                            className="flex items-center gap-2.5 px-4 py-2 text-xs text-stone-700 dark:text-stone-300 hover:bg-[#FAF6F0] dark:hover:bg-[#272420] transition-colors"
                           >
-                            <User className="w-4 h-4 text-slate-400" />
+                            <User className="w-4 h-4 text-stone-400" />
                             My Dashboard
                           </Link>
 
                           <Link
                             to={role === 'listener' ? '/listener/wallet' : '/talker/wallet'}
                             onClick={() => setDropdownOpen(false)}
-                            className="flex items-center gap-2.5 px-4 py-2 text-xs text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"
+                            className="flex items-center gap-2.5 px-4 py-2 text-xs text-stone-700 dark:text-stone-300 hover:bg-[#FAF6F0] dark:hover:bg-[#272420] transition-colors"
                           >
-                            <Wallet className="w-4 h-4 text-slate-400" />
+                            <Wallet className="w-4 h-4 text-stone-400" />
                             {role === 'listener' ? 'Earnings & Payouts' : 'Wallet & Top-up'}
                           </Link>
 
                           <Link
                             to={role === 'listener' ? '/listener/appointments' : '/talker/appointments'}
                             onClick={() => setDropdownOpen(false)}
-                            className="flex items-center gap-2.5 px-4 py-2 text-xs text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/60"
+                            className="flex items-center gap-2.5 px-4 py-2 text-xs text-stone-700 dark:text-stone-300 hover:bg-[#FAF6F0] dark:hover:bg-[#272420] transition-colors"
                           >
-                            <Calendar className="w-4 h-4 text-slate-400" />
+                            <Calendar className="w-4 h-4 text-stone-400" />
                             Appointments
                           </Link>
 
@@ -188,21 +188,21 @@ export const Navbar: React.FC = () => {
                             <Link
                               to="/admin"
                               onClick={() => setDropdownOpen(false)}
-                              className="flex items-center gap-2.5 px-4 py-2 text-xs text-indigo-600 dark:text-indigo-400 font-medium hover:bg-indigo-50 dark:hover:bg-indigo-950/40"
+                              className="flex items-center gap-2.5 px-4 py-2 text-xs text-[#0891B2] dark:text-[#38BDF8] font-medium hover:bg-[#ECFEFF] dark:hover:bg-[#0891B2]/10 transition-colors"
                             >
-                              <ShieldCheck className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                              <ShieldCheck className="w-4 h-4 text-[#0891B2] dark:text-[#38BDF8]" />
                               Private Admin Panel
                             </Link>
                           )}
                         </div>
 
-                        <div className="border-t border-slate-100 dark:border-slate-800 pt-1">
+                        <div className="border-t border-[#EFEBE4] dark:border-[#332E28] pt-1">
                           <button
                             onClick={() => {
                               setDropdownOpen(false);
                               handleLogout();
                             }}
-                            className="w-full flex items-center gap-2.5 px-4 py-2 text-xs text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30"
+                            className="w-full flex items-center gap-2.5 px-4 py-2 text-xs text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 transition-colors"
                           >
                             <LogOut className="w-4 h-4" />
                             Sign Out
@@ -253,19 +253,19 @@ export const Navbar: React.FC = () => {
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 px-4 pt-3 pb-6 space-y-3">
+        <div className="md:hidden border-t border-[#EFEBE4] dark:border-[#332E28] bg-white/95 dark:bg-[#1F1D1A]/95 backdrop-blur-xl px-4 pt-3 pb-6 space-y-3 animate-apple-fade-in">
           {navLinks.map((link) => (
             <Link
               key={link.path}
               to={link.path}
               onClick={() => setMobileMenuOpen(false)}
-              className="block px-3 py-2 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+              className="block px-3 py-2 rounded-xl text-sm font-medium text-stone-700 dark:text-stone-300 hover:bg-[#FAF6F0] dark:hover:bg-[#272420] transition-colors"
             >
               {link.label}
             </Link>
           ))}
 
-          <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
+          <div className="pt-2 border-t border-[#EFEBE4] dark:border-[#332E28]">
             {currentUser ? (
               <div className="space-y-2">
                 <Button
@@ -285,7 +285,7 @@ export const Navbar: React.FC = () => {
                       navigate('/admin');
                     }}
                     variant="outline"
-                    className="w-full justify-center text-indigo-600"
+                    className="w-full justify-center text-[#0891B2]"
                   >
                     Admin Panel
                   </Button>

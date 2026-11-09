@@ -73,18 +73,18 @@ export const AdminLayout: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
       {/* Admin Header */}
-      <div className="mb-6 rounded-3xl bg-slate-900 text-white p-6 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-left border border-slate-800">
+      <div className="mb-6 rounded-3xl bg-[#1F1D1A] text-stone-100 p-6 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-left border border-[#332E28]">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-xl bg-indigo-500/20 text-indigo-400">
+            <span className="p-1.5 rounded-xl bg-[#D4A373]/20 text-[#D4A373]">
               <ShieldAlert className="w-5 h-5" />
             </span>
-            <h1 className="text-xl font-bold tracking-tight">The Listener Admin Center</h1>
-            <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+            <h1 className="text-xl font-bold tracking-tight text-white">The Listener Admin Center</h1>
+            <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-[#166534]/30 text-[#4ADE80] border border-[#166534]">
               Secure Mode
             </span>
           </div>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-stone-400 mt-1">
             Supervisory command center for payments, reconciliations, listeners verification, and ledger controls.
           </p>
         </div>
@@ -93,7 +93,7 @@ export const AdminLayout: React.FC = () => {
           onClick={() => navigate('/')}
           variant="outline"
           size="sm"
-          className="text-slate-300 border-slate-700 hover:bg-slate-800"
+          className="text-stone-300 border-[#332E28] hover:bg-[#272420]"
           leftIcon={<ArrowLeft className="w-4 h-4" />}
         >
           Exit to Website
@@ -102,7 +102,7 @@ export const AdminLayout: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
         {/* Admin Navigation */}
-        <div className="lg:col-span-1 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 p-3 shadow-xs">
+        <div className="lg:col-span-1 rounded-3xl bg-white dark:bg-[#1F1D1A] border border-[#EFEBE4] dark:border-[#332E28] p-3 shadow-xs">
           <nav className="space-y-1">
             {navItems.map((item) => {
               const isActive = location.pathname === item.path;
@@ -110,13 +110,13 @@ export const AdminLayout: React.FC = () => {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl text-xs font-medium transition-all ${
+                  className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl text-xs font-medium transition-all duration-200 ${
                     isActive
-                      ? 'bg-indigo-600 text-white font-semibold shadow-xs'
-                      : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white'
+                      ? 'bg-[#D4A373] text-stone-900 font-semibold shadow-xs'
+                      : 'text-stone-600 dark:text-stone-400 hover:bg-[#FAF6F0] dark:hover:bg-[#272420] hover:text-stone-900 dark:hover:text-stone-100'
                   }`}
                 >
-                  <span className={isActive ? 'text-white' : 'text-slate-400'}>
+                  <span className={isActive ? 'text-stone-900' : 'text-stone-400'}>
                     {item.icon}
                   </span>
                   <span>{item.label}</span>

@@ -75,7 +75,7 @@ export const ExplorePage: React.FC = () => {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 p-5 shadow-xs space-y-4">
+      <div className="rounded-3xl bg-white dark:bg-[#1F1D1A] border border-[#EFEBE4] dark:border-[#332E28] p-5 shadow-xs space-y-4 transition-colors">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className="sm:col-span-2">
             <Input
@@ -90,7 +90,7 @@ export const ExplorePage: React.FC = () => {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+              className="w-full rounded-xl border border-[#EFEBE4] dark:border-[#332E28] bg-white dark:bg-[#1F1D1A] px-3.5 py-2.5 text-sm text-stone-900 dark:text-stone-100 focus:outline-none focus:border-[#D4A373] focus:ring-2 focus:ring-[#D4A373]/20 transition-colors"
             >
               <option value="rating">Sort: Highest Rated</option>
               <option value="experience">Sort: Most Experienced</option>
@@ -100,32 +100,32 @@ export const ExplorePage: React.FC = () => {
         </div>
 
         {/* Filter Pills */}
-        <div className="flex items-center gap-2 flex-wrap pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
-          <span className="font-semibold text-slate-400 uppercase tracking-wider text-[10px] mr-1">
+        <div className="flex items-center gap-2 flex-wrap pt-2 border-t border-[#EFEBE4] dark:border-[#332E28] text-xs">
+          <span className="font-semibold text-stone-400 uppercase tracking-wider text-[10px] mr-1">
             Status:
           </span>
           <button
             onClick={() => setAvailabilityFilter('all')}
-            className={`px-3 py-1 rounded-full font-medium transition-all ${
+            className={`px-3 py-1 rounded-full font-medium transition-all duration-200 active:scale-[0.97] ease-[cubic-bezier(0.16,1,0.3,1)] ${
               availabilityFilter === 'all'
-                ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900'
-                : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'
+                ? 'bg-stone-900 text-white dark:bg-[#FAF6F0] dark:text-stone-900'
+                : 'bg-[#FAF6F0] text-stone-600 dark:bg-[#272420] dark:text-stone-300 border border-[#EFEBE4] dark:border-[#332E28]'
             }`}
           >
             All Listeners
           </button>
           <button
             onClick={() => setAvailabilityFilter('idle')}
-            className={`px-3 py-1 rounded-full font-medium transition-all ${
+            className={`px-3 py-1 rounded-full font-medium transition-all duration-200 active:scale-[0.97] ease-[cubic-bezier(0.16,1,0.3,1)] ${
               availabilityFilter === 'idle'
-                ? 'bg-emerald-600 text-white shadow-xs'
-                : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'
+                ? 'bg-[#166534] text-white shadow-xs'
+                : 'bg-[#FAF6F0] text-stone-600 dark:bg-[#272420] dark:text-stone-300 border border-[#EFEBE4] dark:border-[#332E28]'
             }`}
           >
             Available Now Only
           </button>
 
-          <span className="font-semibold text-slate-400 uppercase tracking-wider text-[10px] ml-4 mr-1">
+          <span className="font-semibold text-stone-400 uppercase tracking-wider text-[10px] ml-4 mr-1">
             Topic:
           </span>
           <div className="flex gap-1.5 flex-wrap">
@@ -133,10 +133,10 @@ export const ExplorePage: React.FC = () => {
               <button
                 key={topic}
                 onClick={() => setSelectedTopic(topic)}
-                className={`px-3 py-1 rounded-full font-medium capitalize transition-all ${
+                className={`px-3 py-1 rounded-full font-medium capitalize transition-all duration-200 active:scale-[0.97] ease-[cubic-bezier(0.16,1,0.3,1)] ${
                   selectedTopic === topic
-                    ? 'bg-indigo-600 text-white shadow-xs'
-                    : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'
+                    ? 'bg-[#D4A373] text-stone-900 font-semibold shadow-xs'
+                    : 'bg-[#FAF6F0] text-stone-600 dark:bg-[#272420] dark:text-stone-300 border border-[#EFEBE4] dark:border-[#332E28]'
                 }`}
               >
                 {topic}

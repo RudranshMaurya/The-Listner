@@ -203,27 +203,27 @@ export const SessionRoomPage: React.FC = () => {
       <audio ref={remoteAudioRef} autoPlay playsInline />
 
       {/* Header Card: Partner Info, Timer, Controls */}
-      <div className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 p-4 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
+      <div className="rounded-3xl bg-white dark:bg-[#1F1D1A] border border-[#EFEBE4] dark:border-[#332E28] p-4 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3 text-left transition-colors">
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <div className="relative">
             <img
               src={partnerPhoto || `https://api.dicebear.com/7.x/avataaars/svg?seed=${partnerId}`}
               alt={partnerName}
-              className="w-12 h-12 rounded-2xl object-cover border border-slate-200 dark:border-slate-700"
+              className="w-12 h-12 rounded-2xl object-cover border border-[#EFEBE4] dark:border-[#332E28]"
             />
-            <span className="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-slate-900" />
+            <span className="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-[#166534] ring-2 ring-white dark:ring-[#161412]" />
           </div>
 
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-base font-bold text-slate-900 dark:text-white">
+              <h3 className="text-base font-bold text-stone-900 dark:text-white">
                 {partnerName}
               </h3>
               <Badge variant={isTalker ? 'listening' : 'neutral'} size="sm">
                 {isTalker ? 'Verified Listener' : 'Talker'}
               </Badge>
             </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-stone-500 dark:text-stone-400">
               {session.type === 'audio' ? 'Encrypted Audio Call' : 'Real-time Safe Chat'}
               {session.status === 'active' && ' • Live'}
             </p>
@@ -261,14 +261,14 @@ export const SessionRoomPage: React.FC = () => {
 
       {/* WebRTC Audio Call Bar (if audio type) */}
       {session.type === 'audio' && session.status === 'active' && (
-        <div className="mt-3 p-4 rounded-2xl bg-indigo-900 text-white flex items-center justify-between shadow-md">
+        <div className="mt-3 p-4 rounded-2xl bg-[#1F1D1A] border border-[#D4A373]/30 text-white flex items-center justify-between shadow-md">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-indigo-800 flex items-center justify-center animate-pulse">
-              <Phone className="w-5 h-5 text-emerald-400" />
+            <div className="w-10 h-10 rounded-full bg-[#272420] flex items-center justify-center animate-pulse border border-[#332E28]">
+              <Phone className="w-5 h-5 text-[#4ADE80]" />
             </div>
             <div>
-              <p className="text-sm font-semibold">WebRTC Audio Connected</p>
-              <p className="text-xs text-indigo-300">
+              <p className="text-sm font-semibold text-white">WebRTC Audio Connected</p>
+              <p className="text-xs text-[#DEC6A5]">
                 Quality: {connectionState === 'connected' ? 'High definition' : connectionState}
               </p>
             </div>
@@ -288,14 +288,14 @@ export const SessionRoomPage: React.FC = () => {
       )}
 
       {/* Chat Messages Stream */}
-      <div className="flex-1 overflow-y-auto my-3 p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-xs space-y-3">
+      <div className="flex-1 overflow-y-auto my-3 p-4 rounded-3xl bg-white dark:bg-[#1F1D1A] border border-[#EFEBE4] dark:border-[#332E28] shadow-xs space-y-3">
         {messages.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center text-center p-6 text-slate-400">
-            <Sparkles className="w-8 h-8 text-indigo-400 mb-2" />
-            <h4 className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+          <div className="h-full flex flex-col items-center justify-center text-center p-6 text-stone-400">
+            <Sparkles className="w-8 h-8 text-[#D4A373] mb-2 animate-pulse-subtle" />
+            <h4 className="text-sm font-semibold text-stone-700 dark:text-stone-200">
               Session is ready.
             </h4>
-            <p className="text-xs text-slate-500 max-w-sm mt-1">
+            <p className="text-xs text-stone-500 max-w-sm mt-1">
               "Sometimes, you don't need advice. You just need someone who listens."
               Say hello and begin speaking freely!
             </p>
@@ -306,18 +306,18 @@ export const SessionRoomPage: React.FC = () => {
             return (
               <div
                 key={msg.id}
-                className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}
+                className={`flex flex-col ${isMe ? 'items-end' : 'items-start'} animate-apple-fade-in`}
               >
                 <div
                   className={`max-w-[75%] sm:max-w-md px-4 py-2.5 rounded-2xl text-sm leading-relaxed text-left ${
                     isMe
-                      ? 'bg-indigo-600 text-white rounded-br-xs shadow-sm'
-                      : 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 rounded-bl-xs'
+                      ? 'bg-[#D4A373] text-stone-950 font-medium rounded-br-xs shadow-xs'
+                      : 'bg-[#FAF6F0] dark:bg-[#272420] text-stone-900 dark:text-stone-100 rounded-bl-xs border border-[#EFEBE4] dark:border-[#332E28]'
                   }`}
                 >
                   <p className="break-words">{msg.text}</p>
                 </div>
-                <span className="text-[10px] text-slate-400 mt-0.5 px-1">
+                <span className="text-[10px] text-stone-400 mt-0.5 px-1">
                   {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </span>
               </div>
@@ -326,8 +326,8 @@ export const SessionRoomPage: React.FC = () => {
         )}
 
         {isPartnerTyping && (
-          <div className="flex items-center gap-1.5 text-xs text-slate-400 italic">
-            <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-ping" />
+          <div className="flex items-center gap-1.5 text-xs text-[#875C34] dark:text-[#DEC6A5] italic">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#D4A373] animate-ping" />
             <span>{partnerName} is typing...</span>
           </div>
         )}
@@ -343,7 +343,7 @@ export const SessionRoomPage: React.FC = () => {
             placeholder={`Message ${partnerName}...`}
             value={inputText}
             onChange={(e) => handleInputChange(e.target.value)}
-            className="flex-1 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-5 py-3 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+            className="flex-1 rounded-full border border-[#EFEBE4] dark:border-[#332E28] bg-white dark:bg-[#1F1D1A] px-5 py-3 text-sm text-stone-900 dark:text-stone-100 placeholder-stone-400 focus:outline-none focus:border-[#D4A373] focus:ring-2 focus:ring-[#D4A373]/20 transition-all duration-200"
           />
           <Button
             type="submit"
@@ -351,18 +351,18 @@ export const SessionRoomPage: React.FC = () => {
             size="md"
             disabled={!inputText.trim()}
             className="rounded-full px-5"
-            rightIcon={<Send className="w-4 h-4" />}
+            rightIcon={<Send className="w-4 h-4 text-stone-900" />}
           >
             Send
           </Button>
         </form>
       ) : (
-        <div className="p-4 rounded-2xl bg-slate-100 dark:bg-slate-800 text-center text-xs text-slate-500">
+        <div className="p-4 rounded-2xl bg-[#FAF6F0] dark:bg-[#272420] text-center text-xs text-stone-500 border border-[#EFEBE4] dark:border-[#332E28]">
           This conversation is completed.
           {isTalker && !session.reviewSubmitted && (
             <button
               onClick={() => setIsReviewOpen(true)}
-              className="ml-2 text-indigo-600 dark:text-indigo-400 font-semibold underline"
+              className="ml-2 text-[#0891B2] dark:text-[#38BDF8] font-semibold underline hover:text-[#0E7490]"
             >
               Leave a Review
             </button>

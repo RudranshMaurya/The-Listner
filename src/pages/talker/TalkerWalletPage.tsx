@@ -78,15 +78,15 @@ export const TalkerWalletPage: React.FC = () => {
   return (
     <div className="space-y-6 text-left">
       {/* Wallet Balance Hero Card */}
-      <div className="rounded-3xl bg-gradient-to-tr from-slate-900 to-indigo-950 text-white p-6 sm:p-8 shadow-xl border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+      <div className="rounded-3xl bg-gradient-to-tr from-[#1F1D1A] via-[#272420] to-[#161412] text-white p-6 sm:p-8 shadow-xl border border-[#D4A373]/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 transition-colors">
         <div>
-          <span className="text-xs uppercase font-semibold text-indigo-300 tracking-wider">
+          <span className="text-xs uppercase font-semibold text-[#D4A373] dark:text-[#DEC6A5] tracking-wider">
             Available Balance
           </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mt-1">
+          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mt-1 text-white">
             {formatPaise(wallet?.balancePaise || 0)}
           </h2>
-          <p className="text-xs text-indigo-200/80 mt-1">
+          <p className="text-xs text-[#DEC6A5]/80 mt-1">
             Standard rate: ₹5 per 2 minutes. Deducted proportionally to active conversation time.
           </p>
         </div>
@@ -95,8 +95,8 @@ export const TalkerWalletPage: React.FC = () => {
           size="lg"
           variant="primary"
           onClick={() => setIsTopupOpen(true)}
-          className="bg-white text-indigo-950 hover:bg-indigo-50 shadow-md font-bold"
-          leftIcon={<PlusCircle className="w-4 h-4 text-indigo-600" />}
+          className="shadow-md font-bold"
+          leftIcon={<PlusCircle className="w-4 h-4 text-stone-900" />}
         >
           Add Money via UPI
         </Button>
@@ -104,26 +104,26 @@ export const TalkerWalletPage: React.FC = () => {
 
       {/* Metrics Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <Card className="p-5 flex items-center justify-between">
+        <Card hover className="p-5 flex items-center justify-between">
           <div>
-            <p className="text-xs uppercase font-semibold text-slate-400">Total Spent on Conversations</p>
-            <p className="text-xl font-bold text-slate-900 dark:text-white mt-0.5">
+            <p className="text-xs uppercase font-semibold text-stone-400">Total Spent on Conversations</p>
+            <p className="text-xl font-bold text-stone-900 dark:text-white mt-0.5">
               {formatPaise(wallet?.totalSpentPaise || 0)}
             </p>
           </div>
-          <div className="w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-2xl bg-[#FAF6F0] dark:bg-[#272420] text-[#D4A373] dark:text-[#DEC6A5] flex items-center justify-center">
             <ArrowUpRight className="w-5 h-5" />
           </div>
         </Card>
 
-        <Card className="p-5 flex items-center justify-between">
+        <Card hover className="p-5 flex items-center justify-between">
           <div>
-            <p className="text-xs uppercase font-semibold text-slate-400">Pending UPI Top-ups</p>
-            <p className="text-xl font-bold text-slate-900 dark:text-white mt-0.5">
+            <p className="text-xs uppercase font-semibold text-stone-400">Pending UPI Top-ups</p>
+            <p className="text-xl font-bold text-stone-900 dark:text-white mt-0.5">
               {pendingTopups.length}
             </p>
           </div>
-          <div className="w-10 h-10 rounded-2xl bg-amber-50 dark:bg-amber-950 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-2xl bg-[#FAF6F0] dark:bg-[#272420] text-[#CA8A04] flex items-center justify-center">
             <Clock className="w-5 h-5" />
           </div>
         </Card>
@@ -131,9 +131,9 @@ export const TalkerWalletPage: React.FC = () => {
 
       {/* Pending Top-ups Warning/Status */}
       {pendingTopups.length > 0 && (
-        <Card className="p-5 bg-amber-50/60 dark:bg-amber-950/30 border-amber-200 dark:border-amber-900/50 space-y-3">
-          <div className="flex items-center gap-2 text-amber-900 dark:text-amber-200 font-bold text-xs uppercase tracking-wider">
-            <Clock className="w-4 h-4 text-amber-600 animate-spin" />
+        <Card className="p-5 bg-[#FAF6F0]/80 dark:bg-[#272420]/60 border-[#D4A373]/30 dark:border-[#332E28] space-y-3">
+          <div className="flex items-center gap-2 text-[#875C34] dark:text-[#DEC6A5] font-bold text-xs uppercase tracking-wider">
+            <Clock className="w-4 h-4 text-[#D4A373] animate-spin" />
             <span>Pending UPI Verifications</span>
           </div>
 
@@ -141,24 +141,24 @@ export const TalkerWalletPage: React.FC = () => {
             {pendingTopups.map((topup) => (
               <div
                 key={topup.id}
-                className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-amber-200/60 dark:border-amber-900/40 text-xs shadow-xs"
+                className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-white dark:bg-[#1F1D1A] border border-[#EFEBE4] dark:border-[#332E28] text-xs shadow-xs"
               >
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-slate-900 dark:text-white">
+                    <span className="font-bold text-stone-900 dark:text-white">
                       Order Ref: {topup.id}
                     </span>
                     <Badge variant="warning" size="sm">Awaiting Notification</Badge>
                   </div>
-                  <p className="text-slate-500 mt-1">
-                    Amount: <strong className="text-slate-900 dark:text-slate-100">{formatRupees(topup.amountRupees)}</strong> • Target UPI: <span className="font-mono">{DESTINATION_UPI_ID}</span>
+                  <p className="text-stone-500 mt-1">
+                    Amount: <strong className="text-stone-900 dark:text-stone-100">{formatRupees(topup.amountRupees)}</strong> • Target UPI: <span className="font-mono">{DESTINATION_UPI_ID}</span>
                   </p>
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0">
                   <Button
                     size="sm"
-                    variant="success"
+                    variant="forest"
                     onClick={() => handleApproveTopup(topup.id)}
                     isLoading={approvingId === topup.id}
                     leftIcon={<CheckCircle2 className="w-3.5 h-3.5" />}
@@ -187,12 +187,12 @@ export const TalkerWalletPage: React.FC = () => {
 
       {/* Transaction History Ledger */}
       <Card className="p-6 space-y-4">
-        <h3 className="text-sm font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3">
+        <h3 className="text-sm font-bold text-stone-900 dark:text-white border-b border-[#EFEBE4] dark:border-[#332E28] pb-3">
           Wallet Transaction Ledger
         </h3>
 
         {ledger.length === 0 ? (
-          <p className="text-xs text-slate-400 py-4 text-center">
+          <p className="text-xs text-stone-400 py-4 text-center">
             No transactions recorded yet. Add money to get started!
           </p>
         ) : (
@@ -202,21 +202,21 @@ export const TalkerWalletPage: React.FC = () => {
               return (
                 <div
                   key={tx.id}
-                  className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 text-xs"
+                  className="flex items-center justify-between p-3 rounded-2xl bg-[#FAF6F0]/60 dark:bg-[#272420]/50 border border-[#EFEBE4] dark:border-[#332E28] text-xs transition-colors"
                 >
                   <div className="flex items-center gap-3">
                     <div
                       className={`w-8 h-8 rounded-xl flex items-center justify-center ${
                         isDebit
                           ? 'bg-rose-50 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400'
-                          : 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400'
+                          : 'bg-[#DCFCE7] text-[#166534] dark:bg-[#166534]/30 dark:text-[#4ADE80]'
                       }`}
                     >
                       {isDebit ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownLeft className="w-4 h-4" />}
                     </div>
 
                     <div>
-                      <p className="font-semibold text-slate-900 dark:text-white">
+                      <p className="font-semibold text-stone-900 dark:text-white">
                         {tx.description}
                       </p>
                       <p className="text-[11px] text-slate-400 mt-0.5">

@@ -174,12 +174,12 @@ export const ListenerOnboardingPage: React.FC = () => {
           {steps.map((s) => (
             <div key={s.num} className="flex items-center gap-1.5 text-xs font-semibold">
               <span
-                className={`w-6 h-6 rounded-full flex items-center justify-center text-xs ${
+                className={`w-6 h-6 rounded-full flex items-center justify-center text-xs transition-colors duration-200 ${
                   currentStep === s.num
-                    ? 'bg-indigo-600 text-white'
+                    ? 'bg-[#D4A373] text-stone-900 font-bold shadow-xs'
                     : currentStep > s.num
-                    ? 'bg-emerald-500 text-white'
-                    : 'bg-slate-200 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
+                    ? 'bg-[#166534] text-white'
+                    : 'bg-[#FAF6F0] text-stone-400 dark:bg-[#272420] dark:text-stone-500 border border-[#EFEBE4] dark:border-[#332E28]'
                 }`}
               >
                 {currentStep > s.num ? '✓' : s.num}
@@ -187,8 +187,8 @@ export const ListenerOnboardingPage: React.FC = () => {
               <span
                 className={
                   currentStep === s.num
-                    ? 'text-indigo-600 dark:text-indigo-400'
-                    : 'text-slate-400'
+                    ? 'text-[#875C34] dark:text-[#E9D9C3] font-bold'
+                    : 'text-stone-400'
                 }
               >
                 {s.title}
@@ -196,9 +196,9 @@ export const ListenerOnboardingPage: React.FC = () => {
             </div>
           ))}
         </div>
-        <div className="w-full bg-slate-200 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
+        <div className="w-full bg-[#FAF6F0] dark:bg-[#272420] border border-[#EFEBE4] dark:border-[#332E28] h-2 rounded-full overflow-hidden p-0.5">
           <div
-            className="bg-indigo-600 h-full transition-all duration-300"
+            className="bg-[#D4A373] h-full rounded-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
             style={{ width: `${(currentStep / 4) * 100}%` }}
           />
         </div>
@@ -243,7 +243,7 @@ export const ListenerOnboardingPage: React.FC = () => {
                 <select
                   value={gender}
                   onChange={(e) => setGender(e.target.value)}
-                  className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                  className="w-full rounded-xl border border-[#EFEBE4] dark:border-[#332E28] bg-white dark:bg-[#1F1D1A] px-3.5 py-2.5 text-sm text-stone-900 dark:text-stone-100 focus:outline-none focus:border-[#D4A373] focus:ring-2 focus:ring-[#D4A373]/20 transition-colors"
                 >
                   <option value="Female">Female</option>
                   <option value="Male">Male</option>
@@ -292,10 +292,10 @@ export const ListenerOnboardingPage: React.FC = () => {
                     key={topic}
                     type="button"
                     onClick={() => toggleTopic(topic)}
-                    className={`px-3.5 py-2 rounded-2xl text-xs font-medium border transition-all ${
+                    className={`px-3.5 py-2 rounded-2xl text-xs font-medium border transition-all duration-200 active:scale-[0.97] ease-[cubic-bezier(0.16,1,0.3,1)] ${
                       isSelected
-                        ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 ring-2 ring-indigo-500/20 font-semibold'
-                        : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50'
+                        ? 'border-[#D4A373] bg-[#FAF6F0] dark:bg-[#272420] text-[#875C34] dark:text-[#E9D9C3] ring-1 ring-[#D4A373] font-semibold shadow-xs'
+                        : 'border-[#EFEBE4] dark:border-[#332E28] text-stone-600 dark:text-stone-300 hover:bg-[#FAF6F0] dark:hover:bg-[#272420]'
                     }`}
                   >
                     {topic}
@@ -377,11 +377,11 @@ export const ListenerOnboardingPage: React.FC = () => {
               required
             />
 
-            <div className="p-4 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/50 text-xs text-indigo-900 dark:text-indigo-300 flex items-start gap-2.5">
-              <ShieldCheck className="w-5 h-5 text-indigo-600 shrink-0 mt-0.5" />
+            <div className="p-4 rounded-2xl bg-[#FAF6F0] dark:bg-[#272420]/70 border border-[#EFEBE4] dark:border-[#332E28] text-xs text-stone-800 dark:text-stone-200 flex items-start gap-2.5">
+              <ShieldCheck className="w-5 h-5 text-[#D4A373] shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold">Next Step: Verification Questionnaire</p>
-                <p className="text-[11px] text-indigo-700 dark:text-indigo-400 mt-0.5">
+                <p className="font-semibold text-stone-900 dark:text-white">Next Step: Verification Questionnaire</p>
+                <p className="text-[11px] text-stone-500 dark:text-stone-400 mt-0.5">
                   To complete registration and earn your green "Platform-verified listener" badge, you will answer a short scenario questionnaire.
                 </p>
               </div>

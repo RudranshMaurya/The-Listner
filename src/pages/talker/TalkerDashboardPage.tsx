@@ -49,48 +49,48 @@ export const TalkerDashboardPage: React.FC = () => {
     <div className="space-y-8 text-left">
       {/* Quick Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="p-5 flex items-center justify-between">
+        <Card hover className="p-5 flex items-center justify-between">
           <div>
-            <p className="text-xs uppercase font-semibold text-slate-400">Available Listeners</p>
-            <p className="text-2xl font-extrabold text-slate-900 dark:text-white mt-0.5">
+            <p className="text-xs uppercase font-semibold text-stone-400">Available Listeners</p>
+            <p className="text-2xl font-extrabold text-stone-900 dark:text-white mt-0.5">
               {availableListeners.length}
             </p>
-            <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1 mt-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-[11px] text-[#166534] dark:text-[#4ADE80] font-medium flex items-center gap-1 mt-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#166534] dark:bg-[#4ADE80] animate-pulse" />
               Ready to talk right now
             </span>
           </div>
-          <div className="w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-2xl bg-[#FAF6F0] dark:bg-[#272420] text-[#D4A373] dark:text-[#DEC6A5] flex items-center justify-center">
             <Users className="w-5 h-5" />
           </div>
         </Card>
 
-        <Card className="p-5 flex items-center justify-between">
+        <Card hover className="p-5 flex items-center justify-between">
           <div>
-            <p className="text-xs uppercase font-semibold text-slate-400">Upcoming Sessions</p>
-            <p className="text-2xl font-extrabold text-slate-900 dark:text-white mt-0.5">
+            <p className="text-xs uppercase font-semibold text-stone-400">Upcoming Sessions</p>
+            <p className="text-2xl font-extrabold text-stone-900 dark:text-white mt-0.5">
               {upcomingAppointments.length}
             </p>
-            <span className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 block">
+            <span className="text-[11px] text-stone-500 dark:text-stone-400 mt-1 block">
               Scheduled in your calendar
             </span>
           </div>
-          <div className="w-10 h-10 rounded-2xl bg-teal-50 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-2xl bg-[#FAF6F0] dark:bg-[#272420] text-[#0891B2] flex items-center justify-center">
             <Calendar className="w-5 h-5" />
           </div>
         </Card>
 
-        <Card className="p-5 flex items-center justify-between">
+        <Card hover className="p-5 flex items-center justify-between">
           <div>
-            <p className="text-xs uppercase font-semibold text-slate-400">Past Conversations</p>
-            <p className="text-2xl font-extrabold text-slate-900 dark:text-white mt-0.5">
+            <p className="text-xs uppercase font-semibold text-stone-400">Past Conversations</p>
+            <p className="text-2xl font-extrabold text-stone-900 dark:text-white mt-0.5">
               {sessions.length}
             </p>
-            <span className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 block">
+            <span className="text-[11px] text-stone-500 dark:text-stone-400 mt-1 block">
               Completed sessions
             </span>
           </div>
-          <div className="w-10 h-10 rounded-2xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-2xl bg-[#FAF6F0] dark:bg-[#272420] text-[#166534] dark:text-[#4ADE80] flex items-center justify-center">
             <MessageSquare className="w-5 h-5" />
           </div>
         </Card>
@@ -100,10 +100,10 @@ export const TalkerDashboardPage: React.FC = () => {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+            <h3 className="text-lg font-bold text-stone-900 dark:text-white">
               Listeners Online Right Now
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-stone-500 dark:text-stone-400">
               Connect instantly via real-time text chat or encrypted audio call.
             </p>
           </div>
@@ -111,14 +111,14 @@ export const TalkerDashboardPage: React.FC = () => {
             variant="ghost"
             size="sm"
             onClick={() => navigate('/talker/listeners')}
-            rightIcon={<ArrowRight className="w-3.5 h-3.5" />}
+            rightIcon={<ArrowRight className="w-3.5 h-3.5 text-[#D4A373]" />}
           >
             View All ({listeners.length})
           </Button>
         </div>
 
         {availableListeners.length === 0 ? (
-          <Card className="p-8 text-center text-slate-500 text-xs">
+          <Card className="p-8 text-center text-stone-500 text-xs">
             No listeners are currently online. You can view all listeners to book a scheduled slot.
           </Card>
         ) : (
@@ -134,38 +134,38 @@ export const TalkerDashboardPage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Appointments List */}
         <Card className="p-6 space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
-            <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-indigo-500" />
+          <div className="flex items-center justify-between border-b border-[#EFEBE4] dark:border-[#332E28] pb-3">
+            <h4 className="text-sm font-bold text-stone-900 dark:text-white flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-[#0891B2]" />
               <span>Upcoming Appointments</span>
             </h4>
-            <Link to="/talker/appointments" className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline">
+            <Link to="/talker/appointments" className="text-xs text-[#0891B2] hover:underline font-medium">
               See All
             </Link>
           </div>
 
           {upcomingAppointments.length === 0 ? (
-            <p className="text-xs text-slate-400 py-4 text-center">
+            <p className="text-xs text-stone-400 py-4 text-center">
               No appointments scheduled for today.
             </p>
           ) : (
             upcomingAppointments.slice(0, 3).map((a) => (
               <div
                 key={a.id}
-                className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800"
+                className="flex items-center justify-between p-3 rounded-2xl bg-[#FAF6F0]/60 dark:bg-[#272420]/50 border border-[#EFEBE4] dark:border-[#332E28]"
               >
                 <div className="flex items-center gap-3">
                   <img
                     src={a.listenerPhoto || `https://api.dicebear.com/7.x/avataaars/svg?seed=${a.listenerId}`}
                     alt={a.listenerName}
-                    className="w-9 h-9 rounded-full object-cover"
+                    className="w-9 h-9 rounded-full object-cover border border-[#EFEBE4] dark:border-[#332E28]"
                   />
                   <div>
-                    <p className="text-xs font-bold text-slate-900 dark:text-white">{a.listenerName}</p>
-                    <p className="text-[11px] text-slate-500">{a.date} • {a.timeSlot}</p>
+                    <p className="text-xs font-bold text-stone-900 dark:text-white">{a.listenerName}</p>
+                    <p className="text-[11px] text-stone-500">{a.date} • {a.timeSlot}</p>
                   </div>
                 </div>
-                <Badge variant="success" size="sm">Confirmed</Badge>
+                <Badge variant="verified" size="sm">Confirmed</Badge>
               </div>
             ))
           )}
@@ -173,29 +173,29 @@ export const TalkerDashboardPage: React.FC = () => {
 
         {/* Recent Conversations */}
         <Card className="p-6 space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
-            <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <MessageSquare className="w-4 h-4 text-purple-500" />
+          <div className="flex items-center justify-between border-b border-[#EFEBE4] dark:border-[#332E28] pb-3">
+            <h4 className="text-sm font-bold text-stone-900 dark:text-white flex items-center gap-2">
+              <MessageSquare className="w-4 h-4 text-[#D4A373]" />
               <span>Recent Conversations</span>
             </h4>
-            <Link to="/talker/conversations" className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline">
+            <Link to="/talker/conversations" className="text-xs text-[#0891B2] hover:underline font-medium">
               Full History
             </Link>
           </div>
 
           {sessions.length === 0 ? (
-            <p className="text-xs text-slate-400 py-4 text-center">
+            <p className="text-xs text-stone-400 py-4 text-center">
               You haven't had any conversations yet. Select a listener to begin!
             </p>
           ) : (
             sessions.slice(0, 3).map((s) => (
               <div
                 key={s.id}
-                className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800"
+                className="flex items-center justify-between p-3 rounded-2xl bg-[#FAF6F0]/60 dark:bg-[#272420]/50 border border-[#EFEBE4] dark:border-[#332E28]"
               >
                 <div>
-                  <p className="text-xs font-bold text-slate-900 dark:text-white">{s.listenerName}</p>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-xs font-bold text-stone-900 dark:text-white">{s.listenerName}</p>
+                  <p className="text-[11px] text-stone-500">
                     {Math.ceil(s.durationSeconds / 60)} mins • {s.type === 'audio' ? 'Audio Call' : 'Chat'}
                   </p>
                 </div>

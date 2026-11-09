@@ -27,15 +27,15 @@ export const LoginPage: React.FC = () => {
 
   return (
     <div className="min-h-[75vh] flex items-center justify-center p-4">
-      <Card className="max-w-md w-full p-8 sm:p-10 text-center shadow-xl border border-slate-200/80 dark:border-slate-800/80">
-        <div className="w-14 h-14 rounded-3xl bg-indigo-600 flex items-center justify-center text-white mx-auto shadow-lg shadow-indigo-600/30 mb-6">
-          <Headphones className="w-7 h-7" />
+      <Card className="max-w-md w-full p-8 sm:p-10 text-center shadow-xl border border-[#EFEBE4] dark:border-[#332E28] animate-apple-fade-in">
+        <div className="w-14 h-14 rounded-3xl bg-gradient-to-tr from-[#D4A373] to-[#C49160] flex items-center justify-center text-white mx-auto shadow-lg shadow-[#D4A373]/25 mb-6">
+          <Headphones className="w-7 h-7 text-white" />
         </div>
 
-        <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+        <h1 className="text-2xl font-extrabold text-stone-900 dark:text-white tracking-tight">
           Welcome to The Listener
         </h1>
-        <p className="mt-2 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+        <p className="mt-2 text-xs text-stone-500 dark:text-stone-400 leading-relaxed">
           Sign in securely with Google to talk freely, connect with listeners, or manage your listener earnings.
         </p>
 
@@ -43,7 +43,7 @@ export const LoginPage: React.FC = () => {
           <Button
             size="lg"
             variant="outline"
-            className="w-full justify-center gap-3 border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/70"
+            className="w-full justify-center gap-3 border-[#EFEBE4] dark:border-[#332E28] hover:bg-[#FAF6F0] dark:hover:bg-[#272420]"
             onClick={handleGoogleLogin}
             isLoading={loading}
             leftIcon={
@@ -71,11 +71,11 @@ export const LoginPage: React.FC = () => {
           </Button>
         </div>
 
-        <div className="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800 text-[11px] text-slate-400">
+        <div className="mt-8 pt-6 border-t border-[#EFEBE4] dark:border-[#332E28] text-[11px] text-stone-400">
           By signing in, you agree to our{' '}
-          <Link to="/terms" className="underline hover:text-indigo-500">Terms of Service</Link>
+          <Link to="/terms" className="underline hover:text-[#D4A373]">Terms of Service</Link>
           {' '}and{' '}
-          <Link to="/privacy" className="underline hover:text-indigo-500">Privacy Policy</Link>.
+          <Link to="/privacy" className="underline hover:text-[#D4A373]">Privacy Policy</Link>.
         </div>
       </Card>
     </div>

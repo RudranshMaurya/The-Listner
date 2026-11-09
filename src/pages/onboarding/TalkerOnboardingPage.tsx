@@ -124,7 +124,7 @@ export const TalkerOnboardingPage: React.FC = () => {
               <select
                 value={gender}
                 onChange={(e) => setGender(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                className="w-full rounded-xl border border-[#EFEBE4] dark:border-[#332E28] bg-white dark:bg-[#1F1D1A] px-3.5 py-2.5 text-sm text-stone-900 dark:text-stone-100 focus:outline-none focus:border-[#D4A373] focus:ring-2 focus:ring-[#D4A373]/20 transition-colors"
               >
                 <option value="Prefer not to say">Prefer not to say</option>
                 <option value="Female">Female</option>
@@ -135,13 +135,13 @@ export const TalkerOnboardingPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-stone-700 dark:text-stone-300 mb-1.5">
               Preferred Language
             </label>
             <select
               value={preferredLanguage}
               onChange={(e) => setPreferredLanguage(e.target.value)}
-              className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+              className="w-full rounded-xl border border-[#EFEBE4] dark:border-[#332E28] bg-white dark:bg-[#1F1D1A] px-3.5 py-2.5 text-sm text-stone-900 dark:text-stone-100 focus:outline-none focus:border-[#D4A373] focus:ring-2 focus:ring-[#D4A373]/20 transition-colors"
             >
               <option value="English">English</option>
               <option value="Hindi">Hindi</option>
@@ -154,7 +154,7 @@ export const TalkerOnboardingPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">
+            <label className="block text-xs font-semibold uppercase tracking-wider text-stone-700 dark:text-stone-300 mb-2">
               Topics you like to talk about
             </label>
             <div className="flex flex-wrap gap-2">
@@ -165,10 +165,10 @@ export const TalkerOnboardingPage: React.FC = () => {
                     key={topic}
                     type="button"
                     onClick={() => toggleTopic(topic)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                    className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all duration-200 active:scale-[0.97] ease-[cubic-bezier(0.16,1,0.3,1)] ${
                       isSelected
-                        ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 ring-1 ring-indigo-500'
-                        : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50'
+                        ? 'border-[#D4A373] bg-[#FAF6F0] dark:bg-[#272420] text-[#875C34] dark:text-[#E9D9C3] ring-1 ring-[#D4A373]'
+                        : 'border-[#EFEBE4] dark:border-[#332E28] text-stone-600 dark:text-stone-300 hover:bg-[#FAF6F0] dark:hover:bg-[#272420]'
                     }`}
                   >
                     {topic}
@@ -192,7 +192,7 @@ export const TalkerOnboardingPage: React.FC = () => {
                 type="checkbox"
                 checked={termsAccepted}
                 onChange={(e) => setTermsAccepted(e.target.checked)}
-                className="mt-0.5 rounded-md border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                className="mt-0.5 rounded-md border-[#EFEBE4] text-[#D4A373] focus:ring-[#D4A373] accent-[#D4A373]"
               />
               <span className="text-xs text-slate-500 dark:text-slate-400">
                 I am at least 18 years old and agree to the platform Terms of Service, Community Guidelines, and acknowledge this is an informal conversation service (not medical care).

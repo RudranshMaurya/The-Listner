@@ -86,7 +86,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ role }) => {
   return (
     <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       {/* Top Welcome & Financial Status Banner */}
-      <div className="mb-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 p-5 sm:p-6 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-left">
+      <div className="mb-6 rounded-3xl bg-white dark:bg-[#1F1D1A] border border-[#EFEBE4] dark:border-[#332E28] p-5 sm:p-6 shadow-sm shadow-[#D4A373]/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-left transition-colors">
         <div className="flex items-center gap-4">
           <div className="relative">
             <img
@@ -96,10 +96,10 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ role }) => {
                 `https://api.dicebear.com/7.x/avataaars/svg?seed=${currentUser?.uid}`
               }
               alt="Profile"
-              className="w-14 h-14 rounded-full object-cover border-2 border-indigo-500/20 shadow-sm"
+              className="w-14 h-14 rounded-full object-cover border-2 border-[#D4A373]/40 shadow-xs"
             />
             {role === 'listener' && listenerProfile?.isVerified && (
-              <span className="absolute -bottom-1 -right-1 p-0.5 rounded-full bg-teal-500 text-white shadow-xs" title="Platform-verified Listener">
+              <span className="absolute -bottom-1 -right-1 p-0.5 rounded-full bg-[#166534] text-white shadow-xs" title="Platform-verified Listener">
                 <CheckCircle2 className="w-4 h-4" />
               </span>
             )}
@@ -107,7 +107,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ role }) => {
 
           <div>
             <div className="flex items-center gap-2 flex-wrap">
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+              <h2 className="text-xl font-bold text-stone-900 dark:text-white">
                 {currentUser?.displayName || 'Welcome back'}
               </h2>
               <Badge variant={role === 'listener' ? 'listening' : 'neutral'} size="sm">
@@ -117,7 +117,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ role }) => {
                 <StatusBadge status={listenerProfile.status} />
               )}
             </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
               {role === 'listener'
                 ? 'Thank you for giving people a safe space to be heard.'
                 : 'Share your thoughts freely. Friendly listeners are ready for you.'}
@@ -126,12 +126,12 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ role }) => {
         </div>
 
         {/* Financial Quick Action Card */}
-        <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end border-t sm:border-t-0 pt-3 sm:pt-0 border-slate-100 dark:border-slate-800">
+        <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end border-t sm:border-t-0 pt-3 sm:pt-0 border-[#EFEBE4] dark:border-[#332E28]">
           {role === 'talker' ? (
             <div className="flex items-center gap-3">
               <div className="text-right">
-                <p className="text-[10px] uppercase font-semibold text-slate-400">Wallet Balance</p>
-                <p className="text-lg font-bold text-slate-900 dark:text-white">
+                <p className="text-[10px] uppercase font-semibold text-stone-400">Wallet Balance</p>
+                <p className="text-lg font-bold text-stone-900 dark:text-white">
                   {formatPaise(wallet?.balancePaise || 0)}
                 </p>
               </div>
@@ -148,13 +148,13 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ role }) => {
             <div className="flex items-center gap-3">
               {/* Listener Availability Toggle */}
               {listenerProfile && (
-                <div className="hidden lg:flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-full text-xs">
+                <div className="hidden lg:flex items-center gap-1 bg-[#FAF6F0] dark:bg-[#272420] p-1 rounded-full text-xs border border-[#EFEBE4] dark:border-[#332E28]">
                   <button
                     onClick={() => handleStatusToggle('idle')}
                     className={`px-3 py-1 rounded-full font-medium transition-all ${
                       listenerProfile.status === 'idle'
-                        ? 'bg-emerald-600 text-white shadow-xs'
-                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+                        ? 'bg-[#166534] text-white shadow-xs'
+                        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
                     }`}
                   >
                     Online
@@ -164,7 +164,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ role }) => {
                     className={`px-3 py-1 rounded-full font-medium transition-all ${
                       listenerProfile.status === 'busy'
                         ? 'bg-amber-600 text-white shadow-xs'
-                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900'
+                        : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
                     }`}
                   >
                     Busy
@@ -173,8 +173,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ role }) => {
               )}
 
               <div className="text-right">
-                <p className="text-[10px] uppercase font-semibold text-slate-400">Withdrawable</p>
-                <p className="text-lg font-bold text-emerald-600 dark:text-emerald-400">
+                <p className="text-[10px] uppercase font-semibold text-stone-400">Withdrawable</p>
+                <p className="text-lg font-bold text-[#166534] dark:text-[#4ADE80]">
                   {formatPaise(wallet?.withdrawablePaise || 0)}
                 </p>
               </div>
@@ -194,7 +194,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ role }) => {
       {/* Main Grid: Sidebar + Child Route View */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
         {/* Sidebar Nav */}
-        <div className="lg:col-span-1 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 p-3 shadow-xs">
+        <div className="lg:col-span-1 rounded-3xl bg-white dark:bg-[#1F1D1A] border border-[#EFEBE4] dark:border-[#332E28] p-3 shadow-sm shadow-[#D4A373]/5">
           <nav className="space-y-1">
             {navItems.map((item) => {
               const isActive = location.pathname === item.path;
@@ -202,30 +202,30 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ role }) => {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-medium transition-all ${
+                  className={`flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-medium transition-all duration-200 ${
                     isActive
-                      ? 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 font-semibold shadow-xs'
-                      : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white'
+                      ? 'bg-[#FAF6F0] dark:bg-[#272420] text-[#875C34] dark:text-[#E9D9C3] font-semibold border border-[#EFEBE4] dark:border-[#332E28] shadow-xs'
+                      : 'text-stone-600 dark:text-stone-400 hover:bg-[#FAF6F0]/60 dark:hover:bg-[#272420]/60 hover:text-stone-900 dark:hover:text-stone-100'
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
-                    <span className={isActive ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400'}>
+                    <span className={isActive ? 'text-[#D4A373] dark:text-[#DEC6A5]' : 'text-stone-400'}>
                       {item.icon}
                     </span>
                     <span>{item.label}</span>
                   </div>
-                  {isActive && <ChevronRight className="w-3.5 h-3.5 text-indigo-400" />}
+                  {isActive && <ChevronRight className="w-3.5 h-3.5 text-[#D4A373]" />}
                 </Link>
               );
             })}
           </nav>
 
           {/* Quick Help Box */}
-          <div className="mt-4 p-3.5 rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/30 border border-indigo-100/80 dark:border-indigo-900/40 text-left">
-            <h5 className="text-[11px] font-semibold text-indigo-900 dark:text-indigo-300">
+          <div className="mt-4 p-3.5 rounded-2xl bg-[#FAF6F0] dark:bg-[#272420]/70 border border-[#EFEBE4] dark:border-[#332E28] text-left">
+            <h5 className="text-[11px] font-semibold text-[#875C34] dark:text-[#DEC6A5]">
               Need assistance?
             </h5>
-            <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed">
+            <p className="text-[10px] text-stone-500 dark:text-stone-400 mt-0.5 leading-relaxed">
               Transparent rate: ₹5 per 2 minutes. All sessions are 100% private.
             </p>
           </div>

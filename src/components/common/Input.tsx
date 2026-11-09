@@ -40,7 +40,7 @@ export const Input: React.FC<InputProps> = ({
 
         <input
           id={inputId}
-          className={`block w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 transition-all focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 disabled:cursor-not-allowed disabled:bg-slate-50 dark:disabled:bg-slate-800/50 ${
+          className={`block w-full rounded-xl border border-[#EFEBE4] dark:border-[#332E28] bg-white dark:bg-[#1F1D1A] px-3.5 py-2.5 text-sm text-stone-900 dark:text-stone-100 placeholder-stone-400 transition-all duration-200 focus:border-[#D4A373] focus:outline-none focus:ring-2 focus:ring-[#D4A373]/25 disabled:cursor-not-allowed disabled:bg-stone-50 dark:disabled:bg-stone-900/50 ${
             leftIcon ? 'pl-10' : ''
           } ${rightIcon ? 'pr-10' : ''} ${
             error ? 'border-rose-500 focus:border-rose-500 focus:ring-rose-500/20' : ''
@@ -93,7 +93,7 @@ export const Textarea: React.FC<TextareaProps> = ({
 
       <textarea
         id={inputId}
-        className={`block w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 transition-all focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 disabled:cursor-not-allowed disabled:bg-slate-50 dark:disabled:bg-slate-800/50 ${
+        className={`block w-full rounded-xl border border-[#EFEBE4] dark:border-[#332E28] bg-white dark:bg-[#1F1D1A] px-3.5 py-2.5 text-sm text-stone-900 dark:text-stone-100 placeholder-stone-400 transition-all duration-200 focus:border-[#D4A373] focus:outline-none focus:ring-2 focus:ring-[#D4A373]/25 disabled:cursor-not-allowed disabled:bg-stone-50 dark:disabled:bg-stone-900/50 ${
           error ? 'border-rose-500 focus:border-rose-500 focus:ring-rose-500/20' : ''
         } ${className}`}
         {...props}

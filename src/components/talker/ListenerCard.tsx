@@ -28,11 +28,11 @@ export const ListenerCard: React.FC<ListenerCardProps> = ({ listener }) => {
               <img
                 src={listener.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${listener.uid}`}
                 alt={listener.displayName}
-                className="w-14 h-14 rounded-2xl object-cover border border-slate-200 dark:border-slate-800 group-hover:scale-105 transition-transform"
+                className="w-14 h-14 rounded-2xl object-cover border border-[#EFEBE4] dark:border-[#332E28] group-hover:scale-105 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
               />
               {listener.isVerified && (
                 <span
-                  className="absolute -bottom-1 -right-1 p-0.5 rounded-full bg-teal-500 text-white shadow-xs"
+                  className="absolute -bottom-1 -right-1 p-0.5 rounded-full bg-[#166534] text-white shadow-xs"
                   title="Platform-verified Listener"
                 >
                   <CheckCircle2 className="w-3.5 h-3.5" />
@@ -42,12 +42,12 @@ export const ListenerCard: React.FC<ListenerCardProps> = ({ listener }) => {
 
             <div>
               <div className="flex items-center gap-1.5">
-                <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                <h3 className="text-base font-bold text-stone-900 dark:text-white group-hover:text-[#D4A373] dark:group-hover:text-[#DEC6A5] transition-colors">
                   {listener.displayName}
                 </h3>
               </div>
 
-              <div className="flex items-center gap-2 mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+              <div className="flex items-center gap-2 mt-0.5 text-xs text-stone-500 dark:text-stone-400">
                 <span>{listener.yearsExperience} yrs exp</span>
                 {listener.showAge && listener.age && (
                   <>
@@ -69,16 +69,16 @@ export const ListenerCard: React.FC<ListenerCardProps> = ({ listener }) => {
         </div>
 
         {/* Rating and Session Stats */}
-        <div className="flex items-center gap-3 mt-3.5 pt-3 border-t border-slate-100 dark:border-slate-800/80">
+        <div className="flex items-center gap-3 mt-3.5 pt-3 border-t border-[#EFEBE4] dark:border-[#332E28]">
           <StarRating rating={listener.rating || 5.0} size="sm" showCount totalReviews={listener.totalReviews || 0} />
-          <span className="text-slate-300 dark:text-slate-700">•</span>
-          <span className="text-xs text-slate-500 dark:text-slate-400">
+          <span className="text-stone-300 dark:text-stone-700">•</span>
+          <span className="text-xs text-stone-500 dark:text-stone-400">
             {listener.totalSessions || 0} conversations
           </span>
         </div>
 
         {/* Short Bio */}
-        <p className="mt-3 text-xs text-slate-600 dark:text-slate-300 line-clamp-2 leading-relaxed">
+        <p className="mt-3 text-xs text-stone-600 dark:text-stone-300 line-clamp-2 leading-relaxed">
           {listener.bio || "Available to listen with complete empathy, patience, and non-judgmental respect."}
         </p>
 
@@ -87,13 +87,13 @@ export const ListenerCard: React.FC<ListenerCardProps> = ({ listener }) => {
           {(listener.topics || []).slice(0, 3).map((topic) => (
             <span
               key={topic}
-              className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300"
+              className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-[#FAF6F0] text-[#875C34] dark:bg-[#272420] dark:text-[#E9D9C3] border border-[#EFEBE4] dark:border-[#332E28]"
             >
               {topic}
             </span>
           ))}
           {(listener.topics || []).length > 3 && (
-            <span className="text-[10px] font-medium px-1.5 py-0.5 text-slate-400">
+            <span className="text-[10px] font-medium px-1.5 py-0.5 text-stone-400">
               +{listener.topics.length - 3} more
             </span>
           )}
@@ -101,11 +101,11 @@ export const ListenerCard: React.FC<ListenerCardProps> = ({ listener }) => {
       </div>
 
       {/* Footer: Languages, Price, and Action Button */}
-      <div className="mt-5 pt-3.5 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+      <div className="mt-5 pt-3.5 border-t border-[#EFEBE4] dark:border-[#332E28] flex items-center justify-between">
         <div>
-          <p className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">Starting Rate</p>
-          <p className="text-sm font-bold text-slate-900 dark:text-white">
-            ₹5 <span className="text-xs font-normal text-slate-500">/ 2 mins</span>
+          <p className="text-[10px] uppercase font-semibold text-stone-400 tracking-wider">Starting Rate</p>
+          <p className="text-sm font-bold text-stone-900 dark:text-white">
+            ₹5 <span className="text-xs font-normal text-stone-500">/ 2 mins</span>
           </p>
         </div>
 

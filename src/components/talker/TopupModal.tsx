@@ -213,10 +213,10 @@ export const TopupModal: React.FC<TopupModalProps> = ({
                     setSelectedAmount(amt);
                     setCustomAmount('');
                   }}
-                  className={`py-2.5 rounded-2xl text-sm font-semibold border transition-all ${
+                  className={`py-2.5 rounded-2xl text-sm font-semibold border transition-all duration-200 active:scale-[0.97] ease-[cubic-bezier(0.16,1,0.3,1)] ${
                     selectedAmount === amt && !customAmount
-                      ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 ring-2 ring-indigo-600/20'
-                      : 'border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50'
+                      ? 'border-[#D4A373] bg-[#FAF6F0] dark:bg-[#272420] text-[#875C34] dark:text-[#E9D9C3] ring-2 ring-[#D4A373]/30 shadow-xs'
+                      : 'border-[#EFEBE4] dark:border-[#332E28] text-stone-700 dark:text-stone-200 hover:bg-[#FAF6F0] dark:hover:bg-[#272420]'
                   }`}
                 >
                   ₹{amt}
@@ -266,15 +266,15 @@ export const TopupModal: React.FC<TopupModalProps> = ({
       )}
 
       {step === 'pay' && currentOrder && (
-        <div className="space-y-5 text-center">
+        <div className="space-y-5 text-center animate-apple-fade-in">
           {/* Amount Badge */}
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300 font-bold text-base">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#FAF6F0] text-[#875C34] dark:bg-[#272420] dark:text-[#E9D9C3] border border-[#EFEBE4] dark:border-[#332E28] font-bold text-base shadow-xs">
             <span>Amount to Pay:</span>
             <span>{formatRupees(currentOrder.amountRupees)}</span>
           </div>
 
           {/* Real Dynamic QR Code Container */}
-          <div className="flex flex-col items-center justify-center p-4 bg-white rounded-3xl border border-slate-200 dark:border-slate-700 shadow-md max-w-xs mx-auto">
+          <div className="flex flex-col items-center justify-center p-4 bg-white rounded-3xl border border-[#EFEBE4] dark:border-[#332E28] shadow-md max-w-xs mx-auto">
             <QRCodeSVG
               value={currentOrder.upiUri}
               size={200}
@@ -282,8 +282,8 @@ export const TopupModal: React.FC<TopupModalProps> = ({
               includeMargin
               className="rounded-xl"
             />
-            <p className="mt-2 text-[11px] font-mono text-slate-500">
-              Order Ref: <span className="font-bold text-slate-800">{currentOrder.id}</span>
+            <p className="mt-2 text-[11px] font-mono text-stone-500">
+              Order Ref: <span className="font-bold text-stone-800">{currentOrder.id}</span>
             </p>
           </div>
 
@@ -301,7 +301,7 @@ export const TopupModal: React.FC<TopupModalProps> = ({
 
             <a
               href={currentOrder.upiUri}
-              className="inline-flex items-center justify-center font-medium rounded-full text-xs px-4 py-2 gap-1.5 h-8 bg-indigo-600 hover:bg-indigo-700 text-white w-full sm:w-auto"
+              className="inline-flex items-center justify-center font-medium rounded-full text-xs px-4 py-2 gap-1.5 h-9 bg-[#0891B2] hover:bg-[#0E7490] text-white w-full sm:w-auto transition-transform active:scale-[0.97] duration-200 shadow-xs"
             >
               <Smartphone className="w-3.5 h-3.5" />
               <span>Open in UPI App</span>
@@ -312,28 +312,28 @@ export const TopupModal: React.FC<TopupModalProps> = ({
           <div className="pt-1">
             <Button
               size="md"
-              variant="primary"
+              variant="forest"
               onClick={handleInstantVerify}
               isLoading={isSubmitting}
-              leftIcon={<CheckCircle2 className="w-4 h-4 text-emerald-300" />}
-              className="w-full justify-center bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-lg shadow-emerald-600/20 cursor-pointer"
+              leftIcon={<CheckCircle2 className="w-4 h-4 text-emerald-200" />}
+              className="w-full justify-center text-white font-bold shadow-lg shadow-[#166534]/20 cursor-pointer"
             >
               I Have Paid ₹{currentOrder.amountRupees} (Instant Auto-Verify)
             </Button>
           </div>
 
           {/* Pending Status Spinner */}
-          <div className="p-3.5 rounded-2xl bg-amber-50/80 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-900/40 text-left flex items-start gap-3">
-            <Clock className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5 animate-spin" />
-            <div className="text-xs text-amber-800 dark:text-amber-200 leading-relaxed">
-              <span className="font-semibold">Automatic MacroDroid Detection Active</span>
-              <p className="text-[11px] text-amber-700/80 dark:text-amber-300/70 mt-0.5">
+          <div className="p-3.5 rounded-2xl bg-[#FAF6F0] dark:bg-[#272420]/70 border border-[#EFEBE4] dark:border-[#332E28] text-left flex items-start gap-3">
+            <Clock className="w-4 h-4 text-[#D4A373] shrink-0 mt-0.5 animate-spin" />
+            <div className="text-xs text-stone-800 dark:text-stone-200 leading-relaxed">
+              <span className="font-semibold text-stone-900 dark:text-stone-100">Automatic MacroDroid Detection Active</span>
+              <p className="text-[11px] text-stone-600 dark:text-stone-400 mt-0.5">
                 Payments via FamApp or UPI auto-credit in real-time. Or click the button above to auto-approve instantly!
               </p>
             </div>
           </div>
 
-          <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+          <div className="pt-2 border-t border-[#EFEBE4] dark:border-[#332E28] flex items-center justify-between">
             <Button variant="ghost" size="sm" onClick={() => setStep('select')}>
               Change Amount
             </Button>
@@ -345,16 +345,16 @@ export const TopupModal: React.FC<TopupModalProps> = ({
       )}
 
       {step === 'success' && currentOrder && (
-        <div className="space-y-4 text-center py-4">
-          <div className="w-16 h-16 rounded-3xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 flex items-center justify-center mx-auto shadow-inner">
+        <div className="space-y-4 text-center py-4 animate-apple-fade-in">
+          <div className="w-16 h-16 rounded-3xl bg-[#DCFCE7] dark:bg-[#166534]/30 text-[#166534] dark:text-[#4ADE80] flex items-center justify-center mx-auto shadow-inner">
             <CheckCircle2 className="w-10 h-10" />
           </div>
 
-          <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+          <h3 className="text-xl font-bold text-stone-900 dark:text-white">
             ₹{currentOrder.amountRupees.toFixed(2)} Credited!
           </h3>
 
-          <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto leading-relaxed">
+          <p className="text-xs text-stone-500 dark:text-stone-400 max-w-sm mx-auto leading-relaxed">
             Your transaction has been securely verified and credited to your wallet balance.
             You can now start listening sessions immediately.
           </p>

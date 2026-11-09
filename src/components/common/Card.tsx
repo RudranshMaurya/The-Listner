@@ -14,15 +14,15 @@ export const Card: React.FC<CardProps> = ({
 }) => {
   return (
     <div
-      className={`rounded-2xl border border-slate-200/80 dark:border-slate-800/80 ${
+      className={`rounded-2xl border border-[#EFEBE4] dark:border-[#332E28] ${
         glass
           ? 'glass-card'
-          : 'bg-white dark:bg-slate-900 shadow-[0_2px_12px_rgba(0,0,0,0.04)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.2)]'
+          : 'bg-[#FFFFFF] dark:bg-[#1F1D1A] shadow-[0_2px_16px_rgba(212,163,115,0.06)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.4)]'
       } ${
         hover
-          ? 'transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 hover:border-slate-300 dark:hover:border-slate-700'
+          ? 'nomad-card-hover hover:border-[#D4A373]/40 dark:hover:border-[#D4A373]/30 cursor-pointer'
           : ''
-      } ${className}`}
+      } transition-colors duration-200 ${className}`}
       {...props}
     >
       {children}
