@@ -8,7 +8,7 @@ import { Button } from '../common/Button';
 import { Input } from '../common/Input';
 import { Badge } from '../common/Badge';
 import { generateOrderId, generateUpiUri, DESTINATION_UPI_ID, formatRupees } from '../../lib/upi';
-import { createTopupOrder, subscribeToTopup, confirmTopupPayment } from '../../lib/database';
+import { createTopupOrder, subscribeToTopup, confirmTopupPayment, subscribeToWallet } from '../../lib/database';
 import type { TopupOrder } from '../../types';
 import {
   QrCode,
@@ -43,6 +43,7 @@ export const TopupModal: React.FC<TopupModalProps> = ({
   const [utrInput, setUtrInput] = useState<string>('');
   const [copied, setCopied] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [baselineBalance, setBaselineBalance] = useState<number | null>(null);
 
   // Watch topup order status in real time
   useEffect(() => {
@@ -66,6 +67,33 @@ export const TopupModal: React.FC<TopupModalProps> = ({
 
     return () => unsubscribe();
   }, [currentOrder?.id]);
+
+  // Dual Fallback: Also watch wallet balance. If balance increases while waiting on payment, mark success immediately!
+  useEffect(() => {
+    if (!currentUser || step !== 'pay') return;
+
+    let baseline = baselineBalance;
+    const unsubWallet = subscribeToWallet(currentUser.uid, (w) => {
+      if (!w) return;
+      if (baseline === null) {
+        baseline = w.balancePaise;
+        setBaselineBalance(w.balancePaise);
+        return;
+      }
+      if (w.balancePaise > baseline) {
+        setStep('success');
+        try {
+          confetti({
+            particleCount: 80,
+            spread: 70,
+            origin: { y: 0.6 }
+          });
+        } catch {}
+      }
+    });
+
+    return () => unsubWallet();
+  }, [currentUser, step, baselineBalance]);
 
   const handleStartPayment = async () => {
     if (!currentUser) return;
@@ -154,6 +182,7 @@ export const TopupModal: React.FC<TopupModalProps> = ({
     setCurrentOrder(null);
     setCustomAmount('');
     setUtrInput('');
+    setBaselineBalance(null);
     onClose();
   };
 
