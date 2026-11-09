@@ -35,6 +35,29 @@ import { DEFAULT_RATE_PAISE_PER_MIN, MIN_WITHDRAWAL_PAISE, calculateCharge, calc
 // USER & LISTENER PROFILES
 // ==========================================
 
+/**
+ * Recursively strips all undefined properties from an object or nested structure.
+ * Firebase Realtime Database strictly rejects any payload containing `undefined`.
+ */
+export function removeUndefined<T>(obj: T): T {
+  if (obj === null || obj === undefined) {
+    return obj;
+  }
+  if (Array.isArray(obj)) {
+    return obj.map(removeUndefined) as any;
+  }
+  if (typeof obj === "object" && !(obj instanceof Date)) {
+    const cleaned: any = {};
+    for (const [key, value] of Object.entries(obj)) {
+      if (value !== undefined) {
+        cleaned[key] = removeUndefined(value);
+      }
+    }
+    return cleaned;
+  }
+  return obj;
+}
+
 export async function getUserProfile(uid: string): Promise<UserProfile | null> {
   const snapshot = await get(ref(db, `profiles/${uid}`));
   return snapshot.exists() ? (snapshot.val() as UserProfile) : null;
@@ -42,14 +65,12 @@ export async function getUserProfile(uid: string): Promise<UserProfile | null> {
 
 export async function saveUserProfile(profile: Partial<UserProfile> & { uid: string }): Promise<void> {
   const existing = await getUserProfile(profile.uid);
-  const data: UserProfile = {
+  const data: Partial<UserProfile> = {
     uid: profile.uid,
     email: profile.email || existing?.email || "",
     displayName: profile.displayName || existing?.displayName || "Anonymous",
     photoURL: profile.photoURL || existing?.photoURL || "",
     role: profile.role || existing?.role || "talker",
-    age: profile.age ?? existing?.age,
-    gender: profile.gender ?? existing?.gender,
     location: profile.location ?? existing?.location ?? "India",
     timezone: profile.timezone ?? existing?.timezone ?? "Asia/Kolkata",
     preferredLanguage: profile.preferredLanguage ?? existing?.preferredLanguage ?? "English",
@@ -61,14 +82,25 @@ export async function saveUserProfile(profile: Partial<UserProfile> & { uid: str
     updatedAt: Date.now()
   };
 
-  await set(ref(db, `profiles/${profile.uid}`), data);
-  await set(ref(db, `users/${profile.uid}`), {
-    uid: data.uid,
-    email: data.email,
-    displayName: data.displayName,
-    role: data.role,
+  const ageVal = profile.age !== undefined ? profile.age : existing?.age;
+  if (ageVal !== undefined) {
+    data.age = ageVal;
+  }
+
+  const genderVal = profile.gender !== undefined ? profile.gender : existing?.gender;
+  if (genderVal !== undefined) {
+    data.gender = genderVal;
+  }
+
+  const cleanedData = removeUndefined(data);
+  await set(ref(db, `profiles/${profile.uid}`), cleanedData);
+  await set(ref(db, `users/${profile.uid}`), removeUndefined({
+    uid: cleanedData.uid,
+    email: cleanedData.email,
+    displayName: cleanedData.displayName,
+    role: cleanedData.role,
     updatedAt: Date.now()
-  });
+  }));
 }
 
 export async function getListenerProfile(uid: string): Promise<ListenerProfile | null> {
@@ -78,13 +110,11 @@ export async function getListenerProfile(uid: string): Promise<ListenerProfile |
 
 export async function saveListenerProfile(listener: Partial<ListenerProfile> & { uid: string }): Promise<void> {
   const existing = await getListenerProfile(listener.uid);
-  const data: ListenerProfile = {
+  const data: Partial<ListenerProfile> = {
     uid: listener.uid,
     displayName: listener.displayName || existing?.displayName || "Listener",
     photoURL: listener.photoURL || existing?.photoURL || "",
     bio: listener.bio || existing?.bio || "Here to listen with empathy and warmth.",
-    age: listener.age ?? existing?.age,
-    gender: listener.gender ?? existing?.gender,
     yearsExperience: listener.yearsExperience ?? existing?.yearsExperience ?? 1,
     topics: listener.topics || existing?.topics || ["General conversations"],
     languages: listener.languages || existing?.languages || ["English", "Hindi"],
@@ -102,7 +132,17 @@ export async function saveListenerProfile(listener: Partial<ListenerProfile> & {
     showGender: listener.showGender ?? existing?.showGender ?? true
   };
 
-  await set(ref(db, `listenerProfiles/${listener.uid}`), data);
+  const ageVal = listener.age !== undefined ? listener.age : existing?.age;
+  if (ageVal !== undefined) {
+    data.age = ageVal;
+  }
+
+  const genderVal = listener.gender !== undefined ? listener.gender : existing?.gender;
+  if (genderVal !== undefined) {
+    data.gender = genderVal;
+  }
+
+  await set(ref(db, `listenerProfiles/${listener.uid}`), removeUndefined(data));
 }
 
 export const SEED_LISTENERS: ListenerProfile[] = [
