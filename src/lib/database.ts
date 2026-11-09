@@ -4,6 +4,7 @@ import {
   get,
   update,
   push,
+  remove,
   onValue,
   onDisconnect,
   serverTimestamp,
@@ -746,6 +747,10 @@ export function subscribeToUserTopups(uid: string, callback: (orders: TopupOrder
     userOrders.sort((a, b) => b.createdAt - a.createdAt);
     callback(userOrders);
   });
+}
+
+export async function cancelTopupOrder(orderId: string): Promise<void> {
+  await remove(ref(db, `topups/${orderId}`));
 }
 
 export async function confirmTopupPayment(orderId: string, utrRef: string, adminIdentifier: string): Promise<void> {

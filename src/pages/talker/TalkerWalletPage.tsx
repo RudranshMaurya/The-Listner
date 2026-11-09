@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { subscribeToWallet, subscribeToLedger, subscribeToUserTopups } from '../../lib/database';
+import { useNotifications } from '../../contexts/NotificationContext';
+import { subscribeToWallet, subscribeToLedger, subscribeToUserTopups, cancelTopupOrder } from '../../lib/database';
 import { formatPaise, formatRupees, DESTINATION_UPI_ID } from '../../lib/upi';
 import type { Wallet, WalletTransaction, TopupOrder } from '../../types';
 import { Card } from '../../components/common/Card';
@@ -15,15 +16,19 @@ import {
   Clock,
   ShieldCheck,
   CheckCircle2,
-  AlertTriangle
+  AlertTriangle,
+  Trash2,
+  XCircle
 } from 'lucide-react';
 
 export const TalkerWalletPage: React.FC = () => {
   const { currentUser } = useAuth();
+  const { showToast } = useNotifications();
   const [wallet, setWallet] = useState<Wallet | null>(null);
   const [ledger, setLedger] = useState<WalletTransaction[]>([]);
   const [topups, setTopups] = useState<TopupOrder[]>([]);
   const [isTopupOpen, setIsTopupOpen] = useState(false);
+  const [cancellingId, setCancellingId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!currentUser) return;
@@ -40,6 +45,22 @@ export const TalkerWalletPage: React.FC = () => {
   }, [currentUser]);
 
   const pendingTopups = topups.filter((t) => t.status === 'pending');
+
+  const handleCancelTopup = async (orderId: string) => {
+    if (!window.confirm(`Are you sure you want to cancel and remove pending top-up request ${orderId}?`)) {
+      return;
+    }
+
+    try {
+      setCancellingId(orderId);
+      await cancelTopupOrder(orderId);
+      showToast('success', `Pending top-up ${orderId} was cancelled successfully.`);
+    } catch (e: any) {
+      showToast('error', e.message || 'Failed to cancel top-up request.');
+    } finally {
+      setCancellingId(null);
+    }
+  };
 
   return (
     <div className="space-y-6 text-left">
@@ -107,17 +128,33 @@ export const TalkerWalletPage: React.FC = () => {
             {pendingTopups.map((topup) => (
               <div
                 key={topup.id}
-                className="flex items-center justify-between p-3 rounded-xl bg-white dark:bg-slate-900 border border-amber-200/60 dark:border-amber-900/40 text-xs"
+                className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-amber-200/60 dark:border-amber-900/40 text-xs shadow-xs"
               >
                 <div>
-                  <span className="font-bold text-slate-900 dark:text-white">
-                    Order Ref: {topup.id}
-                  </span>
-                  <p className="text-slate-500 mt-0.5">
-                    Amount: {formatRupees(topup.amountRupees)} • Target UPI: {DESTINATION_UPI_ID}
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-slate-900 dark:text-white">
+                      Order Ref: {topup.id}
+                    </span>
+                    <Badge variant="warning" size="sm">Awaiting Notification</Badge>
+                  </div>
+                  <p className="text-slate-500 mt-1">
+                    Amount: <strong className="text-slate-900 dark:text-slate-100">{formatRupees(topup.amountRupees)}</strong> • Target UPI: <span className="font-mono">{DESTINATION_UPI_ID}</span>
                   </p>
                 </div>
-                <Badge variant="warning" size="sm">Awaiting Notification</Badge>
+
+                <div className="flex items-center gap-2 shrink-0">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => handleCancelTopup(topup.id)}
+                    isLoading={cancellingId === topup.id}
+                    leftIcon={<Trash2 className="w-3.5 h-3.5 text-rose-500" />}
+                    className="text-rose-600 border-rose-200 hover:bg-rose-50 dark:hover:bg-rose-950/40 dark:border-rose-900/50 cursor-pointer font-medium text-xs py-1 px-2.5"
+                    title="Cancel this pending request"
+                  >
+                    Cancel Request
+                  </Button>
+                </div>
               </div>
             ))}
           </div>
