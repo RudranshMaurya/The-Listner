@@ -21,7 +21,8 @@ import {
   ArrowDownToLine,
   ShieldCheck,
   CheckCircle2,
-  ChevronRight
+  ChevronRight,
+  BarChart3
 } from 'lucide-react';
 
 export interface DashboardLayoutProps {
@@ -62,11 +63,10 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ role }) => {
 
   const listenerNav = [
     { label: 'Overview', path: '/listener/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
+    { label: 'Visitor Analytics', path: '/listener/analytics', icon: <BarChart3 className="w-4 h-4" /> },
     { label: 'Edit Profile', path: '/listener/profile', icon: <Users className="w-4 h-4" /> },
     { label: 'Availability Schedule', path: '/listener/schedule', icon: <Clock className="w-4 h-4" /> },
     { label: 'Appointments', path: '/listener/appointments', icon: <Calendar className="w-4 h-4" /> },
-    { label: 'Conversations', path: '/listener/conversations', icon: <MessageSquare className="w-4 h-4" /> },
-    { label: 'Earnings', path: '/listener/earnings', icon: <TrendingUp className="w-4 h-4" /> },
     { label: 'Wallet & Payouts', path: '/listener/wallet', icon: <WalletIcon className="w-4 h-4" /> },
     { label: 'Reviews', path: '/listener/reviews', icon: <Star className="w-4 h-4" /> },
     { label: 'Settings', path: '/listener/settings', icon: <Settings className="w-4 h-4" /> }

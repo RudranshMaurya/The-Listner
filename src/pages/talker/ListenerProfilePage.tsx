@@ -7,7 +7,8 @@ import {
   subscribeToReviews,
   getListenerSchedule,
   requestSession,
-  getWallet
+  getWallet,
+  recordListenerProfileVisit
 } from '../../lib/database';
 import type { ListenerProfile, Review, ListenerSchedule, SessionType } from '../../types';
 import { Card } from '../../components/common/Card';
@@ -31,7 +32,7 @@ import {
 
 export const ListenerProfilePage: React.FC = () => {
   const { listenerId } = useParams<{ listenerId: string }>();
-  const { currentUser } = useAuth();
+  const { currentUser, role, profile } = useAuth();
   const { showToast } = useNotifications();
   const navigate = useNavigate();
 
@@ -49,11 +50,21 @@ export const ListenerProfilePage: React.FC = () => {
     const unsubReviews = subscribeToReviews(listenerId, (r) => setReviews(r));
     getListenerSchedule(listenerId).then((sch) => setSchedule(sch));
 
+    // Record visitor analytics if visitor is not the listener themselves
+    if (currentUser?.uid !== listenerId) {
+      recordListenerProfileVisit(listenerId, {
+        uid: currentUser?.uid,
+        name: profile?.displayName || currentUser?.displayName || 'Anonymous Talker',
+        role: role || 'talker',
+        photoURL: profile?.photoURL || currentUser?.photoURL || ''
+      });
+    }
+
     return () => {
       unsubListener();
       unsubReviews();
     };
-  }, [listenerId]);
+  }, [listenerId, currentUser?.uid, role, profile?.displayName, profile?.photoURL]);
 
   const handleStartSession = async (type: SessionType) => {
     if (!currentUser || !listener) {
@@ -173,39 +184,55 @@ export const ListenerProfilePage: React.FC = () => {
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="mt-6 flex flex-wrap items-center gap-3">
-          <Button
-            size="lg"
-            variant="primary"
-            disabled={listener.status !== 'idle'}
-            isLoading={isConnecting}
-            onClick={() => handleStartSession('chat')}
-            leftIcon={<MessageSquare className="w-4 h-4" />}
-          >
-            {listener.status === 'idle' ? 'Start Text Chat' : 'Listener Busy'}
-          </Button>
+        {/* Action Buttons: Only shown to talkers/guests, NEVER to listeners */}
+        {role === 'listener' ? (
+          <div className="mt-6 p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/40 text-xs text-amber-900 dark:text-amber-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 w-full">
+            <div>
+              <p className="font-bold">Public Listener Profile Preview</p>
+              <p className="text-amber-700 dark:text-amber-300 mt-0.5">
+                Talkers browsing the site can start text chat, audio calls, or schedule appointments with you from this page.
+              </p>
+            </div>
+            {currentUser?.uid === listener.uid && (
+              <Button size="sm" variant="outline" onClick={() => navigate('/listener/profile')} className="shrink-0 font-bold">
+                Edit Your Profile
+              </Button>
+            )}
+          </div>
+        ) : (
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <Button
+              size="lg"
+              variant="primary"
+              disabled={listener.status !== 'idle'}
+              isLoading={isConnecting}
+              onClick={() => handleStartSession('chat')}
+              leftIcon={<MessageSquare className="w-4 h-4" />}
+            >
+              {listener.status === 'idle' ? 'Start Text Chat' : 'Listener Busy'}
+            </Button>
 
-          <Button
-            size="lg"
-            variant="secondary"
-            disabled={listener.status !== 'idle'}
-            isLoading={isConnecting}
-            onClick={() => handleStartSession('audio')}
-            leftIcon={<PhoneCall className="w-4 h-4" />}
-          >
-            Start Audio Call
-          </Button>
+            <Button
+              size="lg"
+              variant="secondary"
+              disabled={listener.status !== 'idle'}
+              isLoading={isConnecting}
+              onClick={() => handleStartSession('audio')}
+              leftIcon={<PhoneCall className="w-4 h-4" />}
+            >
+              Start Audio Call
+            </Button>
 
-          <Button
-            size="lg"
-            variant="outline"
-            onClick={() => setIsBookingOpen(true)}
-            leftIcon={<Calendar className="w-4 h-4" />}
-          >
-            Schedule for Later
-          </Button>
-        </div>
+            <Button
+              size="lg"
+              variant="outline"
+              onClick={() => setIsBookingOpen(true)}
+              leftIcon={<Calendar className="w-4 h-4" />}
+            >
+              Schedule for Later
+            </Button>
+          </div>
+        )}
       </Card>
 
       {/* Bio & Details Grid */}

@@ -10,6 +10,14 @@ import { MessageSquareHeart, Headphones, ArrowRight, CheckCircle2 } from 'lucide
 export const OnboardingRolePage: React.FC = () => {
   const { currentUser, profile, updateProfileData } = useAuth();
   const navigate = useNavigate();
+
+  // If user already has a locked role, immediately redirect to their dashboard
+  React.useEffect(() => {
+    if (profile?.role) {
+      navigate(profile.role === 'listener' ? '/listener/dashboard' : '/talker/dashboard', { replace: true });
+    }
+  }, [profile?.role, navigate]);
+
   const [selectedRole, setSelectedRole] = useState<UserRole>(() => {
     return (localStorage.getItem('tl_selected_role') as UserRole) || profile?.role || 'listener';
   });

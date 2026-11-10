@@ -92,6 +92,12 @@
         ".write": "auth != null"
       }
     },
+    "listenerAnalytics": {
+      "$listenerId": {
+        ".read": "auth != null",
+        ".write": "auth != null"
+      }
+    },
     "notifications": {
       "$uid": {
         ".read": "auth != null && (auth.uid === $uid || root.child('admin/config/admins/' + auth.uid).val() === true)",

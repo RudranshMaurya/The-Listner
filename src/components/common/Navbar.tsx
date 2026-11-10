@@ -47,7 +47,7 @@ export const Navbar: React.FC = () => {
   const navLinks = [
     { label: 'Home', path: currentUser ? dashboardPath : '/' },
     { label: 'How it works', path: '/how-it-works' },
-    { label: 'Become a Listener', path: '/become-a-listener' }
+    ...(!currentUser ? [{ label: 'Become a Listener', path: '/become-a-listener' }] : [])
   ];
   const firstName =
     (profile?.displayName || currentUser?.displayName || 'Friend')

@@ -39,6 +39,7 @@ import { TalkerSettingsPage } from './pages/talker/TalkerSettingsPage';
 
 // Listener Pages
 import { ListenerDashboardPage } from './pages/listener/ListenerDashboardPage';
+import { ListenerAnalyticsPage } from './pages/listener/ListenerAnalyticsPage';
 import { ListenerProfileEditPage } from './pages/listener/ListenerProfileEditPage';
 import { ListenerSchedulePage } from './pages/listener/ListenerSchedulePage';
 import { ListenerAppointmentsPage } from './pages/listener/ListenerAppointmentsPage';
@@ -199,6 +200,7 @@ export function App() {
                   >
                     <Route index element={<Navigate to="/listener/dashboard" replace />} />
                     <Route path="dashboard" element={<ListenerDashboardPage />} />
+                    <Route path="analytics" element={<ListenerAnalyticsPage />} />
                     <Route path="profile" element={<ListenerProfileEditPage />} />
                     <Route path="schedule" element={<ListenerSchedulePage />} />
                     <Route path="appointments" element={<ListenerAppointmentsPage />} />

@@ -25,7 +25,8 @@ export const BecomeListenerPage: React.FC = () => {
     } else if (role === 'listener') {
       navigate('/listener/dashboard');
     } else {
-      navigate('/onboarding/listener');
+      // Role is locked to talker
+      navigate('/talker/dashboard');
     }
   };
 
@@ -41,15 +42,30 @@ export const BecomeListenerPage: React.FC = () => {
           Set your own availability, connect from the comfort of your home, and receive fast UPI payouts directly to your bank account.
         </p>
 
-        <div className="mt-8 flex items-center justify-center gap-3">
-          <Button
-            size="lg"
-            variant="primary"
-            onClick={handleApply}
-            rightIcon={<ArrowRight className="w-4 h-4" />}
-          >
-            Apply Now in 5 Minutes
-          </Button>
+        <div className="mt-8 flex flex-col items-center justify-center gap-3">
+          {currentUser && role === 'talker' ? (
+            <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-center max-w-md">
+              <p className="text-xs text-amber-900 dark:text-amber-200 font-medium mb-3">
+                You are registered as a Talker with this account. Account roles are permanently fixed once registered.
+              </p>
+              <Button
+                size="md"
+                variant="primary"
+                onClick={() => navigate('/talker/dashboard')}
+              >
+                Go to Talker Dashboard
+              </Button>
+            </div>
+          ) : (
+            <Button
+              size="lg"
+              variant="primary"
+              onClick={handleApply}
+              rightIcon={<ArrowRight className="w-4 h-4" />}
+            >
+              {role === 'listener' ? 'Go to Listener Dashboard' : 'Apply Now in 5 Minutes'}
+            </Button>
+          )}
         </div>
       </div>
 

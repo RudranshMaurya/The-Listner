@@ -7,9 +7,10 @@ import {
   subscribeToAppointments,
   subscribeToUserSessions,
   subscribeToReviews,
+  subscribeToListenerAnalytics,
   setListenerStatus
 } from '../../lib/database';
-import type { ListenerProfile, Wallet, Appointment, Session, Review, ListenerStatus } from '../../types';
+import type { ListenerProfile, Wallet, Appointment, Session, Review, ListenerStatus, ListenerAnalytics } from '../../types';
 import { Card } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
 import { Badge, StatusBadge } from '../../components/common/Badge';
@@ -27,7 +28,9 @@ import {
   ArrowDownToLine,
   Sparkles,
   ShieldCheck,
-  UserCheck
+  UserCheck,
+  Eye,
+  Users
 } from 'lucide-react';
 
 export const ListenerDashboardPage: React.FC = () => {
@@ -39,6 +42,7 @@ export const ListenerDashboardPage: React.FC = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [sessions, setSessions] = useState<Session[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [analytics, setAnalytics] = useState<ListenerAnalytics | null>(null);
   const [isWithdrawalOpen, setIsWithdrawalOpen] = useState(false);
 
   useEffect(() => {
@@ -49,6 +53,7 @@ export const ListenerDashboardPage: React.FC = () => {
     const unsubAppts = subscribeToAppointments(currentUser.uid, 'listener', (a) => setAppointments(a));
     const unsubSessions = subscribeToUserSessions(currentUser.uid, 'listener', (s) => setSessions(s));
     const unsubReviews = subscribeToReviews(currentUser.uid, (r) => setReviews(r));
+    const unsubAnalytics = subscribeToListenerAnalytics(currentUser.uid, (data) => setAnalytics(data));
 
     return () => {
       unsubListener();
@@ -56,6 +61,7 @@ export const ListenerDashboardPage: React.FC = () => {
       unsubAppts();
       unsubSessions();
       unsubReviews();
+      unsubAnalytics();
     };
   }, [currentUser]);
 
@@ -111,7 +117,17 @@ export const ListenerDashboardPage: React.FC = () => {
       )}
 
       {/* Metrics Row */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+        <Card hover className="p-4 flex flex-col justify-between">
+          <p className="text-[11px] uppercase font-semibold text-stone-400">Profile Visitors</p>
+          <div className="flex items-baseline gap-1 mt-1">
+            <span className="text-2xl font-extrabold text-stone-900 dark:text-white font-mono">
+              {analytics?.totalViews || 0}
+            </span>
+          </div>
+          <p className="text-[10px] text-stone-400 mt-1">{analytics?.uniqueVisitorsCount || 0} unique talkers</p>
+        </Card>
+
         <Card hover className="p-4 flex flex-col justify-between">
           <p className="text-[11px] uppercase font-semibold text-stone-400">Star Rating</p>
           <div className="flex items-baseline gap-1 mt-1">
@@ -248,6 +264,69 @@ export const ListenerDashboardPage: React.FC = () => {
           )}
         </Card>
       </div>
+
+      {/* Profile Visitors Analytics Preview */}
+      <Card className="p-5 sm:p-6 space-y-4">
+        <div className="flex items-center justify-between border-b border-gray-100 dark:border-stone-800 pb-3">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+              <Eye className="w-4 h-4" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-stone-900 dark:text-white">
+                Who Visited Your Profile ({analytics?.totalViews || 0} Total Visits)
+              </h3>
+              <p className="text-[11px] text-stone-500">
+                {analytics?.uniqueVisitorsCount || 0} unique talkers viewed your listener profile
+              </p>
+            </div>
+          </div>
+
+          <Link
+            to="/listener/analytics"
+            className="text-xs font-semibold text-amber-600 dark:text-amber-400 hover:underline"
+          >
+            View Full Analytics →
+          </Link>
+        </div>
+
+        {(!analytics?.visitors || Object.keys(analytics.visitors).length === 0) ? (
+          <p className="text-xs text-stone-400 py-4 text-center">
+            No profile visits recorded yet. When talkers explore or open your profile, their visits appear here in real time.
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {Object.values(analytics.visitors)
+              .sort((a, b) => b.lastVisitedAt - a.lastVisitedAt)
+              .slice(0, 6)
+              .map((v, i) => (
+                <div
+                  key={v.visitorId + i}
+                  className="flex items-center justify-between p-3 rounded-2xl bg-[#FAF6F0]/60 dark:bg-[#272420]/50 border border-[#EFEBE4] dark:border-[#332E28]"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <img
+                      src={v.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${v.visitorId}`}
+                      alt={v.visitorName}
+                      className="w-8 h-8 rounded-full object-cover bg-amber-100 ring-1 ring-amber-300"
+                    />
+                    <div>
+                      <p className="text-xs font-bold text-stone-900 dark:text-white">
+                        {v.visitorName}
+                      </p>
+                      <p className="text-[10px] text-stone-400">
+                        {new Date(v.lastVisitedAt).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                      </p>
+                    </div>
+                  </div>
+                  <Badge variant="warning" size="sm">
+                    {v.visitCount} {v.visitCount === 1 ? 'view' : 'views'}
+                  </Badge>
+                </div>
+              ))}
+          </div>
+        )}
+      </Card>
 
       <WithdrawalModal
         isOpen={isWithdrawalOpen}

@@ -28,7 +28,9 @@ import type {
   Review,
   AppNotification,
   AdminPlatformConfig,
-  AuditLog
+  AuditLog,
+  ListenerAnalytics,
+  VisitorRecord
 } from "../types";
 import { DEFAULT_RATE_PAISE_PER_MIN, MIN_WITHDRAWAL_PAISE, calculateCharge, calculateEarningsSplit } from "./billing";
 
@@ -237,6 +239,82 @@ export function setupPresence(uid: string, role?: string) {
       set(listenerAvailStatusRef, "offline");
     }
   };
+}
+
+// ==========================================
+// LISTENER VISITOR ANALYTICS
+// ==========================================
+
+export async function recordListenerProfileVisit(
+  listenerId: string,
+  visitor?: { uid?: string; name?: string; role?: string; photoURL?: string }
+): Promise<void> {
+  if (!listenerId) return;
+  // If the visitor is the listener themself, don't count it
+  if (visitor?.uid && visitor.uid === listenerId) return;
+
+  try {
+    const analyticsRef = ref(db, `listenerAnalytics/${listenerId}`);
+    const snap = await get(analyticsRef);
+    const existing: ListenerAnalytics = snap.exists() ? (snap.val() as ListenerAnalytics) : {
+      listenerId,
+      totalViews: 0,
+      uniqueVisitorsCount: 0,
+      visitors: {},
+      updatedAt: Date.now()
+    };
+
+    const totalViews = (existing.totalViews || 0) + 1;
+    const visitors: Record<string, VisitorRecord> = existing.visitors || {};
+    const visitorKey = visitor?.uid || `anon_${Date.now()}`;
+    const prevVisits = visitors[visitorKey]?.visitCount || 0;
+
+    visitors[visitorKey] = {
+      visitorId: visitor?.uid || 'anonymous',
+      visitorName: visitor?.name || 'Anonymous Talker',
+      visitorRole: visitor?.role || 'talker',
+      lastVisitedAt: Date.now(),
+      visitCount: prevVisits + 1,
+      photoURL: visitor?.photoURL || ''
+    };
+
+    const uniqueVisitorsCount = Object.keys(visitors).length;
+
+    await set(analyticsRef, {
+      listenerId,
+      totalViews,
+      uniqueVisitorsCount,
+      visitors,
+      updatedAt: Date.now()
+    });
+
+    // Also update profileViews counter on listenerProfiles
+    await update(ref(db, `listenerProfiles/${listenerId}`), {
+      profileViews: totalViews
+    });
+  } catch (err) {
+    console.warn('Failed to record listener profile visit:', err);
+  }
+}
+
+export function subscribeToListenerAnalytics(
+  listenerId: string,
+  callback: (analytics: ListenerAnalytics | null) => void
+): () => void {
+  const analyticsRef = ref(db, `listenerAnalytics/${listenerId}`);
+  return onValue(analyticsRef, (snapshot) => {
+    if (snapshot.exists()) {
+      callback(snapshot.val() as ListenerAnalytics);
+    } else {
+      callback({
+        listenerId,
+        totalViews: 0,
+        uniqueVisitorsCount: 0,
+        visitors: {},
+        updatedAt: Date.now()
+      });
+    }
+  });
 }
 
 // ==========================================

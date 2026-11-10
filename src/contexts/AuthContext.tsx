@@ -165,9 +165,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const updateProfileData = async (data: Partial<UserProfile>) => {
     if (!currentUser) return;
-    const effectiveRole = data.role || profile?.role || (localStorage.getItem('tl_selected_role') as UserRole) || 'talker';
-    if (data.role) {
+    // Account roles are permanently fixed once set. Never permit changing an established role.
+    const effectiveRole = profile?.role || data.role || (localStorage.getItem('tl_selected_role') as UserRole) || 'talker';
+    if (!profile?.role && data.role) {
       localStorage.setItem('tl_selected_role', data.role);
+    }
+
+    const cleanData = { ...data };
+    if (profile?.role) {
+      delete cleanData.role; // Prevent overwriting locked role
     }
 
     // 1. Immediate optimistic state update so UI and navigation never freeze
@@ -181,15 +187,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         createdAt: Date.now(),
         onboardingCompleted: false
       }),
-      ...data,
-      role: data.role || profile?.role || effectiveRole,
+      ...cleanData,
+      role: effectiveRole,
       updatedAt: Date.now()
     };
     setProfile(updated);
 
     // 2. Persist to Firebase in background/try-catch
     try {
-      await saveUserProfile({ ...data, uid: currentUser.uid });
+      await saveUserProfile({ ...cleanData, role: effectiveRole, uid: currentUser.uid });
     } catch (err) {
       console.warn('Background saveUserProfile sync:', err);
     }

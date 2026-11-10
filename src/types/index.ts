@@ -62,6 +62,7 @@ export interface ListenerProfile {
   totalReviews: number;
   totalSessions: number;
   totalListeningMinutes: number;
+  profileViews?: number;
   isVerified: boolean;
   verificationScore?: number;
   verificationStatus: 'unsubmitted' | 'pending' | 'passed' | 'failed';
@@ -69,6 +70,23 @@ export interface ListenerProfile {
   lastActive: number;
   showAge?: boolean;
   showGender?: boolean;
+}
+
+export interface VisitorRecord {
+  visitorId: string;
+  visitorName: string;
+  visitorRole: string;
+  lastVisitedAt: number;
+  visitCount: number;
+  photoURL?: string;
+}
+
+export interface ListenerAnalytics {
+  listenerId: string;
+  totalViews: number;
+  uniqueVisitorsCount: number;
+  visitors?: Record<string, VisitorRecord>;
+  updatedAt: number;
 }
 
 export interface ListenerPrivateDetails {

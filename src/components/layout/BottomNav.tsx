@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Home, MessageSquare, Radio, PhoneCall, User, Wallet } from 'lucide-react';
+import { Home, MessageSquare, PhoneCall, User, Wallet, BarChart3 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 
 export const BottomNav: React.FC = () => {
@@ -12,14 +12,7 @@ export const BottomNav: React.FC = () => {
     return null;
   }
 
-  const isTalker = role !== 'listener';
-  const homePath = currentUser ? (isTalker ? '/talker/dashboard' : '/listener/dashboard') : '/';
-  const chatPath = currentUser && isTalker ? '/talker/conversations' : '/explore?type=chat';
-  const livePath = isTalker ? '/explore' : '/listener/schedule';
-  const callPath = isTalker ? '/explore?type=call' : '/listener/appointments';
-  const profilePath = currentUser
-    ? (isTalker ? '/talker/settings' : '/listener/settings')
-    : '/login';
+  const isListener = role === 'listener';
 
   interface NavItem {
     label: string;
@@ -29,29 +22,53 @@ export const BottomNav: React.FC = () => {
     badge?: string | number;
   }
 
-  const navItems: NavItem[] = [
-    {
-      label: 'Home',
-      path: homePath,
-      icon: Home,
-      exact: true
-    },
-    {
-      label: 'Chat',
-      path: chatPath,
-      icon: MessageSquare
-    },
-    {
-      label: 'Call',
-      path: callPath,
-      icon: PhoneCall
-    },
-    {
-      label: currentUser ? 'Profile' : 'Login',
-      path: profilePath,
-      icon: User
-    }
-  ];
+  const navItems: NavItem[] = isListener
+    ? [
+        {
+          label: 'Home',
+          path: '/listener/dashboard',
+          icon: Home,
+          exact: true
+        },
+        {
+          label: 'Analytics',
+          path: '/listener/analytics',
+          icon: BarChart3
+        },
+        {
+          label: 'Earnings',
+          path: '/listener/wallet',
+          icon: Wallet
+        },
+        {
+          label: 'Profile',
+          path: '/listener/settings',
+          icon: User
+        }
+      ]
+    : [
+        {
+          label: 'Home',
+          path: currentUser ? '/talker/dashboard' : '/',
+          icon: Home,
+          exact: true
+        },
+        {
+          label: 'Chat',
+          path: currentUser ? '/talker/conversations' : '/explore?type=chat',
+          icon: MessageSquare
+        },
+        {
+          label: 'Call',
+          path: '/explore?type=call',
+          icon: PhoneCall
+        },
+        {
+          label: currentUser ? 'Profile' : 'Login',
+          path: currentUser ? '/talker/settings' : '/login',
+          icon: User
+        }
+      ];
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-white/95 dark:bg-[#1E1C18]/95 backdrop-blur-xl border-t border-gray-200/80 dark:border-stone-800/80 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] px-2 py-1.5 transition-colors">
