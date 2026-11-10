@@ -10,7 +10,7 @@ import { EmptyState } from '../../components/common/EmptyState';
 import { ReviewModal } from '../../components/communication/ReviewModal';
 import { formatPaise } from '../../lib/upi';
 import { formatDuration } from '../../lib/billing';
-import { MessageSquare, PhoneCall, Calendar, Star, Clock } from 'lucide-react';
+import { MessageSquare, Calendar, Star, Clock } from 'lucide-react';
 
 export const TalkerConversationsPage: React.FC = () => {
   const { currentUser } = useAuth();
@@ -33,23 +33,24 @@ export const TalkerConversationsPage: React.FC = () => {
     <div className="space-y-6 text-left">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+          <h2 className="text-title text-text tracking-tight">
             Conversation History
           </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-small text-text-muted mt-0.5">
             Past text chats and encrypted audio calls with your listeners.
           </p>
         </div>
 
-        <div className="flex gap-1.5 bg-slate-100 dark:bg-slate-800 p-1 rounded-full text-xs">
+        <div className="flex gap-1 bg-surface p-1 rounded-pill border border-border text-caption">
           {(['all', 'chat', 'audio'] as const).map((t) => (
             <button
+              type="button"
               key={t}
               onClick={() => setTypeFilter(t)}
-              className={`px-3 py-1 rounded-full capitalize font-medium transition-all ${
+              className={`px-3 py-1.5 rounded-pill capitalize transition-all cursor-pointer ${
                 typeFilter === t
-                  ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs'
-                  : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+                  ? 'bg-surface-raised text-text font-semibold shadow-soft'
+                  : 'text-text-muted hover:text-text'
               }`}
             >
               {t === 'all' ? 'All Types' : t}
@@ -60,7 +61,7 @@ export const TalkerConversationsPage: React.FC = () => {
 
       {filtered.length === 0 ? (
         <EmptyState
-          icon={<MessageSquare className="w-8 h-8" />}
+          icon={<MessageSquare className="w-5 h-5 text-text-muted" />}
           title="No Past Conversations"
           description="When you complete chat or audio sessions, your detailed duration and receipts will appear here."
           actionLabel="Find a Listener"
@@ -76,36 +77,36 @@ export const TalkerConversationsPage: React.FC = () => {
             });
 
             return (
-              <Card key={s.id} className="p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <Card key={s.id} padding="md" className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
                   <img
                     src={s.listenerPhoto || `https://api.dicebear.com/7.x/avataaars/svg?seed=${s.listenerId}`}
                     alt={s.listenerName}
-                    className="w-12 h-12 rounded-2xl object-cover border border-slate-200 dark:border-slate-700"
+                    className="w-12 h-12 rounded-card object-cover bg-surface border border-border"
                   />
                   <div>
-                    <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <h4 className="text-small font-semibold text-text flex items-center gap-2">
                       <span>{s.listenerName}</span>
                       <Badge variant="neutral" size="sm">
                         {s.type === 'audio' ? 'Audio Call' : 'Chat'}
                       </Badge>
-                      <Badge variant={s.status === 'active' ? 'listening' : 'neutral'} size="sm">
+                      <Badge variant={s.status === 'active' ? 'success' : 'neutral'} size="sm">
                         {s.status}
                       </Badge>
                     </h4>
 
-                    <div className="flex items-center gap-3 mt-1 text-xs text-slate-500">
+                    <div className="flex items-center gap-3 mt-1 text-caption text-text-muted">
                       <span className="flex items-center gap-1">
-                        <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                        <Calendar className="w-3.5 h-3.5" />
                         {dateStr}
                       </span>
                       <span>•</span>
                       <span className="flex items-center gap-1">
-                        <Clock className="w-3.5 h-3.5 text-slate-400" />
+                        <Clock className="w-3.5 h-3.5" />
                         Duration: {formatDuration(s.billableSeconds || s.durationSeconds || 0)}
                       </span>
                       <span>•</span>
-                      <span className="font-bold text-slate-900 dark:text-white">
+                      <span className="font-semibold text-text">
                         Charged: {formatPaise(s.totalChargePaise || 0)}
                       </span>
                     </div>

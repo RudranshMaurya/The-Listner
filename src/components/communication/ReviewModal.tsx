@@ -8,7 +8,7 @@ import { StarRating } from '../common/StarRating';
 import { submitReview } from '../../lib/database';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNotifications } from '../../contexts/NotificationContext';
-import { Heart, Sparkles, Check } from 'lucide-react';
+import { Heart } from 'lucide-react';
 
 export interface ReviewModalProps {
   isOpen: boolean;
@@ -93,12 +93,12 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
     >
       <div className="space-y-5 text-left">
         {/* Star Rating Select */}
-        <div className="flex flex-col items-center justify-center p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200/80 dark:border-slate-700/80">
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+        <div className="flex flex-col items-center justify-center p-5 bg-surface rounded-card border border-border">
+          <p className="text-caption font-semibold text-text-muted uppercase tracking-wider mb-2">
             Tap Stars to Rate
           </p>
           <StarRating rating={rating} size="lg" interactive onRatingChange={(r) => setRating(r)} />
-          <p className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 mt-2">
+          <p className="text-small font-semibold text-accent mt-2">
             {rating === 5 && 'Outstanding Listener ⭐⭐⭐⭐⭐'}
             {rating === 4 && 'Very Good & Helpful ⭐⭐⭐⭐'}
             {rating === 3 && 'Good Conversation ⭐⭐⭐'}
@@ -109,7 +109,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
 
         {/* Remark Chips */}
         <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">
+          <label className="block text-caption font-semibold uppercase tracking-wider text-text-muted mb-2">
             Highlights
           </label>
           <div className="flex flex-wrap gap-2">
@@ -120,10 +120,10 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                   key={tag}
                   type="button"
                   onClick={() => toggleTag(tag)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                  className={`px-3 py-1.5 rounded-pill text-caption font-medium border transition-all cursor-pointer ${
                     isSelected
-                      ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 font-semibold ring-1 ring-indigo-500'
-                      : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50'
+                      ? 'border-accent bg-accent/10 text-accent font-semibold shadow-soft'
+                      : 'border-border bg-surface text-text-muted hover:text-text'
                   }`}
                 >
                   {tag}
@@ -145,8 +145,8 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-2">
-          <Button variant="ghost" size="sm" onClick={onClose} disabled={isSubmitting}>
+        <div className="pt-3 border-t border-border flex items-center justify-end gap-2">
+          <Button variant="ghost" size="md" onClick={onClose} disabled={isSubmitting}>
             Skip
           </Button>
           <Button
@@ -154,7 +154,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
             size="md"
             onClick={handleSubmitReview}
             isLoading={isSubmitting}
-            leftIcon={<Heart className="w-4 h-4 text-rose-300" />}
+            leftIcon={<Heart className="w-4 h-4" />}
           >
             Submit Review
           </Button>

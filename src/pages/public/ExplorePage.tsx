@@ -2,15 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { subscribeToListeners } from '../../lib/database';
-import type { ListenerProfile, SessionType } from '../../types';
+import type { ListenerProfile } from '../../types';
 import { ListenerCard } from '../../components/talker/ListenerCard';
 import { TopupModal } from '../../components/talker/TopupModal';
+import { Button } from '../../components/common/Button';
+import { Card } from '../../components/common/Card';
+import { EmptyState } from '../../components/common/EmptyState';
 import {
   Search,
   Filter,
   Sparkles,
-  Users,
-  Coins
+  Users
 } from 'lucide-react';
 
 export const ExplorePage: React.FC = () => {
@@ -82,102 +84,106 @@ export const ExplorePage: React.FC = () => {
   });
 
   return (
-    <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-8 py-5 sm:py-8 space-y-5 text-left">
-      {/* 1. Header Banner: Only show top-up / recharge banner if LOGGED IN as Talker */}
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 text-left">
+      {/* 1. Header Hero Card */}
       {currentUser && role !== 'listener' ? (
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#FFF6E5] via-[#FFFDF7] to-[#FFF0D4] dark:from-[#26221B] dark:via-[#1F1C18] dark:to-[#26221B] border border-amber-200/70 dark:border-amber-900/40 p-5 sm:p-7 text-center shadow-xs">
-          <div className="relative z-10 flex flex-col items-center">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-xl">🪙</span>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-stone-900 dark:text-amber-100 tracking-tight">
-                50% Cashback!
-              </h2>
-              <span className="text-xl">🪙</span>
+        <Card variant="raised" padding="lg" className="border border-border/80 text-center">
+          <div className="max-w-md mx-auto space-y-2">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-accent/10 text-accent text-caption font-semibold">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Special Offer</span>
             </div>
-
-            <p className="text-[11px] sm:text-xs uppercase tracking-widest font-bold text-stone-600 dark:text-stone-300">
-              ON NEXT RECHARGE
+            <h2 className="text-title text-text tracking-tight">
+              50% Extra Credits
+            </h2>
+            <p className="text-small text-text-muted">
+              Get bonus conversation credits on your next recharge.
             </p>
-
-            <div className="mt-3">
-              <button
+            <div className="pt-2">
+              <Button
+                variant="primary"
+                size="md"
                 onClick={() => setIsTopupOpen(true)}
-                className="px-6 py-2 rounded-full bg-[#F5C518] hover:bg-[#E5B508] active:scale-95 text-stone-950 font-extrabold text-xs sm:text-sm tracking-wide shadow-sm hover:shadow-md transition-all cursor-pointer"
               >
-                RECHARGE NOW
-              </button>
+                Recharge Credits
+              </Button>
             </div>
           </div>
-        </div>
+        </Card>
       ) : (
-        /* Clean Intro Banner for Unauthenticated Visitors / Listeners (NO Topup) */
-        <div className="rounded-3xl bg-white dark:bg-[#1F1D1A] border border-gray-200/90 dark:border-stone-800 p-5 sm:p-6 shadow-2xs text-left">
+        /* Clean Intro Banner for Unauthenticated Visitors / Listeners */
+        <Card variant="default" padding="lg" className="border border-border/60">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200/70 dark:border-amber-900/40 text-[11px] font-bold mb-2">
-                <Sparkles className="w-3 h-3 text-amber-500" />
-                <span>Compassionate & Empathetic Listeners</span>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-accent/10 text-accent text-caption font-semibold mb-2">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Verified Listeners</span>
               </div>
-              <h1 className="text-xl sm:text-2xl font-extrabold text-stone-900 dark:text-white tracking-tight">
+              <h1 className="text-title text-text tracking-tight">
                 Find Someone Ready to Listen
               </h1>
-              <p className="text-xs sm:text-sm text-stone-500 dark:text-stone-400 mt-1 max-w-xl leading-relaxed">
+              <p className="text-small text-text-muted mt-1 max-w-xl leading-relaxed">
                 A private, respectful space to talk through anything on your mind with verified human listeners.
               </p>
             </div>
             {!currentUser && (
-              <button
+              <Button
+                variant="primary"
+                size="md"
                 onClick={() => navigate('/login')}
-                className="px-5 py-2.5 rounded-full bg-[#F5C518] hover:bg-[#E5B508] text-stone-950 font-extrabold text-xs uppercase tracking-wider shadow-sm transition-all shrink-0 cursor-pointer"
+                className="shrink-0"
               >
                 Sign In to Connect
-              </button>
+              </Button>
             )}
           </div>
-        </div>
+        </Card>
       )}
 
       {/* 2. Search & Mode (All / Chat / Call) */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
         <div className="relative flex-1">
-          <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-text-muted absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
             type="text"
             placeholder="Search listener by name, language, or topic..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full rounded-2xl border border-gray-200 dark:border-stone-800 bg-white dark:bg-[#1F1D1A] pl-10 pr-4 py-2.5 text-xs sm:text-sm text-stone-900 dark:text-stone-100 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-400/30 transition-all shadow-2xs"
+            className="w-full h-11 rounded-input border border-border bg-surface pl-10 pr-4 text-small text-text placeholder:text-text-muted/70 focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all"
           />
         </div>
 
         {/* Action filter pill (All / Chat / Call) */}
-        <div className="flex items-center bg-gray-100 dark:bg-stone-800/80 p-1 rounded-2xl border border-gray-200 dark:border-stone-800 shrink-0 text-xs">
+        <div className="flex items-center bg-surface p-1 rounded-pill border border-border shrink-0 text-caption font-medium">
           <button
+            type="button"
             onClick={() => setSearchParams({})}
-            className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer ${
+            className={`px-3.5 py-1.5 rounded-pill transition-all cursor-pointer ${
               actionParam === 'both'
-                ? 'bg-white dark:bg-stone-900 text-stone-900 dark:text-white shadow-2xs'
-                : 'text-stone-500 hover:text-stone-900 dark:hover:text-white'
+                ? 'bg-surface-raised text-text shadow-soft font-semibold'
+                : 'text-text-muted hover:text-text'
             }`}
           >
             All
           </button>
           <button
+            type="button"
             onClick={() => setSearchParams({ type: 'chat' })}
-            className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer ${
+            className={`px-3.5 py-1.5 rounded-pill transition-all cursor-pointer ${
               actionParam === 'chat'
-                ? 'bg-white dark:bg-stone-900 text-emerald-600 dark:text-emerald-400 shadow-2xs'
-                : 'text-stone-500 hover:text-stone-900 dark:hover:text-white'
+                ? 'bg-surface-raised text-accent shadow-soft font-semibold'
+                : 'text-text-muted hover:text-text'
             }`}
           >
             Chat
           </button>
           <button
+            type="button"
             onClick={() => setSearchParams({ type: 'call' })}
-            className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer ${
+            className={`px-3.5 py-1.5 rounded-pill transition-all cursor-pointer ${
               actionParam === 'call'
-                ? 'bg-white dark:bg-stone-900 text-emerald-600 dark:text-emerald-400 shadow-2xs'
-                : 'text-stone-500 hover:text-stone-900 dark:hover:text-white'
+                ? 'bg-surface-raised text-accent shadow-soft font-semibold'
+                : 'text-text-muted hover:text-text'
             }`}
           >
             Call
@@ -188,27 +194,29 @@ export const ExplorePage: React.FC = () => {
       {/* 3. Horizontal Scrollable Category Pills Bar */}
       <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
         <button
+          type="button"
           onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-          className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border text-xs font-semibold shrink-0 transition-all cursor-pointer ${
+          className={`flex items-center gap-1.5 px-3.5 py-2 rounded-pill border text-caption font-medium shrink-0 transition-all cursor-pointer ${
             showAdvancedFilters
-              ? 'border-amber-400 bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-300'
-              : 'border-gray-200 dark:border-stone-800 bg-white dark:bg-[#1F1D1A] text-stone-700 dark:text-stone-300 hover:border-gray-300'
+              ? 'border-accent bg-accent/10 text-accent font-semibold'
+              : 'border-border bg-surface text-text-muted hover:text-text'
           }`}
         >
-          <Filter className="w-3.5 h-3.5 text-stone-500" />
-          <span>Filter</span>
+          <Filter className="w-3.5 h-3.5" />
+          <span>Sort & Filter</span>
         </button>
 
         {categories.map((cat) => {
           const isSelected = selectedCategory === cat.id;
           return (
             <button
+              type="button"
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
-              className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full border text-xs font-bold shrink-0 transition-all cursor-pointer active:scale-95 ${
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-pill border text-caption shrink-0 transition-all cursor-pointer active:scale-98 ${
                 isSelected
-                  ? 'border-amber-400 bg-amber-100/60 dark:bg-amber-950/40 text-amber-900 dark:text-amber-300 ring-1 ring-amber-400/50 shadow-2xs'
-                  : 'border-gray-200 dark:border-stone-800 bg-white dark:bg-[#1F1D1A] text-stone-600 dark:text-stone-300 hover:border-gray-300 dark:hover:border-stone-700'
+                  ? 'border-accent bg-accent text-accent-contrast font-semibold shadow-soft'
+                  : 'border-border bg-surface text-text-muted hover:text-text'
               }`}
             >
               <span>{cat.icon}</span>
@@ -220,59 +228,52 @@ export const ExplorePage: React.FC = () => {
 
       {/* Advanced Filter Drawer */}
       {showAdvancedFilters && (
-        <div className="rounded-2xl border border-gray-200 dark:border-stone-800 bg-white dark:bg-[#1F1D1A] p-4 text-xs space-y-3 animate-apple-fade-in">
-          <div className="flex items-center justify-between">
-            <span className="font-bold text-stone-800 dark:text-white uppercase tracking-wider text-[11px]">
+        <Card variant="raised" padding="sm" className="space-y-3 animate-apple-fade-in">
+          <div className="flex items-center justify-between px-1">
+            <span className="text-caption font-semibold text-text uppercase tracking-wider">
               Sort Listeners By
             </span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="rounded-xl border border-gray-200 dark:border-stone-700 bg-white dark:bg-stone-900 px-3 py-1.5 text-xs text-stone-900 dark:text-white focus:outline-none"
+              className="rounded-input border border-border bg-surface px-3 py-1.5 text-small text-text focus:outline-none focus:ring-2 focus:ring-accent/30"
             >
               <option value="rating">Highest Rated</option>
               <option value="experience">Most Experienced</option>
               <option value="sessions">Most Completed Sessions</option>
             </select>
           </div>
-        </div>
+        </Card>
       )}
 
       {/* 4. Listeners Cards List */}
-      <div className="space-y-3 sm:space-y-4">
+      <div>
         {loading ? (
-          <div className="space-y-3">
-            {[1, 2, 3].map((i) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {[1, 2, 3, 4].map((i) => (
               <div
                 key={i}
-                className="rounded-2xl border border-gray-200 dark:border-stone-800 bg-white dark:bg-[#1F1D1A] p-4 h-28 animate-pulse"
+                className="rounded-card bg-surface border border-border p-5 h-36 animate-pulse"
               />
             ))}
           </div>
         ) : filteredListeners.length === 0 ? (
-          <div className="rounded-3xl border border-gray-200/90 dark:border-stone-800 bg-white dark:bg-[#1F1D1A] p-8 sm:p-12 text-center max-w-lg mx-auto space-y-4 shadow-2xs">
-            <div className="w-14 h-14 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto">
-              <Users className="w-7 h-7" />
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-stone-900 dark:text-white">
-                No Listeners Online Right Now
-              </h3>
-              <p className="text-xs text-stone-500 dark:text-stone-400 mt-1.5 leading-relaxed">
-                Listeners become available throughout the day. Check back soon, or earn by becoming a verified listener yourself.
-              </p>
-            </div>
-            <div className="pt-2 flex justify-center">
-              <button
+          <EmptyState
+            icon={<Users className="w-5 h-5 text-text-muted" />}
+            title="No Listeners Online Right Now"
+            description="Listeners become available throughout the day. Check back soon, or earn by becoming a verified listener yourself."
+            action={
+              <Button
+                variant="secondary"
+                size="md"
                 onClick={() => navigate('/become-a-listener')}
-                className="px-6 py-2.5 rounded-full bg-[#F5C518] hover:bg-[#E5B508] text-stone-950 font-bold text-xs uppercase tracking-wider shadow-sm transition-all cursor-pointer"
               >
                 Become a Listener & Earn
-              </button>
-            </div>
-          </div>
+              </Button>
+            }
+          />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {filteredListeners.map((listener) => (
               <ListenerCard
                 key={listener.uid}

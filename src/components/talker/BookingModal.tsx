@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import type { ListenerProfile, SessionType } from '../../types';
 import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
-import { Input, Textarea } from '../common/Input';
+import { Textarea } from '../common/Input';
 import { createAppointment } from '../../lib/database';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNotifications } from '../../contexts/NotificationContext';
-import { Calendar, Clock, MessageSquare, PhoneCall, Check } from 'lucide-react';
+import { MessageSquare, PhoneCall } from 'lucide-react';
 
 export interface BookingModalProps {
   isOpen: boolean;
@@ -85,17 +85,17 @@ export const BookingModal: React.FC<BookingModalProps> = ({
       <div className="space-y-5 text-left">
         {/* Session Type Select */}
         <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">
+          <label className="block text-caption font-semibold uppercase tracking-wider text-text-muted mb-2">
             Conversation Type
           </label>
           <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
               onClick={() => setSessionType('chat')}
-              className={`flex items-center gap-2.5 p-3 rounded-2xl border text-sm font-medium transition-all ${
+              className={`flex items-center justify-center gap-2.5 p-3 rounded-input border text-small font-medium transition-all cursor-pointer ${
                 sessionType === 'chat'
-                  ? 'border-indigo-600 bg-indigo-50/50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300'
-                  : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50'
+                  ? 'border-accent bg-accent/10 text-accent font-semibold shadow-soft'
+                  : 'border-border bg-surface text-text-muted hover:text-text'
               }`}
             >
               <MessageSquare className="w-4 h-4" />
@@ -105,10 +105,10 @@ export const BookingModal: React.FC<BookingModalProps> = ({
             <button
               type="button"
               onClick={() => setSessionType('audio')}
-              className={`flex items-center gap-2.5 p-3 rounded-2xl border text-sm font-medium transition-all ${
+              className={`flex items-center justify-center gap-2.5 p-3 rounded-input border text-small font-medium transition-all cursor-pointer ${
                 sessionType === 'audio'
-                  ? 'border-indigo-600 bg-indigo-50/50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300'
-                  : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50'
+                  ? 'border-accent bg-accent/10 text-accent font-semibold shadow-soft'
+                  : 'border-border bg-surface text-text-muted hover:text-text'
               }`}
             >
               <PhoneCall className="w-4 h-4" />
@@ -119,19 +119,19 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
         {/* Date Selector */}
         <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">
+          <label className="block text-caption font-semibold uppercase tracking-wider text-text-muted mb-2">
             Select Date (Asia/Kolkata)
           </label>
-          <div className="flex gap-2 overflow-x-auto pb-2">
+          <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
             {dateOptions.map((opt) => (
               <button
                 key={opt.dateStr}
                 type="button"
                 onClick={() => setSelectedDate(opt.dateStr)}
-                className={`px-3.5 py-2 rounded-2xl text-xs font-medium shrink-0 border transition-all ${
+                className={`px-3.5 py-2 rounded-pill text-caption shrink-0 border transition-all cursor-pointer ${
                   selectedDate === opt.dateStr
-                    ? 'border-indigo-600 bg-indigo-600 text-white shadow-xs'
-                    : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50'
+                    ? 'border-accent bg-accent text-accent-contrast font-semibold shadow-soft'
+                    : 'border-border bg-surface text-text-muted hover:text-text'
                 }`}
               >
                 {opt.displayStr}
@@ -142,7 +142,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
         {/* Time Slots */}
         <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">
+          <label className="block text-caption font-semibold uppercase tracking-wider text-text-muted mb-2">
             Select Time Slot
           </label>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -151,10 +151,10 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                 key={slot}
                 type="button"
                 onClick={() => setSelectedSlot(slot)}
-                className={`px-3 py-2 rounded-xl text-xs font-medium border text-center transition-all ${
+                className={`px-3 py-2.5 rounded-input text-caption border text-center transition-all cursor-pointer ${
                   selectedSlot === slot
-                    ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 font-semibold ring-1 ring-indigo-600'
-                    : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50'
+                    ? 'border-accent bg-accent/10 text-accent font-semibold shadow-soft'
+                    : 'border-border bg-surface text-text-muted hover:text-text'
                 }`}
               >
                 {slot}
@@ -163,37 +163,37 @@ export const BookingModal: React.FC<BookingModalProps> = ({
           </div>
         </div>
 
-        {/* Optional Notes */}
+        {/* Notes */}
         <div>
           <Textarea
-            label="What's on your mind? (Optional)"
-            placeholder="Feel free to share what you'd like to discuss or simply 'just want someone to talk to'..."
+            label="What's on your mind? (Private note to listener)"
+            placeholder="Share context, topics, or anything you'd like your listener to keep in mind..."
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={2}
           />
         </div>
 
-        {/* Footer */}
-        <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-          <div className="text-xs text-slate-500">
-            Rate: <span className="font-semibold text-slate-900 dark:text-white">₹5 / 2 mins</span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" onClick={onClose} disabled={isSubmitting}>
-              Cancel
-            </Button>
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={handleBooking}
-              isLoading={isSubmitting}
-              leftIcon={<Check className="w-4 h-4" />}
-            >
-              Confirm Booking
-            </Button>
-          </div>
+        {/* Action Buttons */}
+        <div className="flex items-center justify-end gap-3 pt-3 border-t border-border">
+          <Button
+            type="button"
+            variant="ghost"
+            size="md"
+            onClick={onClose}
+            disabled={isSubmitting}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="button"
+            variant="primary"
+            size="md"
+            onClick={handleBooking}
+            isLoading={isSubmitting}
+          >
+            Confirm Appointment
+          </Button>
         </div>
       </div>
     </Modal>

@@ -11,17 +11,17 @@ export const TalkerNotificationsPage: React.FC = () => {
   return (
     <div className="space-y-6 text-left">
       <div>
-        <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+        <h2 className="text-title text-text tracking-tight">
           Notifications
         </h2>
-        <p className="text-xs text-slate-500 dark:text-slate-400">
+        <p className="text-small text-text-muted mt-0.5">
           Booking confirmations, account credits, and conversation updates.
         </p>
       </div>
 
       {notifications.length === 0 ? (
         <EmptyState
-          icon={<Bell className="w-8 h-8" />}
+          icon={<Bell className="w-5 h-5 text-text-muted" />}
           title="All Caught Up"
           description="You don't have any notifications right now."
         />
@@ -30,22 +30,23 @@ export const TalkerNotificationsPage: React.FC = () => {
           {notifications.map((notif) => (
             <Card
               key={notif.id}
-              className={`p-4 transition-all flex items-start justify-between gap-4 ${
-                !notif.read ? 'border-indigo-500/50 bg-indigo-50/20 dark:bg-indigo-950/20' : ''
+              padding="md"
+              className={`flex items-start justify-between gap-4 transition-all ${
+                !notif.read ? 'border-accent/40 bg-accent/5' : ''
               }`}
             >
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-950 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5">
+                <div className="w-8 h-8 rounded-pill bg-surface border border-border flex items-center justify-center text-accent shrink-0 mt-0.5">
                   <Info className="w-4 h-4" />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold text-slate-900 dark:text-white">
+                  <h4 className="text-small font-semibold text-text">
                     {notif.title}
                   </h4>
-                  <p className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+                  <p className="text-small text-text-muted mt-0.5">
                     {notif.message}
                   </p>
-                  <span className="text-[10px] text-slate-400 mt-1 block">
+                  <span className="text-caption text-text-muted mt-1 block">
                     {new Date(notif.timestamp).toLocaleString()}
                   </span>
                 </div>

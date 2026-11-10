@@ -7,6 +7,7 @@ import { formatPaise } from '../../lib/upi';
 import { Modal } from '../../components/common/Modal';
 import { Input, Textarea } from '../../components/common/Input';
 import { Button } from '../../components/common/Button';
+import { Card } from '../../components/common/Card';
 import {
   ChevronLeft,
   ChevronRight,
@@ -23,8 +24,6 @@ import {
   FileText,
   Lock,
   LogOut,
-  HelpCircle,
-  PhoneCall,
   Save
 } from 'lucide-react';
 
@@ -73,246 +72,254 @@ export const TalkerSettingsPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-xl mx-auto px-4 py-4 sm:py-6 space-y-5 text-left">
-      {/* Top Header with Back Arrow (Astrotalk Style) */}
-      <div className="flex items-center gap-3 pb-2">
+    <div className="max-w-xl mx-auto px-4 py-4 sm:py-6 space-y-6 text-left">
+      {/* Top Header with Back Arrow */}
+      <div className="flex items-center gap-3">
         <button
+          type="button"
           onClick={() => navigate(-1)}
-          className="p-1.5 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-700 dark:text-stone-300 transition-colors cursor-pointer"
+          className="w-10 h-10 rounded-pill hover:bg-surface text-text-muted hover:text-text flex items-center justify-center transition-colors cursor-pointer"
           aria-label="Back"
         >
-          <ChevronLeft className="w-6 h-6" />
+          <ChevronLeft className="w-5 h-5" />
         </button>
-        <h1 className="text-lg sm:text-xl font-bold text-stone-900 dark:text-white">
+        <h1 className="text-title text-text tracking-tight">
           Profile & Settings
         </h1>
       </div>
 
-      {/* Top 3 Quick Cards (Image 3: My Orders, Wallet, Support Chat) */}
-      <div className="grid grid-cols-3 gap-2 sm:gap-3">
+      {/* Top 3 Quick Cards */}
+      <div className="grid grid-cols-3 gap-3">
         {/* Card 1: My Sessions */}
         <Link
           to="/talker/conversations"
-          className="flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl bg-white dark:bg-[#1F1D1A] border border-gray-200/90 dark:border-stone-800 shadow-2xs hover:shadow-xs transition-all text-center group"
+          className="flex flex-col items-center justify-center p-3.5 rounded-card bg-surface hover:bg-surface-raised border border-border shadow-soft transition-all text-center group min-h-[96px]"
         >
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-1 group-hover:scale-105 transition-transform">
-            <ShoppingBag className="w-5 h-5" />
+          <div className="w-9 h-9 rounded-pill bg-surface-raised border border-border/80 text-text flex items-center justify-center mb-1 group-hover:scale-105 transition-transform">
+            <ShoppingBag className="w-4 h-4" />
           </div>
-          <span className="text-[11px] sm:text-xs font-semibold text-stone-800 dark:text-stone-200 mt-1">
+          <span className="text-caption font-semibold text-text mt-1">
             My Orders
           </span>
-          <span className="text-[10px] text-stone-400">Past chats</span>
+          <span className="text-[11px] text-text-muted">Past chats</span>
         </Link>
 
         {/* Card 2: Wallet */}
         <div
+          role="button"
+          tabIndex={0}
           onClick={() => setIsTopupOpen(true)}
-          className="flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl bg-white dark:bg-[#1F1D1A] border border-gray-200/90 dark:border-stone-800 shadow-2xs hover:shadow-xs transition-all text-center cursor-pointer group"
+          onKeyDown={(e) => { if (e.key === 'Enter') setIsTopupOpen(true); }}
+          className="flex flex-col items-center justify-center p-3.5 rounded-card bg-surface hover:bg-surface-raised border border-border shadow-soft transition-all text-center cursor-pointer group min-h-[96px]"
         >
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-1 group-hover:scale-105 transition-transform">
-            <Wallet className="w-5 h-5" />
+          <div className="w-9 h-9 rounded-pill bg-surface-raised border border-border/80 text-accent flex items-center justify-center mb-1 group-hover:scale-105 transition-transform">
+            <Wallet className="w-4 h-4" />
           </div>
-          <span className="text-[11px] sm:text-xs font-bold text-stone-800 dark:text-stone-200 mt-1">
+          <span className="text-caption font-semibold text-text mt-1">
             ₹{formatPaise(wallet?.balancePaise || 0)}
           </span>
-          <span className="text-[10px] text-amber-500 font-bold uppercase tracking-tight">
-            + Recharge
+          <span className="text-[11px] text-accent font-medium">
+            + Top Up
           </span>
         </div>
 
         {/* Card 3: Support Chat */}
         <button
+          type="button"
           onClick={() => setIsSupportModalOpen(true)}
-          className="flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl bg-white dark:bg-[#1F1D1A] border border-gray-200/90 dark:border-stone-800 shadow-2xs hover:shadow-xs transition-all text-center cursor-pointer group"
+          className="flex flex-col items-center justify-center p-3.5 rounded-card bg-surface hover:bg-surface-raised border border-border shadow-soft transition-all text-center cursor-pointer group min-h-[96px]"
         >
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-cyan-50 dark:bg-cyan-950/40 text-cyan-600 dark:text-cyan-400 flex items-center justify-center mb-1 group-hover:scale-105 transition-transform">
-            <Headphones className="w-5 h-5" />
+          <div className="w-9 h-9 rounded-pill bg-surface-raised border border-border/80 text-text-muted flex items-center justify-center mb-1 group-hover:scale-105 transition-transform">
+            <Headphones className="w-4 h-4" />
           </div>
-          <span className="text-[11px] sm:text-xs font-semibold text-stone-800 dark:text-stone-200 mt-1">
+          <span className="text-caption font-semibold text-text mt-1">
             Support Chat
           </span>
-          <span className="text-[10px] text-stone-400">24x7 Help</span>
+          <span className="text-[11px] text-text-muted">24x7 Help</span>
         </button>
       </div>
 
       {/* SECTION 1: EXPLORE */}
-      <div className="space-y-1.5 pt-2">
-        <h3 className="text-[11px] font-bold uppercase tracking-wider text-stone-400 px-2">
-          EXPLORE
+      <div className="space-y-2">
+        <h3 className="text-caption font-semibold uppercase tracking-wider text-text-muted px-2">
+          Explore
         </h3>
-        <div className="rounded-2xl border border-gray-200/90 dark:border-stone-800 bg-white dark:bg-[#1F1D1A] divide-y divide-gray-100 dark:divide-stone-800/80 shadow-2xs overflow-hidden">
+        <Card padding="none" className="divide-y divide-border overflow-hidden">
           <Link
             to="/"
-            className="flex items-center justify-between px-4 py-3 hover:bg-stone-50 dark:hover:bg-stone-800/50 transition-colors"
+            className="flex items-center justify-between px-4 py-3.5 hover:bg-surface/50 transition-colors"
           >
             <div className="flex items-center gap-3">
-              <Home className="w-4 h-4 text-stone-500" />
-              <span className="text-xs sm:text-sm font-medium text-stone-800 dark:text-stone-200">
+              <Home className="w-4 h-4 text-text-muted" />
+              <span className="text-small text-text font-medium">
                 Home
               </span>
             </div>
-            <ChevronRight className="w-4 h-4 text-stone-400" />
+            <ChevronRight className="w-4 h-4 text-text-muted" />
           </Link>
 
           <Link
             to="/explore"
-            className="flex items-center justify-between px-4 py-3 hover:bg-stone-50 dark:hover:bg-stone-800/50 transition-colors"
+            className="flex items-center justify-between px-4 py-3.5 hover:bg-surface/50 transition-colors"
           >
             <div className="flex items-center gap-3">
-              <Sparkles className="w-4 h-4 text-stone-500" />
-              <span className="text-xs sm:text-sm font-medium text-stone-800 dark:text-stone-200">
+              <Sparkles className="w-4 h-4 text-text-muted" />
+              <span className="text-small text-text font-medium">
                 Find Compassionate Listeners
               </span>
             </div>
-            <ChevronRight className="w-4 h-4 text-stone-400" />
+            <ChevronRight className="w-4 h-4 text-text-muted" />
           </Link>
 
           <Link
             to="/talker/appointments"
-            className="flex items-center justify-between px-4 py-3 hover:bg-stone-50 dark:hover:bg-stone-800/50 transition-colors"
+            className="flex items-center justify-between px-4 py-3.5 hover:bg-surface/50 transition-colors"
           >
             <div className="flex items-center gap-3">
-              <Calendar className="w-4 h-4 text-stone-500" />
-              <span className="text-xs sm:text-sm font-medium text-stone-800 dark:text-stone-200">
+              <Calendar className="w-4 h-4 text-text-muted" />
+              <span className="text-small text-text font-medium">
                 Scheduled Appointments
               </span>
             </div>
-            <ChevronRight className="w-4 h-4 text-stone-400" />
+            <ChevronRight className="w-4 h-4 text-text-muted" />
           </Link>
 
           <Link
             to="/become-a-listener"
-            className="flex items-center justify-between px-4 py-3 hover:bg-stone-50 dark:hover:bg-stone-800/50 transition-colors"
+            className="flex items-center justify-between px-4 py-3.5 hover:bg-surface/50 transition-colors"
           >
             <div className="flex items-center gap-3">
-              <Award className="w-4 h-4 text-stone-500" />
-              <span className="text-xs sm:text-sm font-medium text-stone-800 dark:text-stone-200">
+              <Award className="w-4 h-4 text-text-muted" />
+              <span className="text-small text-text font-medium">
                 Become a Listener (Earn ₹2.50/min)
               </span>
             </div>
-            <ChevronRight className="w-4 h-4 text-stone-400" />
+            <ChevronRight className="w-4 h-4 text-text-muted" />
           </Link>
-        </div>
+        </Card>
       </div>
 
       {/* SECTION 2: ACCOUNT */}
-      <div className="space-y-1.5 pt-2">
-        <h3 className="text-[11px] font-bold uppercase tracking-wider text-stone-400 px-2">
-          ACCOUNT
+      <div className="space-y-2">
+        <h3 className="text-caption font-semibold uppercase tracking-wider text-text-muted px-2">
+          Account
         </h3>
-        <div className="rounded-2xl border border-gray-200/90 dark:border-stone-800 bg-white dark:bg-[#1F1D1A] divide-y divide-gray-100 dark:divide-stone-800/80 shadow-2xs overflow-hidden">
+        <Card padding="none" className="divide-y divide-border overflow-hidden">
           <button
+            type="button"
             onClick={() => setIsSupportModalOpen(true)}
-            className="w-full flex items-center justify-between px-4 py-3 hover:bg-stone-50 dark:hover:bg-stone-800/50 transition-colors cursor-pointer text-left"
+            className="w-full flex items-center justify-between px-4 py-3.5 hover:bg-surface/50 transition-colors cursor-pointer text-left"
           >
             <div className="flex items-center gap-3">
-              <Headphones className="w-4 h-4 text-stone-500" />
-              <span className="text-xs sm:text-sm font-medium text-stone-800 dark:text-stone-200">
+              <Headphones className="w-4 h-4 text-text-muted" />
+              <span className="text-small text-text font-medium">
                 Customer Support Chat
               </span>
             </div>
-            <ChevronRight className="w-4 h-4 text-stone-400" />
+            <ChevronRight className="w-4 h-4 text-text-muted" />
           </button>
 
           <Link
             to="/talker/wallet"
-            className="flex items-center justify-between px-4 py-3 hover:bg-stone-50 dark:hover:bg-stone-800/50 transition-colors"
+            className="flex items-center justify-between px-4 py-3.5 hover:bg-surface/50 transition-colors"
           >
             <div className="flex items-center gap-3">
-              <Wallet className="w-4 h-4 text-stone-500" />
-              <span className="text-xs sm:text-sm font-medium text-stone-800 dark:text-stone-200">
+              <Wallet className="w-4 h-4 text-text-muted" />
+              <span className="text-small text-text font-medium">
                 Credits & Recharge History
               </span>
             </div>
-            <ChevronRight className="w-4 h-4 text-stone-400" />
+            <ChevronRight className="w-4 h-4 text-text-muted" />
           </Link>
 
           <Link
             to="/talker/conversations"
-            className="flex items-center justify-between px-4 py-3 hover:bg-stone-50 dark:hover:bg-stone-800/50 transition-colors"
+            className="flex items-center justify-between px-4 py-3.5 hover:bg-surface/50 transition-colors"
           >
             <div className="flex items-center gap-3">
-              <History className="w-4 h-4 text-stone-500" />
-              <span className="text-xs sm:text-sm font-medium text-stone-800 dark:text-stone-200">
+              <History className="w-4 h-4 text-text-muted" />
+              <span className="text-small text-text font-medium">
                 Order & Conversation History
               </span>
             </div>
-            <ChevronRight className="w-4 h-4 text-stone-400" />
+            <ChevronRight className="w-4 h-4 text-text-muted" />
           </Link>
 
           <button
+            type="button"
             onClick={() => setIsEditProfileOpen(true)}
-            className="w-full flex items-center justify-between px-4 py-3 hover:bg-stone-50 dark:hover:bg-stone-800/50 transition-colors cursor-pointer text-left"
+            className="w-full flex items-center justify-between px-4 py-3.5 hover:bg-surface/50 transition-colors cursor-pointer text-left"
           >
             <div className="flex items-center gap-3">
-              <User className="w-4 h-4 text-stone-500" />
-              <span className="text-xs sm:text-sm font-medium text-stone-800 dark:text-stone-200">
+              <User className="w-4 h-4 text-text-muted" />
+              <span className="text-small text-text font-medium">
                 Edit Profile Details
               </span>
             </div>
-            <ChevronRight className="w-4 h-4 text-stone-400" />
+            <ChevronRight className="w-4 h-4 text-text-muted" />
           </button>
-        </div>
+        </Card>
       </div>
 
       {/* SECTION 3: SAFETY & POLICIES */}
-      <div className="space-y-1.5 pt-2">
-        <h3 className="text-[11px] font-bold uppercase tracking-wider text-stone-400 px-2">
-          SAFETY & POLICIES
+      <div className="space-y-2">
+        <h3 className="text-caption font-semibold uppercase tracking-wider text-text-muted px-2">
+          Safety & Policies
         </h3>
-        <div className="rounded-2xl border border-gray-200/90 dark:border-stone-800 bg-white dark:bg-[#1F1D1A] divide-y divide-gray-100 dark:divide-stone-800/80 shadow-2xs overflow-hidden">
+        <Card padding="none" className="divide-y divide-border overflow-hidden">
           <Link
             to="/community-guidelines"
-            className="flex items-center justify-between px-4 py-3 hover:bg-stone-50 dark:hover:bg-stone-800/50 transition-colors"
+            className="flex items-center justify-between px-4 py-3.5 hover:bg-surface/50 transition-colors"
           >
             <div className="flex items-center gap-3">
-              <ShieldCheck className="w-4 h-4 text-stone-500" />
-              <span className="text-xs sm:text-sm font-medium text-stone-800 dark:text-stone-200">
+              <ShieldCheck className="w-4 h-4 text-text-muted" />
+              <span className="text-small text-text font-medium">
                 Community Guidelines
               </span>
             </div>
-            <ChevronRight className="w-4 h-4 text-stone-400" />
+            <ChevronRight className="w-4 h-4 text-text-muted" />
           </Link>
 
           <Link
             to="/terms"
-            className="flex items-center justify-between px-4 py-3 hover:bg-stone-50 dark:hover:bg-stone-800/50 transition-colors"
+            className="flex items-center justify-between px-4 py-3.5 hover:bg-surface/50 transition-colors"
           >
             <div className="flex items-center gap-3">
-              <FileText className="w-4 h-4 text-stone-500" />
-              <span className="text-xs sm:text-sm font-medium text-stone-800 dark:text-stone-200">
+              <FileText className="w-4 h-4 text-text-muted" />
+              <span className="text-small text-text font-medium">
                 Terms of Service
               </span>
             </div>
-            <ChevronRight className="w-4 h-4 text-stone-400" />
+            <ChevronRight className="w-4 h-4 text-text-muted" />
           </Link>
 
           <Link
             to="/privacy"
-            className="flex items-center justify-between px-4 py-3 hover:bg-stone-50 dark:hover:bg-stone-800/50 transition-colors"
+            className="flex items-center justify-between px-4 py-3.5 hover:bg-surface/50 transition-colors"
           >
             <div className="flex items-center gap-3">
-              <Lock className="w-4 h-4 text-stone-500" />
-              <span className="text-xs sm:text-sm font-medium text-stone-800 dark:text-stone-200">
+              <Lock className="w-4 h-4 text-text-muted" />
+              <span className="text-small text-text font-medium">
                 Privacy Policy
               </span>
             </div>
-            <ChevronRight className="w-4 h-4 text-stone-400" />
+            <ChevronRight className="w-4 h-4 text-text-muted" />
           </Link>
-        </div>
+        </Card>
       </div>
 
       {/* SECTION 4: LOGOUT */}
       <div className="pt-2">
         <button
+          type="button"
           onClick={handleLogout}
-          className="w-full flex items-center justify-between px-4 py-3.5 rounded-2xl border border-rose-200/80 dark:border-rose-900/40 bg-white dark:bg-[#1F1D1A] text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/20 shadow-2xs transition-colors cursor-pointer"
+          className="w-full flex items-center justify-between px-4 py-3.5 rounded-card border border-border bg-surface text-danger hover:bg-danger/10 shadow-soft transition-colors cursor-pointer"
         >
-          <div className="flex items-center gap-3 font-semibold text-xs sm:text-sm">
+          <div className="flex items-center gap-3 font-semibold text-small">
             <LogOut className="w-4 h-4" />
             <span>Sign Out</span>
           </div>
-          <ChevronRight className="w-4 h-4" />
+          <ChevronRight className="w-4 h-4 opacity-70" />
         </button>
       </div>
 
@@ -343,13 +350,13 @@ export const TalkerSettingsPage: React.FC = () => {
             />
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+              <label className="block text-caption font-medium text-text mb-1.5">
                 Language
               </label>
               <select
                 value={preferredLanguage}
                 onChange={(e) => setPreferredLanguage(e.target.value)}
-                className="w-full rounded-xl border border-gray-200 dark:border-stone-700 bg-white dark:bg-stone-900 px-3 py-2.5 text-xs text-stone-900 dark:text-stone-100 focus:outline-none"
+                className="w-full h-11 rounded-input border border-border bg-surface px-3 text-small text-text focus:outline-none focus:ring-2 focus:ring-accent/30"
               >
                 <option value="English">English</option>
                 <option value="Hindi">Hindi</option>
@@ -366,7 +373,7 @@ export const TalkerSettingsPage: React.FC = () => {
             rows={2}
           />
 
-          <div className="flex justify-end gap-2 pt-2 border-t border-gray-100 dark:border-stone-800">
+          <div className="flex justify-end gap-2 pt-3 border-t border-border">
             <Button
               type="button"
               variant="ghost"
@@ -395,22 +402,22 @@ export const TalkerSettingsPage: React.FC = () => {
         title="Customer Support"
         description="Need assistance with payments or conversation quality?"
       >
-        <div className="space-y-4 text-left text-xs text-stone-600 dark:text-stone-300">
-          <div className="p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/40">
-            <p className="font-bold text-amber-900 dark:text-amber-300 mb-1">
+        <div className="space-y-4 text-left text-small text-text-muted">
+          <div className="p-4 rounded-input bg-surface border border-border">
+            <p className="font-semibold text-text mb-1">
               Payment & Credits Inquiries:
             </p>
-            <p>
+            <p className="text-caption">
               UPI auto-credit detects transactions via webhook. If you experience any delay, pending orders can be approved or managed inside your Credits section.
             </p>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700">
-            <p className="font-bold text-stone-900 dark:text-white mb-1">
+          <div className="p-4 rounded-input bg-surface border border-border">
+            <p className="font-semibold text-text mb-1">
               National Support Helplines:
             </p>
-            <p>KIRAN Mental Health Toll-Free: <strong>1800-599-0019</strong></p>
-            <p>Vandrevala Foundation: <strong>9999-666-555</strong></p>
+            <p className="text-caption">KIRAN Mental Health Toll-Free: <strong className="text-text">1800-599-0019</strong></p>
+            <p className="text-caption">Vandrevala Foundation: <strong className="text-text">9999-666-555</strong></p>
           </div>
 
           <div className="pt-2 flex justify-end">

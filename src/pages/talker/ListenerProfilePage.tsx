@@ -13,7 +13,7 @@ import {
 import type { ListenerProfile, Review, ListenerSchedule, SessionType } from '../../types';
 import { Card } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
-import { Badge, StatusBadge } from '../../components/common/Badge';
+import { StatusBadge } from '../../components/common/Badge';
 import { StarRating } from '../../components/common/StarRating';
 import { BookingModal } from '../../components/talker/BookingModal';
 import { TopupModal } from '../../components/talker/TopupModal';
@@ -22,12 +22,8 @@ import {
   MessageSquare,
   PhoneCall,
   Calendar,
-  Clock,
-  Sparkles,
   ShieldCheck,
-  Languages,
-  ArrowLeft,
-  Heart
+  ArrowLeft
 } from 'lucide-react';
 
 export const ListenerProfilePage: React.FC = () => {
@@ -38,7 +34,7 @@ export const ListenerProfilePage: React.FC = () => {
 
   const [listener, setListener] = useState<ListenerProfile | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
-  const [schedule, setSchedule] = useState<ListenerSchedule | null>(null);
+  const [, setSchedule] = useState<ListenerSchedule | null>(null);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [isTopupOpen, setIsTopupOpen] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
@@ -104,7 +100,7 @@ export const ListenerProfilePage: React.FC = () => {
   if (!listener) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-3 border-accent border-t-transparent rounded-pill animate-spin" />
       </div>
     );
   }
@@ -121,18 +117,18 @@ export const ListenerProfilePage: React.FC = () => {
       </Button>
 
       {/* Main Profile Header Card */}
-      <Card className="p-6 sm:p-8">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-slate-100 dark:border-slate-800 pb-6">
-          <div className="flex items-center gap-4">
-            <div className="relative">
+      <Card variant="raised" padding="lg">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-border pb-6">
+          <div className="flex items-center gap-5">
+            <div className="relative shrink-0">
               <img
                 src={listener.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${listener.uid}`}
                 alt={listener.displayName}
-                className="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl object-cover border-2 border-indigo-500/20 shadow-md"
+                className="w-20 h-20 sm:w-24 sm:h-24 rounded-card object-cover bg-surface border border-border"
               />
               {listener.isVerified && (
                 <span
-                  className="absolute -bottom-1 -right-1 p-1 rounded-full bg-teal-500 text-white shadow-xs"
+                  className="absolute -bottom-1 -right-1 p-1 rounded-pill bg-accent text-accent-contrast shadow-soft"
                   title="Platform-verified Listener"
                 >
                   <CheckCircle2 className="w-4 h-4" />
@@ -141,14 +137,14 @@ export const ListenerProfilePage: React.FC = () => {
             </div>
 
             <div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">
+              <div className="flex items-center gap-2.5 flex-wrap">
+                <h1 className="text-title text-text tracking-tight">
                   {listener.displayName}
                 </h1>
                 <StatusBadge status={listener.status} />
               </div>
 
-              <div className="flex items-center gap-2 mt-1 text-xs text-slate-500 dark:text-slate-400">
+              <div className="flex items-center gap-2 mt-1.5 text-caption text-text-muted">
                 <span>{listener.yearsExperience} yrs experience</span>
                 {listener.showAge && listener.age && (
                   <>
@@ -166,8 +162,8 @@ export const ListenerProfilePage: React.FC = () => {
 
               <div className="flex items-center gap-3 mt-3">
                 <StarRating rating={listener.rating || 5.0} size="sm" showCount totalReviews={listener.totalReviews || 0} />
-                <span className="text-slate-300 dark:text-slate-700">•</span>
-                <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">
+                <span className="text-border">•</span>
+                <span className="text-caption text-text-muted font-medium">
                   {listener.totalSessions || 0} completed conversations
                 </span>
               </div>
@@ -175,26 +171,26 @@ export const ListenerProfilePage: React.FC = () => {
           </div>
 
           {/* Pricing Box */}
-          <div className="w-full sm:w-auto p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 text-center sm:text-right">
-            <p className="text-[10px] uppercase font-semibold text-slate-400">Transparent Rate</p>
-            <p className="text-xl font-extrabold text-slate-900 dark:text-white">
-              ₹5 <span className="text-xs font-normal text-slate-500">/ 2 mins</span>
+          <div className="w-full sm:w-auto p-4 rounded-card bg-surface border border-border text-center sm:text-right">
+            <p className="text-[11px] uppercase tracking-wider font-semibold text-text-muted">Standard Rate</p>
+            <p className="text-xl font-bold text-text mt-0.5">
+              ₹5 <span className="text-caption font-normal text-text-muted">/ 2 mins</span>
             </p>
-            <p className="text-[10px] text-slate-400 mt-0.5">₹2.50 per min (active time only)</p>
+            <p className="text-caption text-text-muted mt-0.5">₹2.50 per min active time</p>
           </div>
         </div>
 
         {/* Action Buttons: Only shown to talkers/guests, NEVER to listeners */}
         {role === 'listener' ? (
-          <div className="mt-6 p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/40 text-xs text-amber-900 dark:text-amber-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 w-full">
+          <div className="mt-6 p-4 rounded-input bg-surface border border-border text-small text-text flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 w-full">
             <div>
-              <p className="font-bold">Public Listener Profile Preview</p>
-              <p className="text-amber-700 dark:text-amber-300 mt-0.5">
+              <p className="font-semibold text-text">Public Listener Profile Preview</p>
+              <p className="text-caption text-text-muted mt-0.5">
                 Talkers browsing the site can start text chat, audio calls, or schedule appointments with you from this page.
               </p>
             </div>
             {currentUser?.uid === listener.uid && (
-              <Button size="sm" variant="outline" onClick={() => navigate('/listener/profile')} className="shrink-0 font-bold">
+              <Button size="sm" variant="outline" onClick={() => navigate('/listener/profile')} className="shrink-0">
                 Edit Your Profile
               </Button>
             )}
@@ -202,7 +198,7 @@ export const ListenerProfilePage: React.FC = () => {
         ) : (
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <Button
-              size="lg"
+              size="md"
               variant="primary"
               disabled={listener.status !== 'idle'}
               isLoading={isConnecting}
@@ -213,7 +209,7 @@ export const ListenerProfilePage: React.FC = () => {
             </Button>
 
             <Button
-              size="lg"
+              size="md"
               variant="secondary"
               disabled={listener.status !== 'idle'}
               isLoading={isConnecting}
@@ -224,7 +220,7 @@ export const ListenerProfilePage: React.FC = () => {
             </Button>
 
             <Button
-              size="lg"
+              size="md"
               variant="outline"
               onClick={() => setIsBookingOpen(true)}
               leftIcon={<Calendar className="w-4 h-4" />}
@@ -239,26 +235,26 @@ export const ListenerProfilePage: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2 space-y-6">
           {/* Bio */}
-          <Card className="p-6">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-2">
+          <Card padding="md">
+            <h3 className="text-small font-semibold text-text mb-2">
               About {listener.displayName}
             </h3>
-            <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed whitespace-pre-line">
+            <p className="text-small text-text-muted leading-relaxed whitespace-pre-line">
               {listener.bio || "I am here to offer a welcoming, gentle, and non-judgmental presence. Feel free to talk about whatever is weighing on your mind."}
             </p>
           </Card>
 
           {/* Topics & Languages */}
-          <Card className="p-6 space-y-4">
+          <Card padding="md" className="space-y-4">
             <div>
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
+              <h4 className="text-caption font-semibold uppercase tracking-wider text-text-muted mb-2">
                 Topics {listener.displayName} Listens To
               </h4>
               <div className="flex flex-wrap gap-2">
                 {(listener.topics || []).map((topic) => (
                   <span
                     key={topic}
-                    className="text-xs font-medium px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300"
+                    className="text-caption font-medium px-3 py-1 rounded-pill bg-surface border border-border text-text"
                   >
                     {topic}
                   </span>
@@ -267,14 +263,14 @@ export const ListenerProfilePage: React.FC = () => {
             </div>
 
             <div>
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
+              <h4 className="text-caption font-semibold uppercase tracking-wider text-text-muted mb-2">
                 Languages Spoken
               </h4>
               <div className="flex flex-wrap gap-2">
                 {(listener.languages || ['English', 'Hindi']).map((lang) => (
                   <span
                     key={lang}
-                    className="text-xs font-medium px-3 py-1 rounded-full bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300"
+                    className="text-caption font-medium px-3 py-1 rounded-pill bg-surface border border-border text-text-muted"
                   >
                     {lang}
                   </span>
@@ -284,16 +280,16 @@ export const ListenerProfilePage: React.FC = () => {
           </Card>
 
           {/* Reviews & Feedback */}
-          <Card className="p-6 space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <Card padding="md" className="space-y-4">
+            <div className="flex items-center justify-between border-b border-border pb-3">
+              <h3 className="text-small font-semibold text-text flex items-center gap-2">
                 <StarRating rating={listener.rating || 5.0} size="sm" />
-                <span>Reviews from Talkers ({reviews.length})</span>
+                <span>Reviews ({reviews.length})</span>
               </h3>
             </div>
 
             {reviews.length === 0 ? (
-              <p className="text-xs text-slate-400 py-3">
+              <p className="text-caption text-text-muted py-3">
                 No reviews yet. Be the first to have a conversation with {listener.displayName}!
               </p>
             ) : (
@@ -301,10 +297,10 @@ export const ListenerProfilePage: React.FC = () => {
                 {reviews.map((rev) => (
                   <div
                     key={rev.id}
-                    className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 space-y-1.5"
+                    className="p-3.5 rounded-input bg-surface border border-border space-y-1.5"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-slate-900 dark:text-white">
+                      <span className="text-caption font-semibold text-text">
                         {rev.talkerName}
                       </span>
                       <StarRating rating={rev.rating} size="sm" />
@@ -312,13 +308,13 @@ export const ListenerProfilePage: React.FC = () => {
                     {rev.tags && rev.tags.length > 0 && (
                       <div className="flex flex-wrap gap-1">
                         {rev.tags.map((t) => (
-                          <span key={t} className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 font-medium">
+                          <span key={t} className="text-[10px] px-2 py-0.5 rounded-pill bg-accent/10 text-accent font-medium">
                             {t}
                           </span>
                         ))}
                       </div>
                     )}
-                    <p className="text-xs text-slate-600 dark:text-slate-300 italic">
+                    <p className="text-caption text-text-muted italic">
                       "{rev.comment}"
                     </p>
                   </div>
@@ -330,12 +326,12 @@ export const ListenerProfilePage: React.FC = () => {
 
         {/* Sidebar Trust & Safety info */}
         <div className="space-y-4">
-          <Card className="p-5 space-y-3">
-            <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-bold text-xs uppercase tracking-wider">
+          <Card padding="md" className="space-y-3">
+            <div className="flex items-center gap-2 text-accent font-semibold text-caption uppercase tracking-wider">
               <ShieldCheck className="w-4 h-4" />
               <span>Platform Safety</span>
             </div>
-            <ul className="text-xs text-slate-600 dark:text-slate-400 space-y-2">
+            <ul className="text-caption text-text-muted space-y-2">
               <li>✓ Verified active listener assessment</li>
               <li>✓ Zero phone numbers or private UPI exposed</li>
               <li>✓ Encrypted WebRTC audio calling</li>
