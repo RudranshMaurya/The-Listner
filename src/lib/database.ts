@@ -146,106 +146,19 @@ export async function saveListenerProfile(listener: Partial<ListenerProfile> & {
   await set(ref(db, `listenerProfiles/${listener.uid}`), removeUndefined(data));
 }
 
-export const SEED_LISTENERS: ListenerProfile[] = [
-  {
-    uid: "listener-seed-1",
-    displayName: "Ananya Sen",
-    photoURL: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
-    bio: "Passionate about providing a calm, non-judgmental space. I listen with patience, warmth, and full attention.",
-    age: 26,
-    gender: "Female",
-    yearsExperience: 4,
-    topics: ["Personal growth", "Friendship", "Family", "Loneliness"],
-    languages: ["English", "Hindi"],
-    pricingPaisePerMin: 250,
-    rating: 4.9,
-    totalReviews: 24,
-    totalSessions: 38,
-    totalListeningMinutes: 420,
-    isVerified: true,
-    verificationScore: 95,
-    verificationStatus: "passed",
-    status: "idle",
-    lastActive: Date.now(),
-    showAge: true,
-    showGender: true
-  },
-  {
-    uid: "listener-seed-2",
-    displayName: "Aarav Sharma",
-    photoURL: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
-    bio: "Here to listen to whatever you are carrying. No advice, no judgment, just an empathetic ear whenever you need one.",
-    age: 28,
-    gender: "Male",
-    yearsExperience: 3,
-    topics: ["Career", "Work stress", "Relationships", "Motivation"],
-    languages: ["English", "Hindi"],
-    pricingPaisePerMin: 250,
-    rating: 5.0,
-    totalReviews: 31,
-    totalSessions: 52,
-    totalListeningMinutes: 590,
-    isVerified: true,
-    verificationScore: 100,
-    verificationStatus: "passed",
-    status: "idle",
-    lastActive: Date.now(),
-    showAge: true,
-    showGender: true
-  },
-  {
-    uid: "listener-seed-3",
-    displayName: "Pooja Verma",
-    photoURL: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80",
-    bio: "Life gets heavy sometimes. I am here to help you unpack your thoughts at your own pace.",
-    age: 29,
-    gender: "Female",
-    yearsExperience: 5,
-    topics: ["Daily life", "Life experiences", "Relationships", "Loneliness"],
-    languages: ["English", "Hindi", "Marathi"],
-    pricingPaisePerMin: 250,
-    rating: 4.8,
-    totalReviews: 19,
-    totalSessions: 29,
-    totalListeningMinutes: 340,
-    isVerified: true,
-    verificationScore: 90,
-    verificationStatus: "passed",
-    status: "busy",
-    lastActive: Date.now(),
-    showAge: true,
-    showGender: true
-  }
-];
-
-export async function seedInitialListenersIfEmpty(): Promise<void> {
-  try {
-    const snap = await get(ref(db, "listenerProfiles"));
-    if (!snap.exists()) {
-      for (const listener of SEED_LISTENERS) {
-        await set(ref(db, `listenerProfiles/${listener.uid}`), listener);
-      }
-    }
-  } catch (err) {
-    // Ignore if permission denied in read-only environment
-  }
-}
-
 export async function getAllListeners(): Promise<ListenerProfile[]> {
-  await seedInitialListenersIfEmpty();
   const snapshot = await get(ref(db, "listenerProfiles"));
-  if (!snapshot.exists()) return SEED_LISTENERS;
+  if (!snapshot.exists()) return [];
   const val = snapshot.val();
   return Object.values(val) as ListenerProfile[];
 }
 
 export function subscribeToListeners(callback: (listeners: ListenerProfile[]) => void) {
-  seedInitialListenersIfEmpty().catch(() => {});
   return onValue(ref(db, "listenerProfiles"), (snapshot) => {
     if (snapshot.exists()) {
       callback(Object.values(snapshot.val()) as ListenerProfile[]);
     } else {
-      callback(SEED_LISTENERS);
+      callback([]);
     }
   });
 }
