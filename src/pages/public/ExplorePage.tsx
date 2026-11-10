@@ -1,34 +1,50 @@
 import React, { useEffect, useState } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { subscribeToListeners } from '../../lib/database';
-import type { ListenerProfile, ListenerStatus } from '../../types';
+import type { ListenerProfile, SessionType } from '../../types';
 import { ListenerCard } from '../../components/talker/ListenerCard';
-import { Input } from '../../components/common/Input';
+import { TopupModal } from '../../components/talker/TopupModal';
 import { EmptyState } from '../../components/common/EmptyState';
 import { Skeleton } from '../../components/common/Skeleton';
-import { Search, Filter, Sparkles, Users } from 'lucide-react';
+import {
+  Search,
+  Filter,
+  Sparkles,
+  Users,
+  Coins,
+  Heart,
+  Briefcase,
+  CloudRain,
+  Sun,
+  Coffee,
+  CheckCircle2
+} from 'lucide-react';
 
 export const ExplorePage: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+
   const [listeners, setListeners] = useState<ListenerProfile[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [selectedTopic, setSelectedTopic] = useState<string>('all');
-  const [selectedLanguage, setSelectedLanguage] = useState<string>('all');
-  const [availabilityFilter, setAvailabilityFilter] = useState<'all' | 'idle'>('all');
+  const [isTopupOpen, setIsTopupOpen] = useState(false);
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+
+  // Category filter
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'rating' | 'experience' | 'sessions'>('rating');
 
-  const topicsList = [
-    'all',
-    'Relationships',
-    'Friendship',
-    'Family',
-    'Career',
-    'Work stress',
-    'Loneliness',
-    'Personal growth',
-    'General conversations'
-  ];
+  const actionParam = ((searchParams.get('type') as 'chat' | 'call') || 'both') as 'chat' | 'call' | 'both';
 
-  const languagesList = ['all', 'English', 'Hindi', 'Hinglish'];
+  const categories = [
+    { id: 'all', label: 'All', icon: '▦' },
+    { id: 'new', label: 'NEW!', icon: '✦' },
+    { id: 'relationships', label: 'Love & Dating', icon: '♡' },
+    { id: 'stress', label: 'Stress & Anxiety', icon: '☁' },
+    { id: 'career', label: 'Career & Work', icon: '🎓' },
+    { id: 'loneliness', label: 'Loneliness', icon: '☀' },
+    { id: 'casual', label: 'Casual Talk', icon: '☕' }
+  ];
 
   useEffect(() => {
     const unsubscribe = subscribeToListeners((list) => {
@@ -42,18 +58,26 @@ export const ExplorePage: React.FC = () => {
   const filteredListeners = listeners.filter((l) => {
     const matchesSearch =
       l.displayName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (l.bio && l.bio.toLowerCase().includes(searchTerm.toLowerCase()));
+      (l.bio && l.bio.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (l.topics && l.topics.some((t) => t.toLowerCase().includes(searchTerm.toLowerCase()))) ||
+      (l.languages && l.languages.some((lang) => lang.toLowerCase().includes(searchTerm.toLowerCase())));
 
-    const matchesTopic =
-      selectedTopic === 'all' || (l.topics && l.topics.includes(selectedTopic));
+    let matchesCategory = true;
+    if (selectedCategory === 'new') {
+      matchesCategory = (l.totalSessions || 0) < 50;
+    } else if (selectedCategory === 'relationships') {
+      matchesCategory = l.topics?.some((t) => /relation|love|dating|marriage/i.test(t)) ?? true;
+    } else if (selectedCategory === 'stress') {
+      matchesCategory = l.topics?.some((t) => /stress|anxiety|overthinking|grief/i.test(t)) ?? true;
+    } else if (selectedCategory === 'career') {
+      matchesCategory = l.topics?.some((t) => /career|work|job|growth/i.test(t)) ?? true;
+    } else if (selectedCategory === 'loneliness') {
+      matchesCategory = l.topics?.some((t) => /lonely|loneliness|listen/i.test(t)) ?? true;
+    } else if (selectedCategory === 'casual') {
+      matchesCategory = true;
+    }
 
-    const matchesLanguage =
-      selectedLanguage === 'all' || (l.languages && l.languages.includes(selectedLanguage));
-
-    const matchesAvailability =
-      availabilityFilter === 'all' || l.status === 'idle';
-
-    return matchesSearch && matchesTopic && matchesLanguage && matchesAvailability;
+    return matchesSearch && matchesCategory;
   });
 
   filteredListeners.sort((a, b) => {
@@ -64,115 +88,178 @@ export const ExplorePage: React.FC = () => {
   });
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 text-left">
-      <div>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-          Explore Compassionate Listeners
-        </h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-          Find a patient, verified listener ready to hear you without judgment. Transparent rate: ₹5 per 2 minutes.
-        </p>
-      </div>
+    <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-8 py-5 sm:py-8 space-y-5 text-left">
+      {/* 1. Astrotalk Promotional Cashback Banner */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#FFF6E5] via-[#FFFDF7] to-[#FFF0D4] dark:from-[#26221B] dark:via-[#1F1C18] dark:to-[#26221B] border border-amber-200/70 dark:border-amber-900/40 p-5 sm:p-7 text-center shadow-xs">
+        {/* Floating coins illustrations */}
+        <div className="absolute -left-4 -top-4 w-16 h-16 rounded-full bg-amber-200/50 dark:bg-amber-500/10 blur-xl pointer-events-none" />
+        <div className="absolute -right-4 -bottom-4 w-16 h-16 rounded-full bg-amber-300/40 dark:bg-amber-500/10 blur-xl pointer-events-none" />
 
-      {/* Filter and Search Bar */}
-      <div className="rounded-3xl bg-white dark:bg-[#1F1D1A] border border-[#EFEBE4] dark:border-[#332E28] p-5 shadow-xs space-y-4 transition-colors">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="sm:col-span-2">
-            <Input
-              placeholder="Search by listener name, bio keywords..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              leftIcon={<Search className="w-4 h-4" />}
-            />
+        <div className="relative z-10 flex flex-col items-center">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-xl">🪙</span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-stone-900 dark:text-amber-100 tracking-tight">
+              50% Cashback!
+            </h2>
+            <span className="text-xl">🪙</span>
           </div>
 
-          <div>
+          <p className="text-[11px] sm:text-xs uppercase tracking-widest font-bold text-stone-600 dark:text-stone-300">
+            ON NEXT RECHARGE
+          </p>
+
+          <div className="mt-3">
+            <button
+              onClick={() => setIsTopupOpen(true)}
+              className="px-6 py-2 rounded-full bg-[#F5C518] hover:bg-[#E5B508] active:scale-95 text-stone-950 font-extrabold text-xs sm:text-sm tracking-wide shadow-sm hover:shadow-md transition-all cursor-pointer"
+            >
+              RECHARGE NOW
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. Search & Quick Mode (All / Chat / Call) */}
+      <div className="flex items-center gap-2">
+        <div className="relative flex-1">
+          <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            placeholder="Search listener by name, language, or topic..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full rounded-2xl border border-gray-200 dark:border-stone-800 bg-white dark:bg-[#1F1D1A] pl-10 pr-4 py-2.5 text-xs sm:text-sm text-stone-900 dark:text-stone-100 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-400/30 transition-all shadow-2xs"
+          />
+        </div>
+
+        {/* Action filter pill (All / Chat / Call) */}
+        <div className="flex items-center bg-gray-100 dark:bg-stone-800/80 p-1 rounded-2xl border border-gray-200 dark:border-stone-800 shrink-0 text-xs">
+          <button
+            onClick={() => setSearchParams({})}
+            className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer ${
+              actionParam === 'both'
+                ? 'bg-white dark:bg-stone-900 text-stone-900 dark:text-white shadow-2xs'
+                : 'text-stone-500 hover:text-stone-900 dark:hover:text-white'
+            }`}
+          >
+            All
+          </button>
+          <button
+            onClick={() => setSearchParams({ type: 'chat' })}
+            className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer ${
+              actionParam === 'chat'
+                ? 'bg-white dark:bg-stone-900 text-emerald-600 dark:text-emerald-400 shadow-2xs'
+                : 'text-stone-500 hover:text-stone-900 dark:hover:text-white'
+            }`}
+          >
+            Chat
+          </button>
+          <button
+            onClick={() => setSearchParams({ type: 'call' })}
+            className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer ${
+              actionParam === 'call'
+                ? 'bg-white dark:bg-stone-900 text-emerald-600 dark:text-emerald-400 shadow-2xs'
+                : 'text-stone-500 hover:text-stone-900 dark:hover:text-white'
+            }`}
+          >
+            Call
+          </button>
+        </div>
+      </div>
+
+      {/* 3. Horizontal Scrollable Category Pills Bar (Astrotalk Style) */}
+      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+        <button
+          onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+          className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border text-xs font-semibold shrink-0 transition-all cursor-pointer ${
+            showAdvancedFilters
+              ? 'border-amber-400 bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-300'
+              : 'border-gray-200 dark:border-stone-800 bg-white dark:bg-[#1F1D1A] text-stone-700 dark:text-stone-300 hover:border-gray-300'
+          }`}
+        >
+          <Filter className="w-3.5 h-3.5 text-stone-500" />
+          <span>Filter</span>
+        </button>
+
+        {categories.map((cat) => {
+          const isSelected = selectedCategory === cat.id;
+          return (
+            <button
+              key={cat.id}
+              onClick={() => setSelectedCategory(cat.id)}
+              className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full border text-xs font-bold shrink-0 transition-all cursor-pointer active:scale-95 ${
+                isSelected
+                  ? 'border-amber-400 bg-amber-100/60 dark:bg-amber-950/40 text-amber-900 dark:text-amber-300 ring-1 ring-amber-400/50 shadow-2xs'
+                  : 'border-gray-200 dark:border-stone-800 bg-white dark:bg-[#1F1D1A] text-stone-600 dark:text-stone-300 hover:border-gray-300 dark:hover:border-stone-700'
+              }`}
+            >
+              <span>{cat.icon}</span>
+              <span>{cat.label}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Optional Advanced Filter Drawer */}
+      {showAdvancedFilters && (
+        <div className="rounded-2xl border border-gray-200 dark:border-stone-800 bg-white dark:bg-[#1F1D1A] p-4 text-xs space-y-3 animate-apple-fade-in">
+          <div className="flex items-center justify-between">
+            <span className="font-bold text-stone-800 dark:text-white uppercase tracking-wider text-[11px]">
+              Sort Listeners By
+            </span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="w-full rounded-xl border border-[#EFEBE4] dark:border-[#332E28] bg-white dark:bg-[#1F1D1A] px-3.5 py-2.5 text-sm text-stone-900 dark:text-stone-100 focus:outline-none focus:border-[#D4A373] focus:ring-2 focus:ring-[#D4A373]/20 transition-colors"
+              className="rounded-xl border border-gray-200 dark:border-stone-700 bg-white dark:bg-stone-900 px-3 py-1.5 text-xs text-stone-900 dark:text-white focus:outline-none"
             >
-              <option value="rating">Sort: Highest Rated</option>
-              <option value="experience">Sort: Most Experienced</option>
-              <option value="sessions">Sort: Most Conversations</option>
+              <option value="rating">Highest Rated</option>
+              <option value="experience">Most Experienced</option>
+              <option value="sessions">Most Completed Sessions</option>
             </select>
           </div>
         </div>
+      )}
 
-        {/* Filter Pills */}
-        <div className="flex items-center gap-2 flex-wrap pt-2 border-t border-[#EFEBE4] dark:border-[#332E28] text-xs">
-          <span className="font-semibold text-stone-400 uppercase tracking-wider text-[10px] mr-1">
-            Status:
-          </span>
-          <button
-            onClick={() => setAvailabilityFilter('all')}
-            className={`px-3 py-1 rounded-full font-medium transition-all duration-200 active:scale-[0.97] ease-[cubic-bezier(0.16,1,0.3,1)] ${
-              availabilityFilter === 'all'
-                ? 'bg-stone-900 text-white dark:bg-[#FAF6F0] dark:text-stone-900'
-                : 'bg-[#FAF6F0] text-stone-600 dark:bg-[#272420] dark:text-stone-300 border border-[#EFEBE4] dark:border-[#332E28]'
-            }`}
-          >
-            All Listeners
-          </button>
-          <button
-            onClick={() => setAvailabilityFilter('idle')}
-            className={`px-3 py-1 rounded-full font-medium transition-all duration-200 active:scale-[0.97] ease-[cubic-bezier(0.16,1,0.3,1)] ${
-              availabilityFilter === 'idle'
-                ? 'bg-[#166534] text-white shadow-xs'
-                : 'bg-[#FAF6F0] text-stone-600 dark:bg-[#272420] dark:text-stone-300 border border-[#EFEBE4] dark:border-[#332E28]'
-            }`}
-          >
-            Available Now Only
-          </button>
-
-          <span className="font-semibold text-stone-400 uppercase tracking-wider text-[10px] ml-4 mr-1">
-            Topic:
-          </span>
-          <div className="flex gap-1.5 flex-wrap">
-            {topicsList.slice(0, 6).map((topic) => (
-              <button
-                key={topic}
-                onClick={() => setSelectedTopic(topic)}
-                className={`px-3 py-1 rounded-full font-medium capitalize transition-all duration-200 active:scale-[0.97] ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                  selectedTopic === topic
-                    ? 'bg-[#D4A373] text-stone-900 font-semibold shadow-xs'
-                    : 'bg-[#FAF6F0] text-stone-600 dark:bg-[#272420] dark:text-stone-300 border border-[#EFEBE4] dark:border-[#332E28]'
-                }`}
-              >
-                {topic}
-              </button>
+      {/* 4. Listeners Cards List (Full width row cards matching reference) */}
+      <div className="space-y-3 sm:space-y-4">
+        {loading ? (
+          <div className="space-y-3">
+            {[1, 2, 3, 4].map((i) => (
+              <div
+                key={i}
+                className="rounded-2xl border border-gray-200 dark:border-stone-800 bg-white dark:bg-[#1F1D1A] p-4 h-28 animate-pulse"
+              />
             ))}
           </div>
-        </div>
+        ) : filteredListeners.length === 0 ? (
+          <EmptyState
+            icon={<Users className="w-8 h-8 text-stone-400" />}
+            title="No listeners found"
+            description="Try clearing your search keyword or switching category tabs."
+            actionLabel="Reset Filters"
+            onAction={() => {
+              setSearchTerm('');
+              setSelectedCategory('all');
+            }}
+          />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+            {filteredListeners.map((listener) => (
+              <ListenerCard
+                key={listener.uid}
+                listener={listener}
+                preferredAction={actionParam}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Grid of Listeners */}
-      {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="h-64 rounded-2xl bg-slate-100 dark:bg-slate-800/50 animate-pulse" />
-          ))}
-        </div>
-      ) : filteredListeners.length === 0 ? (
-        <EmptyState
-          icon={<Users className="w-8 h-8" />}
-          title="No Listeners Matched Your Filter"
-          description="Try broadening your search keywords or resetting topics to see more friendly listeners."
-          actionLabel="Reset All Filters"
-          onAction={() => {
-            setSearchTerm('');
-            setSelectedTopic('all');
-            setSelectedLanguage('all');
-            setAvailabilityFilter('all');
-          }}
-        />
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredListeners.map((listener) => (
-            <ListenerCard key={listener.uid} listener={listener} />
-          ))}
-        </div>
-      )}
+      <TopupModal
+        isOpen={isTopupOpen}
+        onClose={() => setIsTopupOpen(false)}
+        initialAmount={100}
+      />
     </div>
   );
 };

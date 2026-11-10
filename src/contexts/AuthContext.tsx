@@ -7,13 +7,14 @@ import {
 } from 'firebase/auth';
 import { ref, onValue, get, set } from 'firebase/database';
 import { auth, googleProvider, db } from '../lib/firebase';
-import type { UserProfile, UserRole } from '../types';
-import { getUserProfile, saveUserProfile } from '../lib/database';
+import type { UserProfile, UserRole, Wallet } from '../types';
+import { getUserProfile, saveUserProfile, subscribeToWallet } from '../lib/database';
 
 interface AuthContextType {
   currentUser: FirebaseUser | null;
   profile: UserProfile | null;
   role: UserRole | null;
+  wallet: Wallet | null;
   isAdmin: boolean;
   loading: boolean;
   loginWithGoogle: () => Promise<void>;
@@ -27,13 +28,21 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [wallet, setWallet] = useState<Wallet | null>(null);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    let unsubWallet: (() => void) | null = null;
+
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
       if (user) {
+        // Subscribe to live wallet
+        unsubWallet = subscribeToWallet(user.uid, (w) => {
+          setWallet(w);
+        });
+
         // Listen to live profile in RTDB
         const profileRef = ref(db, `profiles/${user.uid}`);
         const unsubProfile = onValue(profileRef, async (snapshot) => {
@@ -55,15 +64,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setLoading(false);
         });
 
-        return () => unsubProfile();
+        return () => {
+          unsubProfile();
+          if (unsubWallet) unsubWallet();
+        };
       } else {
         setProfile(null);
+        setWallet(null);
         setIsAdmin(false);
         setLoading(false);
       }
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribe();
+      if (unsubWallet) unsubWallet();
+    };
   }, []);
 
   const checkAdminStatus = async (uid: string, p: UserProfile | null) => {
@@ -161,6 +177,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         currentUser,
         profile,
         role: profile?.role || null,
+        wallet,
         isAdmin,
         loading,
         loginWithGoogle,

@@ -61,29 +61,25 @@ export const SessionTimer: React.FC<SessionTimerProps> = ({
     return () => clearInterval(interval);
   }, [session, talkerWallet, lowBalanceAlerted]);
 
+  const minutesPassed = Math.floor(elapsedSeconds / 60);
+
   return (
-    <div className="flex items-center gap-3 bg-slate-900 text-white px-4 py-2 rounded-2xl shadow-sm text-left">
-      <div className="flex items-center gap-2">
-        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-        <Clock className="w-4 h-4 text-slate-400" />
-        <span className="font-mono text-sm font-bold tracking-wider">
+    <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60 shadow-xs text-xs font-semibold">
+        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+        <Clock className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+        <span className="font-mono tracking-wide">
           {formatDuration(elapsedSeconds)}
+        </span>
+        <span className="text-[11px] text-emerald-700/80 dark:text-emerald-400/80 font-normal">
+          ({minutesPassed} {minutesPassed === 1 ? 'min' : 'mins'} passed)
         </span>
       </div>
 
-      <div className="h-4 w-px bg-slate-700" />
-
-      <div>
-        <p className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">Estimated Cost</p>
-        <p className="text-xs font-bold text-emerald-400 font-mono">
-          {formatPaise(estimatedChargePaise)}
-        </p>
-      </div>
-
       {lowBalanceAlerted && session.status === 'active' && (
-        <div className="flex items-center gap-1 text-[11px] text-amber-400 bg-amber-950/60 border border-amber-800/80 px-2 py-0.5 rounded-lg">
-          <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
-          <span>Low balance (&lt; 2 min left)</span>
+        <div className="flex items-center gap-1 text-[11px] text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800/60 px-2.5 py-1 rounded-full animate-pulse">
+          <AlertTriangle className="w-3.5 h-3.5 shrink-0 text-amber-600" />
+          <span>Low balance: less than 2 mins left</span>
         </div>
       )}
     </div>

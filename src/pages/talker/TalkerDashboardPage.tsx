@@ -46,9 +46,35 @@ export const TalkerDashboardPage: React.FC = () => {
   const upcomingAppointments = appointments.filter((a) => a.status === 'confirmed');
 
   return (
-    <div className="space-y-8 text-left">
+    <div className="space-y-6 text-left">
+      {/* Astrotalk Promotional Cashback Banner */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#FFF6E5] via-[#FFFDF7] to-[#FFF0D4] dark:from-[#26221B] dark:via-[#1F1C18] dark:to-[#26221B] border border-amber-200/70 dark:border-amber-900/40 p-5 sm:p-6 text-center shadow-xs">
+        <div className="relative z-10 flex flex-col items-center">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-xl">🪙</span>
+            <h2 className="text-xl sm:text-2xl font-extrabold text-stone-900 dark:text-amber-100 tracking-tight">
+              50% Cashback!
+            </h2>
+            <span className="text-xl">🪙</span>
+          </div>
+
+          <p className="text-[11px] uppercase tracking-widest font-bold text-stone-600 dark:text-stone-300">
+            ON NEXT RECHARGE
+          </p>
+
+          <div className="mt-2.5">
+            <button
+              onClick={() => setIsTopupOpen(true)}
+              className="px-5 py-1.5 rounded-full bg-[#F5C518] hover:bg-[#E5B508] active:scale-95 text-stone-950 font-extrabold text-xs uppercase tracking-wide shadow-sm hover:shadow-md transition-all cursor-pointer"
+            >
+              RECHARGE NOW
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* Quick Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
         <Card hover className="p-5 flex items-center justify-between">
           <div>
             <p className="text-xs uppercase font-semibold text-stone-400">Available Listeners</p>
@@ -122,8 +148,8 @@ export const TalkerDashboardPage: React.FC = () => {
             No listeners are currently online. You can view all listeners to book a scheduled slot.
           </Card>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {availableListeners.slice(0, 3).map((l) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {availableListeners.slice(0, 4).map((l) => (
               <ListenerCard key={l.uid} listener={l} />
             ))}
           </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import { Navbar } from '../common/Navbar';
+import { BottomNav } from './BottomNav';
 import { ToastContainer } from '../common/Toast';
 import { useCommunication } from '../../contexts/CommunicationContext';
 import { Headphones, ShieldAlert, PhoneCall, Check, X } from 'lucide-react';
@@ -59,9 +60,12 @@ export const AppLayout: React.FC = () => {
       )}
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col">
+      <main className="flex-1 flex flex-col pb-16 md:pb-0">
         <Outlet />
       </main>
+
+      {/* Sticky Mobile Bottom Navigation */}
+      <BottomNav />
 
       {/* Trust & Safety Emergency Banner */}
       <div className="bg-[#FAF6F0] dark:bg-[#1F1D1A] border-t border-[#EFEBE4] dark:border-[#332E28] py-3 px-4 text-center">
