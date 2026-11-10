@@ -46,30 +46,36 @@ export const Modal: React.FC<ModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-stone-950/65 backdrop-blur-sm transition-opacity animate-in fade-in"
+        className="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
         onClick={onClose}
+        aria-hidden="true"
       />
 
-      {/* Modal Card */}
+      {/* Modal Sheet Card */}
       <div
-        className={`relative w-full ${maxWidthClass} rounded-3xl bg-white dark:bg-[#1F1D1A] border border-[#EFEBE4] dark:border-[#332E28] shadow-2xl p-6 sm:p-8 z-10 transition-all animate-apple-fade-in`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={title ? 'modal-title' : undefined}
+        className={`relative w-full ${maxWidthClass} rounded-card-lg bg-surface-raised border border-border/60 shadow-soft p-6 sm:p-8 z-10 transition-apple animate-apple-fade-in`}
       >
-        <div className="flex items-start justify-between pb-4 border-b border-[#EFEBE4] dark:border-[#332E28]">
+        <div className="flex items-start justify-between pb-4 border-b border-border/50">
           <div>
             {title && (
-              <h3 className="text-lg sm:text-xl font-semibold text-stone-900 dark:text-white">
+              <h3 id="modal-title" className="text-heading font-semibold text-text">
                 {title}
               </h3>
             )}
             {description && (
-              <p className="mt-1 text-xs sm:text-sm text-stone-500 dark:text-stone-400">
+              <p className="mt-1 text-small text-text-muted">
                 {description}
               </p>
             )}
           </div>
+
           <button
             onClick={onClose}
-            className="rounded-full p-1.5 text-stone-400 hover:text-stone-700 hover:bg-[#FAF6F0] dark:hover:bg-[#272420] dark:hover:text-stone-200 transition-colors"
+            aria-label="Close dialog"
+            className="p-1.5 rounded-pill text-text-muted hover:text-text hover:bg-surface transition-apple cursor-pointer ml-3"
           >
             <X className="w-5 h-5" />
           </button>

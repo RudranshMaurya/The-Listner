@@ -25,40 +25,40 @@ export const Input: React.FC<InputProps> = ({
       {label && (
         <label
           htmlFor={inputId}
-          className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300"
+          className="block text-caption font-medium uppercase tracking-wider text-text-muted"
         >
           {label}
         </label>
       )}
 
-      <div className="relative rounded-xl shadow-xs">
+      <div className="relative rounded-input">
         {leftIcon && (
-          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-text-muted">
             {leftIcon}
           </div>
         )}
 
         <input
           id={inputId}
-          className={`block w-full rounded-xl border border-[#EFEBE4] dark:border-[#332E28] bg-white dark:bg-[#1F1D1A] px-3.5 py-2.5 text-sm text-stone-900 dark:text-stone-100 placeholder-stone-400 transition-all duration-200 focus:border-[#D4A373] focus:outline-none focus:ring-2 focus:ring-[#D4A373]/25 disabled:cursor-not-allowed disabled:bg-stone-50 dark:disabled:bg-stone-900/50 ${
+          className={`block w-full rounded-input border border-border bg-surface-raised px-3.5 py-2.5 text-small text-text placeholder:text-text-muted transition-apple focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 disabled:cursor-not-allowed disabled:opacity-50 min-h-[44px] ${
             leftIcon ? 'pl-10' : ''
           } ${rightIcon ? 'pr-10' : ''} ${
-            error ? 'border-rose-500 focus:border-rose-500 focus:ring-rose-500/20' : ''
+            error ? 'border-danger focus:border-danger focus:ring-danger/20' : ''
           } ${className}`}
           {...props}
         />
 
         {rightIcon && (
-          <div className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400">
+          <div className="absolute inset-y-0 right-0 flex items-center pr-3.5 text-text-muted">
             {rightIcon}
           </div>
         )}
       </div>
 
       {error ? (
-        <p className="text-xs text-rose-600 dark:text-rose-400">{error}</p>
+        <p className="text-caption text-danger">{error}</p>
       ) : helperText ? (
-        <p className="text-xs text-slate-500 dark:text-slate-400">{helperText}</p>
+        <p className="text-caption text-text-muted">{helperText}</p>
       ) : null}
     </div>
   );
@@ -76,33 +76,35 @@ export const Textarea: React.FC<TextareaProps> = ({
   helperText,
   className = '',
   id,
+  rows = 3,
   ...props
 }) => {
-  const inputId = id || (label ? label.toLowerCase().replace(/\s+/g, '-') : undefined);
+  const textareaId = id || (label ? label.toLowerCase().replace(/\s+/g, '-') : undefined);
 
   return (
     <div className="w-full space-y-1.5 text-left">
       {label && (
         <label
-          htmlFor={inputId}
-          className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300"
+          htmlFor={textareaId}
+          className="block text-caption font-medium uppercase tracking-wider text-text-muted"
         >
           {label}
         </label>
       )}
 
       <textarea
-        id={inputId}
-        className={`block w-full rounded-xl border border-[#EFEBE4] dark:border-[#332E28] bg-white dark:bg-[#1F1D1A] px-3.5 py-2.5 text-sm text-stone-900 dark:text-stone-100 placeholder-stone-400 transition-all duration-200 focus:border-[#D4A373] focus:outline-none focus:ring-2 focus:ring-[#D4A373]/25 disabled:cursor-not-allowed disabled:bg-stone-50 dark:disabled:bg-stone-900/50 ${
-          error ? 'border-rose-500 focus:border-rose-500 focus:ring-rose-500/20' : ''
+        id={textareaId}
+        rows={rows}
+        className={`block w-full rounded-input border border-border bg-surface-raised px-3.5 py-2.5 text-small text-text placeholder:text-text-muted transition-apple focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 disabled:cursor-not-allowed disabled:opacity-50 resize-y ${
+          error ? 'border-danger focus:border-danger focus:ring-danger/20' : ''
         } ${className}`}
         {...props}
       />
 
       {error ? (
-        <p className="text-xs text-rose-600 dark:text-rose-400">{error}</p>
+        <p className="text-caption text-danger">{error}</p>
       ) : helperText ? (
-        <p className="text-xs text-slate-500 dark:text-slate-400">{helperText}</p>
+        <p className="text-caption text-text-muted">{helperText}</p>
       ) : null}
     </div>
   );

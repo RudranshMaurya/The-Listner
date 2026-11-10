@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import {
@@ -6,7 +6,6 @@ import {
   LayoutDashboard,
   Users,
   CheckCircle2,
-  PhoneCall,
   BellRing,
   Wallet,
   ArrowDownToLine,
@@ -26,21 +25,21 @@ export const AdminLayout: React.FC = () => {
 
   const navItems = [
     { label: 'Overview', path: '/admin', icon: <LayoutDashboard className="w-4 h-4" /> },
-    { label: 'User Directory', path: '/admin/users', icon: <Users className="w-4 h-4" /> },
-    { label: 'Listener Verification', path: '/admin/verification', icon: <CheckCircle2 className="w-4 h-4" /> },
-    { label: 'Active Sessions', path: '/admin/sessions', icon: <Activity className="w-4 h-4" /> },
-    { label: 'Payment Notifications', path: '/admin/payments', icon: <BellRing className="w-4 h-4" /> },
-    { label: 'Top-up Orders', path: '/admin/topups', icon: <Wallet className="w-4 h-4" /> },
-    { label: 'Withdrawal Payouts', path: '/admin/withdrawals', icon: <ArrowDownToLine className="w-4 h-4" /> },
-    { label: 'Reviews & Moderation', path: '/admin/reviews', icon: <Star className="w-4 h-4" /> },
-    { label: 'Platform Settings', path: '/admin/settings', icon: <Settings className="w-4 h-4" /> },
-    { label: 'Security & Audit Logs', path: '/admin/audit-logs', icon: <FileText className="w-4 h-4" /> }
+    { label: 'Users', path: '/admin/users', icon: <Users className="w-4 h-4" /> },
+    { label: 'Verification', path: '/admin/verification', icon: <CheckCircle2 className="w-4 h-4" /> },
+    { label: 'Sessions', path: '/admin/sessions', icon: <Activity className="w-4 h-4" /> },
+    { label: 'Payments', path: '/admin/payments', icon: <BellRing className="w-4 h-4" /> },
+    { label: 'Top-ups', path: '/admin/topups', icon: <Wallet className="w-4 h-4" /> },
+    { label: 'Withdrawals', path: '/admin/withdrawals', icon: <ArrowDownToLine className="w-4 h-4" /> },
+    { label: 'Reviews', path: '/admin/reviews', icon: <Star className="w-4 h-4" /> },
+    { label: 'Settings', path: '/admin/settings', icon: <Settings className="w-4 h-4" /> },
+    { label: 'Audit Logs', path: '/admin/audit-logs', icon: <FileText className="w-4 h-4" /> }
   ];
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -49,20 +48,19 @@ export const AdminLayout: React.FC = () => {
   if (!currentUser || !isAdmin) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center p-4">
-        <div className="max-w-md w-full p-8 rounded-3xl bg-white dark:bg-slate-900 border border-rose-200 dark:border-rose-900/50 text-center shadow-xl">
-          <div className="w-14 h-14 rounded-2xl bg-rose-50 dark:bg-rose-950/50 text-rose-600 flex items-center justify-center mx-auto mb-4">
-            <Lock className="w-7 h-7" />
+        <div className="max-w-md w-full p-8 rounded-card-lg bg-surface-raised border border-border/60 text-center shadow-soft">
+          <div className="w-12 h-12 rounded-pill bg-surface text-danger flex items-center justify-center mx-auto mb-4 border border-border/50">
+            <Lock className="w-6 h-6" />
           </div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+          <h2 className="text-heading font-semibold text-text">
             Access Restricted
           </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
-            This private administration console requires verified administrator privileges.
-            Ordinary users and listeners cannot access or modify platform financial controls.
+          <p className="text-small text-text-muted mt-2 leading-relaxed">
+            This administration console requires verified administrator privileges.
           </p>
           <div className="mt-6">
             <Button onClick={() => navigate('/')} variant="primary" className="w-full">
-              Return to Safety
+              Return Home
             </Button>
           </div>
         </div>
@@ -71,66 +69,59 @@ export const AdminLayout: React.FC = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
+    <div className="max-w-[1120px] mx-auto w-full px-4 sm:px-6 py-6 text-left transition-apple">
       {/* Admin Header */}
-      <div className="mb-6 rounded-3xl bg-[#1F1D1A] text-stone-100 p-6 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-left border border-[#332E28]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-border/40">
         <div>
           <div className="flex items-center gap-2">
-            <span className="p-1.5 rounded-xl bg-[#D4A373]/20 text-[#D4A373]">
-              <ShieldAlert className="w-5 h-5" />
-            </span>
-            <h1 className="text-xl font-bold tracking-tight text-white">The Listener Admin Center</h1>
-            <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-[#166534]/30 text-[#4ADE80] border border-[#166534]">
-              Secure Mode
+            <ShieldAlert className="w-5 h-5 text-accent" />
+            <h1 className="text-title font-semibold tracking-tight text-text">Admin Console</h1>
+            <span className="text-caption font-semibold px-2 py-0.5 rounded-pill bg-surface text-text-muted border border-border/40">
+              Admin
             </span>
           </div>
-          <p className="text-xs text-stone-400 mt-1">
-            Supervisory command center for payments, reconciliations, listeners verification, and ledger controls.
+          <p className="text-small text-text-muted mt-0.5">
+            Platform control center for verification, payouts, reconciliation, and audit logs.
           </p>
         </div>
 
         <Button
           onClick={() => navigate('/')}
-          variant="outline"
+          variant="secondary"
           size="sm"
-          className="text-stone-300 border-[#332E28] hover:bg-[#272420]"
           leftIcon={<ArrowLeft className="w-4 h-4" />}
         >
-          Exit to Website
+          Exit Admin
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
-        {/* Admin Navigation */}
-        <div className="lg:col-span-1 rounded-3xl bg-white dark:bg-[#1F1D1A] border border-[#EFEBE4] dark:border-[#332E28] p-3 shadow-xs">
-          <nav className="space-y-1">
-            {navItems.map((item) => {
-              const isActive = location.pathname === item.path;
-              return (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl text-xs font-medium transition-all duration-200 ${
-                    isActive
-                      ? 'bg-[#D4A373] text-stone-900 font-semibold shadow-xs'
-                      : 'text-stone-600 dark:text-stone-400 hover:bg-[#FAF6F0] dark:hover:bg-[#272420] hover:text-stone-900 dark:hover:text-stone-100'
-                  }`}
-                >
-                  <span className={isActive ? 'text-stone-900' : 'text-stone-400'}>
-                    {item.icon}
-                  </span>
-                  <span>{item.label}</span>
-                </Link>
-              );
-            })}
-          </nav>
-        </div>
-
-        {/* Admin Content Area */}
-        <div className="lg:col-span-3">
-          <Outlet />
-        </div>
+      {/* Slim Desktop Horizontal Navigation */}
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none border-b border-border/40 mb-6">
+        {navItems.map((item) => {
+          const isActive = location.pathname === item.path;
+          return (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-pill text-small transition-apple whitespace-nowrap ${
+                isActive
+                  ? 'bg-surface font-semibold text-text shadow-soft'
+                  : 'text-text-muted hover:text-text hover:bg-surface/50 font-normal'
+              }`}
+            >
+              <span className={isActive ? 'text-accent' : 'text-text-muted'}>
+                {item.icon}
+              </span>
+              <span>{item.label}</span>
+            </Link>
+          );
+        })}
       </div>
+
+      {/* Admin Content Area */}
+      <main className="w-full">
+        <Outlet />
+      </main>
     </div>
   );
 };

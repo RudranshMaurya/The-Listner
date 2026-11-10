@@ -71,13 +71,15 @@ export const BottomNav: React.FC = () => {
       ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-white/95 dark:bg-[#1E1C18]/95 backdrop-blur-xl border-t border-gray-200/80 dark:border-stone-800/80 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] px-2 py-1.5 transition-colors">
-      <div className="flex items-center justify-around max-w-lg mx-auto">
+    <nav
+      className="fixed bottom-0 left-0 right-0 z-40 md:hidden glass-nav border-t border-border/60 transition-apple px-2 py-1"
+      aria-label="Mobile Navigation"
+    >
+      <div className="flex items-center justify-around max-w-md mx-auto">
         {navItems.map((item) => {
-          const isActive =
-            item.exact
-              ? location.pathname === item.path
-              : location.pathname.startsWith(item.path.split('?')[0]);
+          const isActive = item.exact
+            ? location.pathname === item.path
+            : location.pathname.startsWith(item.path.split('?')[0]);
 
           const Icon = item.icon;
 
@@ -85,25 +87,21 @@ export const BottomNav: React.FC = () => {
             <NavLink
               key={item.label}
               to={item.path}
-              className={`flex flex-col items-center justify-center flex-1 py-1 px-1 transition-all duration-200 active:scale-90 ${
+              className={`flex flex-col items-center justify-center flex-1 min-h-[44px] py-1 transition-apple active:scale-95 ${
                 isActive
-                  ? 'text-amber-600 dark:text-amber-400 font-bold'
-                  : 'text-stone-500 dark:text-stone-400 hover:text-stone-800 dark:hover:text-stone-200 font-medium'
+                  ? 'text-accent font-semibold'
+                  : 'text-text-muted hover:text-text font-normal'
               }`}
             >
               <div className="relative">
-                <Icon
-                  className={`w-5 h-5 transition-transform duration-200 ${
-                    isActive ? 'scale-110 stroke-[2.5]' : 'stroke-[1.8]'
-                  }`}
-                />
+                <Icon className="w-5 h-5 stroke-[2]" />
                 {item.badge && (
-                  <span className="absolute -top-1 -right-3 text-[8px] font-extrabold bg-rose-500 text-white px-1 py-0.2 rounded-full ring-1 ring-white dark:ring-stone-900 animate-pulse">
+                  <span className="absolute -top-1 -right-2 text-[10px] font-bold bg-danger text-white px-1 rounded-full">
                     {item.badge}
                   </span>
                 )}
               </div>
-              <span className="text-[10px] mt-1 tracking-tight leading-none">
+              <span className="text-caption mt-1 tracking-tight">
                 {item.label}
               </span>
             </NavLink>
