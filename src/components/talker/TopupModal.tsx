@@ -6,19 +6,14 @@ import { useNotifications } from '../../contexts/NotificationContext';
 import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
 import { Input } from '../common/Input';
-import { Badge } from '../common/Badge';
 import { generateOrderId, generateUpiUri, DESTINATION_UPI_ID, formatRupees } from '../../lib/upi';
-import { createTopupOrder, subscribeToTopup, confirmTopupPayment, subscribeToWallet } from '../../lib/database';
+import { createTopupOrder, subscribeToTopup, subscribeToWallet } from '../../lib/database';
 import type { TopupOrder } from '../../types';
 import {
-  QrCode,
-  Copy,
-  ExternalLink,
   CheckCircle2,
   Clock,
   ShieldCheck,
-  Smartphone,
-  Info
+  Smartphone
 } from 'lucide-react';
 
 export interface TopupModalProps {
@@ -40,8 +35,6 @@ export const TopupModal: React.FC<TopupModalProps> = ({
   const [customAmount, setCustomAmount] = useState<string>('');
   const [step, setStep] = useState<'select' | 'pay' | 'success'>('select');
   const [currentOrder, setCurrentOrder] = useState<TopupOrder | null>(null);
-  const [utrInput, setUtrInput] = useState<string>('');
-  const [copied, setCopied] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [baselineBalance, setBaselineBalance] = useState<number | null>(null);
 
@@ -68,7 +61,7 @@ export const TopupModal: React.FC<TopupModalProps> = ({
     return () => unsubscribe();
   }, [currentOrder?.id]);
 
-  // Dual Fallback: Also watch wallet balance. If balance increases while waiting on payment, mark success immediately!
+  // Dual Fallback: Also watch balance in real time
   useEffect(() => {
     if (!currentUser || step !== 'pay') return;
 
@@ -99,7 +92,7 @@ export const TopupModal: React.FC<TopupModalProps> = ({
     if (!currentUser) return;
     const finalAmount = customAmount ? parseFloat(customAmount) : selectedAmount;
     if (!finalAmount || finalAmount < 10) {
-      showToast('error', 'Minimum top-up amount is ₹10.00');
+      showToast('error', 'Minimum amount is ₹10.00');
       return;
     }
 
@@ -110,7 +103,7 @@ export const TopupModal: React.FC<TopupModalProps> = ({
         vpa: DESTINATION_UPI_ID,
         amountRupees: finalAmount,
         orderId,
-        note: `The Listener Wallet - ${orderId}`
+        note: `The Listener Credits - ${orderId}`
       });
 
       const order: TopupOrder = {
@@ -136,53 +129,10 @@ export const TopupModal: React.FC<TopupModalProps> = ({
     }
   };
 
-  const handleCopyVpa = () => {
-    navigator.clipboard.writeText(DESTINATION_UPI_ID);
-    setCopied(true);
-    showToast('info', 'UPI ID copied to clipboard');
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const handleInstantVerify = async () => {
-    if (!currentOrder) return;
-    try {
-      setIsSubmitting(true);
-      await confirmTopupPayment(currentOrder.id, `FAM-${Date.now()}`, 'Instant Auto-Verify');
-      showToast('success', `Payment of ₹${currentOrder.amountRupees.toFixed(2)} verified & credited!`);
-      setStep('success');
-      try {
-        confetti({
-          particleCount: 80,
-          spread: 70,
-          origin: { y: 0.6 }
-        });
-      } catch {}
-    } catch (e: any) {
-      showToast('error', e.message || 'Auto-verification failed.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleManualUtrSubmit = async () => {
-    if (!currentOrder || !utrInput.trim()) return;
-    try {
-      setIsSubmitting(true);
-      // In production, user can attach candidate UTR to speed up reconciliation
-      showToast('success', 'UTR reference submitted. Verifying payment...');
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   const resetState = () => {
     setStep('select');
     setCurrentOrder(null);
     setCustomAmount('');
-    setUtrInput('');
-    setBaselineBalance(null);
     onClose();
   };
 
@@ -190,44 +140,48 @@ export const TopupModal: React.FC<TopupModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={resetState}
-      title={step === 'success' ? 'Wallet Top-up Successful!' : 'Add Money to Wallet'}
+      title={step === 'success' ? 'Credits Added' : 'Add Credits'}
       description={
-        step === 'success'
-          ? 'Your funds are immediately available for conversations.'
-          : 'Scan the UPI QR code using Google Pay, PhonePe, Paytm, or any UPI app.'
+        step === 'select'
+          ? 'Select amount to add credits for talking with listeners.'
+          : step === 'pay'
+          ? 'Scan the UPI QR code with any payment app to complete.'
+          : 'Your credits have been added successfully.'
       }
-      maxWidth="md"
     >
       {step === 'select' && (
-        <div className="space-y-5 text-left">
+        <div className="space-y-5 text-left animate-apple-fade-in">
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">
-              Select Amount (INR)
+            <label className="block text-xs font-semibold uppercase tracking-wider text-stone-600 dark:text-stone-300 mb-2">
+              Select Amount
             </label>
             <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
-              {presetAmounts.map((amt) => (
-                <button
-                  key={amt}
-                  type="button"
-                  onClick={() => {
-                    setSelectedAmount(amt);
-                    setCustomAmount('');
-                  }}
-                  className={`py-2.5 rounded-2xl text-sm font-semibold border transition-all duration-200 active:scale-[0.97] ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                    selectedAmount === amt && !customAmount
-                      ? 'border-[#D4A373] bg-[#FAF6F0] dark:bg-[#272420] text-[#875C34] dark:text-[#E9D9C3] ring-2 ring-[#D4A373]/30 shadow-xs'
-                      : 'border-[#EFEBE4] dark:border-[#332E28] text-stone-700 dark:text-stone-200 hover:bg-[#FAF6F0] dark:hover:bg-[#272420]'
-                  }`}
-                >
-                  ₹{amt}
-                </button>
-              ))}
+              {presetAmounts.map((amt) => {
+                const isSelected = selectedAmount === amt && !customAmount;
+                return (
+                  <button
+                    key={amt}
+                    type="button"
+                    onClick={() => {
+                      setSelectedAmount(amt);
+                      setCustomAmount('');
+                    }}
+                    className={`py-2.5 px-3 rounded-2xl text-xs font-bold border transition-all cursor-pointer ${
+                      isSelected
+                        ? 'border-amber-400 bg-amber-50 dark:bg-amber-950/40 text-stone-900 dark:text-amber-200 ring-2 ring-amber-400/40 shadow-xs'
+                        : 'border-gray-200 dark:border-stone-800 bg-white dark:bg-[#1F1D1A] text-stone-700 dark:text-stone-300 hover:border-gray-300'
+                    }`}
+                  >
+                    ₹{amt}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
           <div>
             <Input
-              label="Or Enter Custom Amount (₹)"
+              label="Or Custom Amount (₹)"
               type="number"
               min="10"
               max="10000"
@@ -240,13 +194,14 @@ export const TopupModal: React.FC<TopupModalProps> = ({
             />
           </div>
 
-          <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/80 text-xs text-slate-600 dark:text-slate-400 space-y-1">
-            <div className="flex items-center gap-1.5 font-medium text-slate-900 dark:text-slate-200">
+          <div className="p-3 rounded-2xl bg-stone-50 dark:bg-stone-800/50 border border-gray-200/80 dark:border-stone-700/80 text-xs text-stone-600 dark:text-stone-400 space-y-1">
+            <div className="flex items-center gap-1.5 font-medium text-stone-900 dark:text-stone-200">
               <ShieldCheck className="w-4 h-4 text-emerald-500" />
-              <span>Direct Bank UPI Integration</span>
+              <span>Instant UPI Credit</span>
             </div>
-            <p>Target UPI: <code className="font-mono text-indigo-600 dark:text-indigo-400">{DESTINATION_UPI_ID}</code></p>
-            <p className="text-[11px] text-slate-400">Zero platform deposit fees. 100% money credited to your talker wallet.</p>
+            <p className="text-[11px] text-stone-500">
+              Zero fees. 100% of payment is credited directly into your conversation credits.
+            </p>
           </div>
 
           <div className="pt-2 flex items-center justify-end gap-2">
@@ -259,86 +214,65 @@ export const TopupModal: React.FC<TopupModalProps> = ({
               onClick={handleStartPayment}
               isLoading={isSubmitting}
             >
-              Generate UPI QR (₹{customAmount || selectedAmount})
+              Continue (₹{customAmount || selectedAmount})
             </Button>
           </div>
         </div>
       )}
 
       {step === 'pay' && currentOrder && (
-        <div className="space-y-5 text-center animate-apple-fade-in">
+        <div className="space-y-4 text-center animate-apple-fade-in py-1">
           {/* Amount Badge */}
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#FAF6F0] text-[#875C34] dark:bg-[#272420] dark:text-[#E9D9C3] border border-[#EFEBE4] dark:border-[#332E28] font-bold text-base shadow-xs">
-            <span>Amount to Pay:</span>
+          <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-amber-50 text-amber-900 dark:bg-amber-950/50 dark:text-amber-200 border border-amber-200 dark:border-amber-800/50 font-bold text-sm shadow-2xs">
+            <span>Amount:</span>
             <span>{formatRupees(currentOrder.amountRupees)}</span>
+            <span className="text-xs font-normal text-amber-700 dark:text-amber-300">
+              ({currentOrder.amountRupees} Credits)
+            </span>
           </div>
 
-          {/* Real Dynamic QR Code Container */}
-          <div className="flex flex-col items-center justify-center p-4 bg-white rounded-3xl border border-[#EFEBE4] dark:border-[#332E28] shadow-md max-w-xs mx-auto">
+          {/* Clean Modern Dynamic QR Code Container */}
+          <div className="flex flex-col items-center justify-center p-4 bg-white rounded-3xl border border-gray-200 dark:border-stone-700 shadow-sm max-w-xs mx-auto">
             <QRCodeSVG
               value={currentOrder.upiUri}
-              size={200}
+              size={210}
               level="H"
               includeMargin
-              className="rounded-xl"
+              className="rounded-2xl"
             />
-            <p className="mt-2 text-[11px] font-mono text-stone-500">
-              Order Ref: <span className="font-bold text-stone-800">{currentOrder.id}</span>
+            <p className="mt-2 text-[10px] font-mono text-stone-400">
+              Ref: {currentOrder.id}
             </p>
           </div>
 
-          {/* Quick UPI ID Copy & Mobile Link */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 max-w-sm mx-auto">
-            <Button
-              onClick={handleCopyVpa}
-              variant="outline"
-              size="sm"
-              className="w-full sm:w-auto"
-              leftIcon={<Copy className="w-3.5 h-3.5" />}
-            >
-              {copied ? 'Copied UPI ID' : `Copy UPI (${DESTINATION_UPI_ID})`}
-            </Button>
+          {/* Supported Apps subtle indicators */}
+          <p className="text-[11px] text-stone-500 dark:text-stone-400">
+            Scan using Google Pay, PhonePe, Paytm, BHIM, or any UPI app
+          </p>
 
+          {/* Mobile Direct Intent Link */}
+          <div className="flex justify-center">
             <a
               href={currentOrder.upiUri}
-              className="inline-flex items-center justify-center font-medium rounded-full text-xs px-4 py-2 gap-1.5 h-9 bg-[#0891B2] hover:bg-[#0E7490] text-white w-full sm:w-auto transition-transform active:scale-[0.97] duration-200 shadow-xs"
+              className="inline-flex items-center justify-center font-bold rounded-2xl text-xs px-5 py-2.5 gap-2 bg-[#F5C518] hover:bg-[#E5B508] text-stone-950 transition-all active:scale-95 shadow-sm"
             >
-              <Smartphone className="w-3.5 h-3.5" />
+              <Smartphone className="w-4 h-4" />
               <span>Open in UPI App</span>
             </a>
           </div>
 
-          {/* Instant Auto-Verify Button */}
-          <div className="pt-1">
-            <Button
-              size="md"
-              variant="forest"
-              onClick={handleInstantVerify}
-              isLoading={isSubmitting}
-              leftIcon={<CheckCircle2 className="w-4 h-4 text-emerald-200" />}
-              className="w-full justify-center text-white font-bold shadow-lg shadow-[#166534]/20 cursor-pointer"
-            >
-              I Have Paid ₹{currentOrder.amountRupees} (Instant Auto-Verify)
-            </Button>
+          {/* Real-time Checking Status Indicator */}
+          <div className="flex items-center justify-center gap-2 text-xs text-stone-500 dark:text-stone-400 pt-1">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+            <span>Waiting for payment confirmation... Credits update automatically</span>
           </div>
 
-          {/* Pending Status Spinner */}
-          <div className="p-3.5 rounded-2xl bg-[#FAF6F0] dark:bg-[#272420]/70 border border-[#EFEBE4] dark:border-[#332E28] text-left flex items-start gap-3">
-            <Clock className="w-4 h-4 text-[#D4A373] shrink-0 mt-0.5 animate-spin" />
-            <div className="text-xs text-stone-800 dark:text-stone-200 leading-relaxed">
-              <span className="font-semibold text-stone-900 dark:text-stone-100">Automatic MacroDroid Detection Active</span>
-              <p className="text-[11px] text-stone-600 dark:text-stone-400 mt-0.5">
-                Payments via FamApp or UPI auto-credit in real-time. Or click the button above to auto-approve instantly!
-              </p>
-            </div>
-          </div>
-
-          <div className="pt-2 border-t border-[#EFEBE4] dark:border-[#332E28] flex items-center justify-between">
+          <div className="pt-3 border-t border-gray-100 dark:border-stone-800 flex items-center justify-between">
             <Button variant="ghost" size="sm" onClick={() => setStep('select')}>
               Change Amount
             </Button>
             <Button variant="secondary" size="sm" onClick={resetState}>
-              Close & Wait in Background
+              Close
             </Button>
           </div>
         </div>
@@ -346,22 +280,21 @@ export const TopupModal: React.FC<TopupModalProps> = ({
 
       {step === 'success' && currentOrder && (
         <div className="space-y-4 text-center py-4 animate-apple-fade-in">
-          <div className="w-16 h-16 rounded-3xl bg-[#DCFCE7] dark:bg-[#166534]/30 text-[#166534] dark:text-[#4ADE80] flex items-center justify-center mx-auto shadow-inner">
+          <div className="w-16 h-16 rounded-3xl bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto shadow-inner">
             <CheckCircle2 className="w-10 h-10" />
           </div>
 
           <h3 className="text-xl font-bold text-stone-900 dark:text-white">
-            ₹{currentOrder.amountRupees.toFixed(2)} Credited!
+            ₹{currentOrder.amountRupees.toFixed(2)} Credits Added!
           </h3>
 
           <p className="text-xs text-stone-500 dark:text-stone-400 max-w-sm mx-auto leading-relaxed">
-            Your transaction has been securely verified and credited to your wallet balance.
-            You can now start listening sessions immediately.
+            Your transaction has been confirmed and conversation credits have been added to your account.
           </p>
 
-          <div className="pt-4">
+          <div className="pt-2">
             <Button variant="primary" size="md" className="w-full" onClick={resetState}>
-              Continue to Dashboard
+              Done
             </Button>
           </div>
         </div>

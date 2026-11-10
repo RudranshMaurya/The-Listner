@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNotifications } from '../../contexts/NotificationContext';
-import { Button } from '../../components/common/Button';
-import { Headphones, ShieldCheck, Sparkles, Lock } from 'lucide-react';
+import { Headphones, Lock, User, Sparkles } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
   const { currentUser, profile, role, loginWithGoogle } = useAuth();
@@ -11,6 +10,8 @@ export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
+  const [displayName, setDisplayName] = useState('');
+  const [gender, setGender] = useState('Female');
 
   // If already logged in, smoothly redirect
   useEffect(() => {
@@ -18,22 +19,24 @@ export const LoginPage: React.FC = () => {
       if (role === 'listener') {
         navigate('/listener/dashboard', { replace: true });
       } else {
-        navigate('/explore', { replace: true });
+        navigate('/talker/dashboard', { replace: true });
       }
     }
   }, [currentUser, role, navigate]);
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleLogin = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     try {
       setLoading(true);
-      const userProfile = await loginWithGoogle();
+      const userProfile = await loginWithGoogle({
+        displayName: displayName.trim(),
+        gender
+      });
       showToast('success', 'Signed in successfully!');
-      if (!userProfile?.onboardingCompleted) {
-        navigate('/onboarding');
-      } else if (userProfile.role === 'listener') {
+      if (userProfile.role === 'listener') {
         navigate('/listener/dashboard');
       } else {
-        navigate('/explore');
+        navigate('/talker/dashboard');
       }
     } catch (e: any) {
       showToast('error', e.message || 'Google sign-in failed. Please try again.');
@@ -47,7 +50,7 @@ export const LoginPage: React.FC = () => {
       {/* Top Bar with Skip */}
       <div className="flex items-center justify-end w-full pt-2">
         <Link
-          to="/explore"
+          to="/"
           className="text-xs sm:text-sm font-semibold text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-white px-3 py-1.5 rounded-full hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
         >
           Skip
@@ -55,68 +58,102 @@ export const LoginPage: React.FC = () => {
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col items-center justify-center py-6">
+      <div className="flex-1 flex flex-col items-center justify-center py-4">
         {/* Brand Golden Emblem */}
-        <div className="relative mb-6">
-          <div className="w-24 h-24 rounded-full bg-[#F5C518] flex items-center justify-center shadow-lg shadow-amber-400/20 ring-4 ring-amber-300/40">
-            <div className="w-20 h-20 rounded-full border-2 border-stone-900/20 flex items-center justify-center">
-              <Headphones className="w-10 h-10 text-stone-950" />
+        <div className="relative mb-5">
+          <div className="w-20 h-20 rounded-full bg-[#F5C518] flex items-center justify-center shadow-lg shadow-amber-400/20 ring-4 ring-amber-300/40">
+            <div className="w-16 h-16 rounded-full border-2 border-stone-900/20 flex items-center justify-center">
+              <Headphones className="w-8 h-8 text-stone-950" />
             </div>
           </div>
         </div>
 
         {/* Brand Name & Subtitle */}
-        <h1 className="text-3xl font-extrabold text-stone-900 dark:text-white tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-stone-900 dark:text-white tracking-tight">
           The Listener
         </h1>
-        <p className="mt-1 text-sm text-stone-500 dark:text-stone-400 font-medium">
-          Login or Sign Up
+        <p className="mt-1 text-xs sm:text-sm text-stone-500 dark:text-stone-400 font-medium">
+          Talk freely. Connect with someone ready to listen.
         </p>
 
-        {/* 1-Click Secure Google Sign-In */}
-        <div className="w-full mt-8 space-y-4">
-          <button
-            onClick={handleGoogleLogin}
-            disabled={loading}
-            className="w-full py-3.5 px-4 rounded-2xl bg-[#F5C518] hover:bg-[#E5B508] active:scale-[0.98] text-stone-950 font-extrabold text-sm uppercase tracking-wider shadow-sm hover:shadow-md transition-all cursor-pointer flex items-center justify-center gap-3"
-          >
-            <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24">
-              <path
-                fill="#4285F4"
-                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+        {/* Talker Setup: Name & Gender */}
+        <form onSubmit={handleGoogleLogin} className="w-full mt-6 space-y-3.5 text-left">
+          <div>
+            <label className="block text-[11px] font-bold uppercase tracking-wider text-stone-600 dark:text-stone-300 mb-1.5">
+              Your Name or Nickname
+            </label>
+            <div className="relative">
+              <User className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                placeholder="e.g. Saanvi / Alex (or use Google Name)"
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                className="w-full rounded-2xl border border-gray-300 dark:border-stone-700 bg-white dark:bg-[#1F1D1A] pl-10 pr-4 py-3 text-sm text-stone-900 dark:text-stone-100 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-400/40 focus:border-amber-400 transition-all shadow-2xs"
               />
-              <path
-                fill="#34A853"
-                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-              />
-              <path
-                fill="#FBBC05"
-                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
-              />
-              <path
-                fill="#EA4335"
-                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
-              />
-            </svg>
-            <span>{loading ? 'Signing In...' : 'Continue with Google'}</span>
-          </button>
-
-          <div className="p-3.5 rounded-2xl bg-stone-50 dark:bg-[#1E1C18] border border-gray-200 dark:border-stone-800 text-xs text-stone-500 dark:text-stone-400 space-y-1">
-            <div className="flex items-center justify-center gap-1.5 font-semibold text-stone-700 dark:text-stone-300">
-              <Lock className="w-3.5 h-3.5 text-emerald-600" />
-              <span>Instant & Private Account Setup</span>
             </div>
-            <p className="text-[11px] leading-relaxed">
-              Sign in securely to browse listeners, start live encrypted conversations, or earn by becoming a listener.
-            </p>
           </div>
+
+          <div>
+            <label className="block text-[11px] font-bold uppercase tracking-wider text-stone-600 dark:text-stone-300 mb-1.5">
+              Gender
+            </label>
+            <select
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
+              className="w-full rounded-2xl border border-gray-300 dark:border-stone-700 bg-white dark:bg-[#1F1D1A] px-4 py-3 text-sm text-stone-900 dark:text-stone-100 focus:outline-none focus:ring-2 focus:ring-amber-400/40 focus:border-amber-400 transition-all shadow-2xs cursor-pointer"
+            >
+              <option value="Female">Female</option>
+              <option value="Male">Male</option>
+              <option value="Non-binary">Non-binary</option>
+              <option value="Prefer not to say">Prefer not to say</option>
+            </select>
+          </div>
+
+          {/* 1-Click Secure Google Sign-In */}
+          <div className="pt-2">
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3.5 px-4 rounded-2xl bg-[#F5C518] hover:bg-[#E5B508] active:scale-[0.98] text-stone-950 font-extrabold text-sm uppercase tracking-wider shadow-sm hover:shadow-md transition-all cursor-pointer flex items-center justify-center gap-3"
+            >
+              <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24">
+                <path
+                  fill="#4285F4"
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                />
+                <path
+                  fill="#34A853"
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                />
+                <path
+                  fill="#FBBC05"
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                />
+                <path
+                  fill="#EA4335"
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                />
+              </svg>
+              <span>{loading ? 'Connecting...' : 'Continue with Google'}</span>
+            </button>
+          </div>
+        </form>
+
+        <div className="w-full mt-4 p-3 rounded-2xl bg-stone-50 dark:bg-[#1E1C18] border border-gray-200 dark:border-stone-800 text-xs text-stone-500 dark:text-stone-400 space-y-1">
+          <div className="flex items-center justify-center gap-1.5 font-semibold text-stone-700 dark:text-stone-300">
+            <Lock className="w-3.5 h-3.5 text-emerald-600" />
+            <span>Instant & Private Account Setup</span>
+          </div>
+          <p className="text-[11px] leading-relaxed">
+            Name and gender help your listener address you respectfully. No phone number or clinical questions asked.
+          </p>
         </div>
       </div>
 
-      {/* Bottom Legal Disclaimer (Astrotalk Style) */}
-      <div className="pb-4 pt-2 text-[11px] leading-relaxed text-stone-500 dark:text-stone-400">
-        By continuing you accept to share your profile information with{' '}
-        <strong className="text-stone-700 dark:text-stone-300">The Listener</strong>, and agree to the{' '}
+      {/* Bottom Legal Disclaimer */}
+      <div className="pb-3 pt-2 text-[11px] leading-relaxed text-stone-500 dark:text-stone-400">
+        By continuing you agree to The Listener's{' '}
         <Link to="/privacy" className="underline font-medium hover:text-amber-500">
           privacy policy
         </Link>{' '}

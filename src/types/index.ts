@@ -1,6 +1,6 @@
 export type UserRole = 'talker' | 'listener' | 'admin';
 
-export type ListenerStatus = 'idle' | 'busy' | 'listening';
+export type ListenerStatus = 'idle' | 'busy' | 'listening' | 'offline';
 
 export type AppointmentStatus = 'pending' | 'confirmed' | 'cancelled' | 'completed' | 'missed';
 

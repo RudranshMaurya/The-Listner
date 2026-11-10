@@ -45,7 +45,6 @@ export const Navbar: React.FC = () => {
   const navLinks = [
     { label: 'Home', path: '/' },
     { label: 'How it works', path: '/how-it-works' },
-    { label: 'Explore Listeners', path: '/explore' },
     { label: 'Become a Listener', path: '/become-a-listener' }
   ];
 
@@ -127,16 +126,16 @@ export const Navbar: React.FC = () => {
 
             {/* Right: Actions */}
             <div className="flex items-center gap-2 sm:gap-3">
-              {/* Only show Wallet Pill when USER IS LOGGED IN and is Talker */}
+              {/* Only show Credits Pill when USER IS LOGGED IN and is Talker */}
               {currentUser && role !== 'listener' && (
                 <button
                   onClick={() => setIsTopupOpen(true)}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-300 dark:border-stone-700 bg-white dark:bg-stone-900/90 text-gray-900 dark:text-white hover:border-amber-400 dark:hover:border-amber-400 transition-all shadow-xs cursor-pointer active:scale-95 group"
-                  title="Wallet Balance - Click to Recharge"
+                  title="Credits Balance - Click to Add Credits"
                 >
-                  <span className="text-sm">💼</span>
+                  <span className="text-sm">🪙</span>
                   <span className="text-xs sm:text-sm font-bold tracking-tight">
-                    ₹{formatPaise(wallet?.balancePaise || 0)}
+                    ₹{formatPaise(wallet?.balancePaise || 0)} Credits
                   </span>
                   <span className="w-4 h-4 rounded-full bg-amber-400 group-hover:bg-amber-500 text-stone-900 text-xs font-bold flex items-center justify-center leading-none">
                     +
@@ -229,7 +228,7 @@ export const Navbar: React.FC = () => {
                             className="flex items-center gap-2.5 px-4 py-2 text-xs text-stone-700 dark:text-stone-300 hover:bg-[#FAF6F0] dark:hover:bg-[#272420] transition-colors"
                           >
                             <Wallet className="w-4 h-4 text-stone-400" />
-                            {role === 'listener' ? 'Earnings & Payouts' : 'Wallet & Top-up'}
+                            {role === 'listener' ? 'Earnings & Payouts' : 'Credits & Top-up'}
                           </Link>
 
                           <Link

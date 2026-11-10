@@ -221,7 +221,7 @@ export const TalkerSettingsPage: React.FC = () => {
             <div className="flex items-center gap-3">
               <Wallet className="w-4 h-4 text-stone-500" />
               <span className="text-xs sm:text-sm font-medium text-stone-800 dark:text-stone-200">
-                Wallet & Recharge History
+                Credits & Recharge History
               </span>
             </div>
             <ChevronRight className="w-4 h-4 text-stone-400" />
@@ -398,10 +398,10 @@ export const TalkerSettingsPage: React.FC = () => {
         <div className="space-y-4 text-left text-xs text-stone-600 dark:text-stone-300">
           <div className="p-3.5 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/40">
             <p className="font-bold text-amber-900 dark:text-amber-300 mb-1">
-              Payment & Wallet Inquiries:
+              Payment & Credits Inquiries:
             </p>
             <p>
-              UPI auto-credit detects transactions instantly via notification webhook. If you experience any delay, click "Instant Auto-Verify" inside your wallet top-up window.
+              UPI auto-credit detects transactions via webhook. If you experience any delay, pending orders can be approved or managed inside your Credits section.
             </p>
           </div>
 

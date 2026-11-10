@@ -3,7 +3,7 @@ import { CheckCircle2, Circle } from 'lucide-react';
 import type { ListenerStatus } from '../../types';
 
 export interface BadgeProps {
-  variant?: 'idle' | 'busy' | 'listening' | 'verified' | 'success' | 'warning' | 'danger' | 'neutral' | 'info';
+  variant?: 'idle' | 'busy' | 'listening' | 'offline' | 'verified' | 'success' | 'warning' | 'danger' | 'neutral' | 'info';
   children?: React.ReactNode;
   className?: string;
   size?: 'sm' | 'md';
@@ -23,6 +23,7 @@ export const Badge: React.FC<BadgeProps> = ({
     busy: 'bg-amber-50 text-amber-700 border-amber-200/80 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/60',
     // Sand for listening
     listening: 'bg-[#FAF6F0] text-[#875C34] border-[#DEC6A5] dark:bg-[#272420] dark:text-[#E9D9C3] dark:border-[#38332E]',
+    offline: 'bg-stone-100 text-stone-500 border-stone-200 dark:bg-stone-800 dark:text-stone-400 dark:border-stone-700',
     // Forest for verified
     verified: 'bg-[#F0FDF4] text-[#166534] border-[#BBF7D0] dark:bg-[#142B1A] dark:text-[#86EFAC] dark:border-[#1E4D2B]',
     success: 'bg-[#F0FDF4] text-[#166534] border-[#BBF7D0] dark:bg-[#142B1A] dark:text-[#86EFAC]',
@@ -46,6 +47,9 @@ export const Badge: React.FC<BadgeProps> = ({
       {variant === 'listening' && (
         <span className="w-1.5 h-1.5 rounded-full bg-[#D4A373] animate-ping" />
       )}
+      {variant === 'offline' && (
+        <span className="w-1.5 h-1.5 rounded-full bg-stone-400" />
+      )}
       {variant === 'verified' && (
         <CheckCircle2 className="w-3.5 h-3.5 text-[#166534] dark:text-[#86EFAC] shrink-0" />
       )}
@@ -58,7 +62,8 @@ export const StatusBadge: React.FC<{ status: ListenerStatus }> = ({ status }) =>
   const labels: Record<ListenerStatus, string> = {
     idle: 'Available Now',
     busy: 'Busy',
-    listening: 'In Conversation'
+    listening: 'In Conversation',
+    offline: 'Offline'
   };
 
   return <Badge variant={status}>{labels[status] || status}</Badge>;

@@ -21,7 +21,15 @@ export const BottomNav: React.FC = () => {
     ? (isTalker ? '/talker/settings' : '/listener/settings')
     : '/login';
 
-  const navItems = [
+  interface NavItem {
+    label: string;
+    path: string;
+    icon: typeof Home;
+    exact?: boolean;
+    badge?: string | number;
+  }
+
+  const navItems: NavItem[] = [
     {
       label: 'Home',
       path: homePath,
@@ -32,12 +40,6 @@ export const BottomNav: React.FC = () => {
       label: 'Chat',
       path: chatPath,
       icon: MessageSquare
-    },
-    {
-      label: 'Explore',
-      path: livePath,
-      icon: Radio,
-      badge: 'LIVE'
     },
     {
       label: 'Call',

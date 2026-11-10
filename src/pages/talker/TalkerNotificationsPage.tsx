@@ -15,7 +15,7 @@ export const TalkerNotificationsPage: React.FC = () => {
           Notifications
         </h2>
         <p className="text-xs text-slate-500 dark:text-slate-400">
-          Booking confirmations, wallet credits, and conversation updates.
+          Booking confirmations, account credits, and conversation updates.
         </p>
       </div>
 

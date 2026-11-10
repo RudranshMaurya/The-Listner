@@ -42,8 +42,13 @@ export const ListenerCard: React.FC<ListenerCardProps> = ({
     // Require at least ₹2.50 (250 paise) to connect
     const currentBalance = wallet?.balancePaise || 0;
     if (currentBalance < 250) {
-      showToast('warning', `Low wallet balance (₹${(currentBalance / 100).toFixed(2)}). Please recharge to connect.`);
+      showToast('warning', `Low credits balance (₹${(currentBalance / 100).toFixed(2)}). Please add credits to connect.`);
       setIsTopupOpen(true);
+      return;
+    }
+
+    if (listener.status === 'offline') {
+      showToast('info', `${listener.displayName} is currently offline. You can book a scheduled slot or choose an online listener.`);
       return;
     }
 
@@ -100,9 +105,19 @@ export const ListenerCard: React.FC<ListenerCardProps> = ({
             {/* Status Indicator Dot */}
             <span
               className={`absolute bottom-0 right-1 w-3.5 h-3.5 rounded-full border-2 border-white dark:border-stone-900 ${
-                listener.status === 'idle' ? 'bg-emerald-500' : 'bg-amber-500'
+                listener.status === 'idle'
+                  ? 'bg-emerald-500'
+                  : listener.status === 'busy' || listener.status === 'listening'
+                  ? 'bg-amber-500'
+                  : 'bg-stone-400'
               }`}
-              title={listener.status === 'idle' ? 'Online' : 'Busy'}
+              title={
+                listener.status === 'idle'
+                  ? 'Available Now'
+                  : listener.status === 'busy' || listener.status === 'listening'
+                  ? 'Busy in Session'
+                  : 'Offline / Not Available'
+              }
             />
           </div>
 
@@ -114,6 +129,11 @@ export const ListenerCard: React.FC<ListenerCardProps> = ({
               </h3>
               {listener.isVerified && (
                 <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+              )}
+              {listener.status === 'offline' && (
+                <span className="text-[10px] font-semibold text-stone-400 bg-stone-100 dark:bg-stone-800 px-2 py-0.5 rounded-full">
+                  Offline
+                </span>
               )}
             </div>
 
@@ -155,31 +175,39 @@ export const ListenerCard: React.FC<ListenerCardProps> = ({
           <div className="flex flex-col gap-2 shrink-0">
             {(preferredAction === 'chat' || preferredAction === 'both') && (
               <button
-                disabled={isStarting !== null}
+                disabled={isStarting !== null || listener.status === 'offline'}
                 onClick={(e) => handleAction(e, 'chat')}
-                className="px-4 sm:px-6 py-2 rounded-xl border-2 border-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 font-bold text-xs sm:text-sm transition-all duration-150 active:scale-95 shadow-xs flex items-center justify-center gap-1.5 cursor-pointer bg-white dark:bg-[#1F1D1A]"
+                className={`px-4 sm:px-6 py-2 rounded-xl border-2 font-bold text-xs sm:text-sm transition-all duration-150 shadow-xs flex items-center justify-center gap-1.5 cursor-pointer ${
+                  listener.status === 'offline'
+                    ? 'border-stone-200 dark:border-stone-800 text-stone-400 bg-stone-50 dark:bg-stone-900 cursor-not-allowed opacity-60'
+                    : 'border-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 active:scale-95 bg-white dark:bg-[#1F1D1A]'
+                }`}
               >
                 {isStarting === 'chat' ? (
                   <Loader2 className="w-4 h-4 animate-spin text-emerald-600" />
                 ) : (
-                  <MessageSquare className="w-4 h-4 text-emerald-600" />
+                  <MessageSquare className="w-4 h-4" />
                 )}
-                <span>Chat</span>
+                <span>{listener.status === 'offline' ? 'Offline' : 'Chat'}</span>
               </button>
             )}
 
             {(preferredAction === 'call' || preferredAction === 'both') && (
               <button
-                disabled={isStarting !== null}
+                disabled={isStarting !== null || listener.status === 'offline'}
                 onClick={(e) => handleAction(e, 'audio')}
-                className="px-4 sm:px-6 py-2 rounded-xl border-2 border-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 font-bold text-xs sm:text-sm transition-all duration-150 active:scale-95 shadow-xs flex items-center justify-center gap-1.5 cursor-pointer bg-white dark:bg-[#1F1D1A]"
+                className={`px-4 sm:px-6 py-2 rounded-xl border-2 font-bold text-xs sm:text-sm transition-all duration-150 shadow-xs flex items-center justify-center gap-1.5 cursor-pointer ${
+                  listener.status === 'offline'
+                    ? 'border-stone-200 dark:border-stone-800 text-stone-400 bg-stone-50 dark:bg-stone-900 cursor-not-allowed opacity-60'
+                    : 'border-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 active:scale-95 bg-white dark:bg-[#1F1D1A]'
+                }`}
               >
                 {isStarting === 'audio' ? (
                   <Loader2 className="w-4 h-4 animate-spin text-emerald-600" />
                 ) : (
-                  <PhoneCall className="w-4 h-4 text-emerald-600" />
+                  <PhoneCall className="w-4 h-4" />
                 )}
-                <span>Call</span>
+                <span>{listener.status === 'offline' ? 'Offline' : 'Call'}</span>
               </button>
             )}
           </div>

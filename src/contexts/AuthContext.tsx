@@ -8,7 +8,7 @@ import {
 import { ref, onValue, get, set } from 'firebase/database';
 import { auth, googleProvider, db } from '../lib/firebase';
 import type { UserProfile, UserRole, Wallet } from '../types';
-import { getUserProfile, saveUserProfile, subscribeToWallet } from '../lib/database';
+import { getUserProfile, saveUserProfile, subscribeToWallet, setupPresence } from '../lib/database';
 
 interface AuthContextType {
   currentUser: FirebaseUser | null;
@@ -17,7 +17,7 @@ interface AuthContextType {
   wallet: Wallet | null;
   isAdmin: boolean;
   loading: boolean;
-  loginWithGoogle: () => Promise<UserProfile>;
+  loginWithGoogle: (extra?: { displayName?: string; gender?: string }) => Promise<UserProfile>;
   logout: () => Promise<void>;
   updateProfileData: (data: Partial<UserProfile>) => Promise<void>;
   refreshProfile: () => Promise<void>;
@@ -34,10 +34,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     let unsubWallet: (() => void) | null = null;
+    let cleanupPresence: (() => void) | null = null;
 
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
       if (user) {
+        // Setup live presence with automatic onDisconnect detection
+        const cachedRole = localStorage.getItem('tl_selected_role') || undefined;
+        cleanupPresence = setupPresence(user.uid, cachedRole);
+
         // Subscribe to live wallet
         unsubWallet = subscribeToWallet(user.uid, (w) => {
           setWallet(w);
@@ -50,12 +55,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const p = snapshot.val() as UserProfile;
             setProfile(p);
             checkAdminStatus(user.uid, p);
+            if (p.role) {
+              if (cleanupPresence) cleanupPresence();
+              cleanupPresence = setupPresence(user.uid, p.role);
+            }
           } else {
             // Check if profile exists in users or create placeholder
             const p = await getUserProfile(user.uid);
             if (p) {
               setProfile(p);
               checkAdminStatus(user.uid, p);
+              if (p.role) {
+                if (cleanupPresence) cleanupPresence();
+                cleanupPresence = setupPresence(user.uid, p.role);
+              }
             } else {
               setProfile(null);
               setIsAdmin(false);
@@ -67,8 +80,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return () => {
           unsubProfile();
           if (unsubWallet) unsubWallet();
+          if (cleanupPresence) cleanupPresence();
         };
       } else {
+        if (cleanupPresence) cleanupPresence();
         setProfile(null);
         setWallet(null);
         setIsAdmin(false);
@@ -79,6 +94,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return () => {
       unsubscribe();
       if (unsubWallet) unsubWallet();
+      if (cleanupPresence) cleanupPresence();
     };
   }, []);
 
@@ -94,27 +110,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const loginWithGoogle = async (): Promise<UserProfile> => {
+  const loginWithGoogle = async (extra?: { displayName?: string; gender?: string }): Promise<UserProfile> => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
       const existing = await getUserProfile(user.uid);
 
       if (!existing) {
-        // First login: profile not yet completed, will be guided to onboarding
+        // Direct talker onboarding: Name and Gender only, onboardingCompleted: true
         const initialProfile: UserProfile = {
           uid: user.uid,
           email: user.email || "",
-          displayName: user.displayName || "User",
+          displayName: extra?.displayName?.trim() || user.displayName || "Talker",
+          gender: extra?.gender || "Prefer not to say",
           photoURL: user.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.uid}`,
-          role: "talker", // default placeholder, chosen in onboarding
+          role: "talker",
           createdAt: Date.now(),
-          onboardingCompleted: false
+          onboardingCompleted: true
         };
         await saveUserProfile(initialProfile);
         setProfile(initialProfile);
         return initialProfile;
       } else {
+        if (extra?.displayName || extra?.gender) {
+          const updated: UserProfile = {
+            ...existing,
+            displayName: extra.displayName?.trim() || existing.displayName,
+            gender: extra.gender || existing.gender || "Prefer not to say",
+            onboardingCompleted: true
+          };
+          await saveUserProfile(updated);
+          setProfile(updated);
+          return updated;
+        }
         setProfile(existing);
         return existing;
       }

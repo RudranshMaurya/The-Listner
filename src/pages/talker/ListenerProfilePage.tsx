@@ -64,7 +64,7 @@ export const ListenerProfilePage: React.FC = () => {
     // Check talker wallet balance first
     const wallet = await getWallet(currentUser.uid);
     if ((wallet.balancePaise || 0) < 500) {
-      showToast('warning', 'Please add money to your wallet before starting a paid session. Minimum ₹5 required.');
+      showToast('warning', 'Please add credits to your account before starting a paid session. Minimum ₹5 required.');
       setIsTopupOpen(true);
       return;
     }

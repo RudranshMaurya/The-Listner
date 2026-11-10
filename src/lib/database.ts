@@ -184,12 +184,15 @@ export async function setListenerStatus(uid: string, status: ListenerStatus): Pr
   });
 }
 
-export function setupPresence(uid: string) {
+export function setupPresence(uid: string, role?: string) {
   const userStatusRef = ref(db, `presence/${uid}`);
   const connectedRef = ref(db, ".info/connected");
+  const listenerProfileStatusRef = ref(db, `listenerProfiles/${uid}/status`);
+  const listenerAvailStatusRef = ref(db, `listenerAvailability/${uid}/status`);
 
-  onValue(connectedRef, (snap) => {
+  const unsub = onValue(connectedRef, (snap) => {
     if (snap.val() === true) {
+      // Setup general onDisconnect
       onDisconnect(userStatusRef).set({
         state: "offline",
         lastChanged: serverTimestamp()
@@ -199,8 +202,41 @@ export function setupPresence(uid: string) {
         state: "online",
         lastChanged: serverTimestamp()
       });
+
+      // If user is a listener, register onDisconnect to immediately mark offline when browser closes!
+      if (role === "listener") {
+        onDisconnect(listenerProfileStatusRef).set("offline");
+        onDisconnect(listenerAvailStatusRef).set("offline");
+
+        // Mark as idle and online while tab is open
+        set(listenerProfileStatusRef, "idle");
+        set(listenerAvailStatusRef, "idle");
+        set(ref(db, `listenerProfiles/${uid}/lastActive`), Date.now());
+      }
     }
   });
+
+  const handleBeforeUnload = () => {
+    if (role === "listener") {
+      set(listenerProfileStatusRef, "offline");
+      set(listenerAvailStatusRef, "offline");
+    }
+    set(userStatusRef, {
+      state: "offline",
+      lastChanged: Date.now()
+    });
+  };
+
+  window.addEventListener("beforeunload", handleBeforeUnload);
+
+  return () => {
+    unsub();
+    window.removeEventListener("beforeunload", handleBeforeUnload);
+    if (role === "listener") {
+      set(listenerProfileStatusRef, "offline");
+      set(listenerAvailStatusRef, "offline");
+    }
+  };
 }
 
 // ==========================================

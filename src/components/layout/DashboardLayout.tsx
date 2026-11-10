@@ -55,7 +55,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ role }) => {
     { label: 'Find Listeners', path: '/talker/listeners', icon: <Users className="w-4 h-4" /> },
     { label: 'Appointments', path: '/talker/appointments', icon: <Calendar className="w-4 h-4" /> },
     { label: 'Conversations', path: '/talker/conversations', icon: <MessageSquare className="w-4 h-4" /> },
-    { label: 'Wallet & Top-up', path: '/talker/wallet', icon: <WalletIcon className="w-4 h-4" /> },
+    { label: 'Credits', path: '/talker/wallet', icon: <WalletIcon className="w-4 h-4" /> },
     { label: 'Notifications', path: '/talker/notifications', icon: <Bell className="w-4 h-4" /> },
     { label: 'Settings', path: '/talker/settings', icon: <Settings className="w-4 h-4" /> }
   ];
@@ -130,9 +130,9 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ role }) => {
           {role === 'talker' ? (
             <div className="flex items-center gap-3">
               <div className="text-right">
-                <p className="text-[10px] uppercase font-semibold text-stone-400">Wallet Balance</p>
+                <p className="text-[10px] uppercase font-semibold text-stone-400">Credits Balance</p>
                 <p className="text-lg font-bold text-stone-900 dark:text-white">
-                  {formatPaise(wallet?.balancePaise || 0)}
+                  ₹{formatPaise(wallet?.balancePaise || 0)} Credits
                 </p>
               </div>
               <Button
@@ -141,7 +141,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ role }) => {
                 variant="primary"
                 leftIcon={<PlusCircle className="w-3.5 h-3.5" />}
               >
-                Add Money
+                Add Credits
               </Button>
             </div>
           ) : (

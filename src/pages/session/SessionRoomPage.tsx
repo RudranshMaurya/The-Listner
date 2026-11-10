@@ -237,11 +237,11 @@ export const SessionRoomPage: React.FC = () => {
             talkerWallet={talkerWallet}
             onLowBalance={() => {
               if (isTalker) {
-                showToast('warning', 'Low wallet balance: You have less than 2 minutes of conversation funds remaining. Please top up soon.');
+                showToast('warning', 'Low credits balance: You have less than 2 minutes of conversation credits remaining. Please add credits soon.');
               }
             }}
             onAutoEndSession={() => {
-              showToast('error', 'Wallet funds exhausted. Ending conversation safely.');
+              showToast('error', 'Credits exhausted. Ending conversation safely.');
               handleEndConversation();
             }}
           />
@@ -390,7 +390,7 @@ export const SessionRoomPage: React.FC = () => {
         isOpen={isEndConfirmOpen}
         onClose={() => setIsEndConfirmOpen(false)}
         title="End Conversation?"
-        description="Billing stops immediately upon ending. The final charge will be debited from wallet according to active server duration."
+        description="Billing stops immediately upon ending. The final charge will be debited from credits according to active server duration."
       >
         <div className="space-y-4 text-left">
           <p className="text-xs text-slate-600 dark:text-slate-300">

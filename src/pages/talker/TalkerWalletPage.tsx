@@ -67,7 +67,7 @@ export const TalkerWalletPage: React.FC = () => {
     try {
       setApprovingId(orderId);
       await confirmTopupPayment(orderId, `FAM-${Date.now()}`, 'Instant Auto-Approval');
-      showToast('success', `Top-up ${orderId} has been verified and credited to your wallet!`);
+      showToast('success', `Top-up ${orderId} has been verified and credited to your account credits!`);
     } catch (e: any) {
       showToast('error', e.message || 'Failed to auto-approve top-up.');
     } finally {
@@ -77,17 +77,17 @@ export const TalkerWalletPage: React.FC = () => {
 
   return (
     <div className="space-y-6 text-left">
-      {/* Wallet Balance Hero Card */}
+      {/* Credits Balance Hero Card */}
       <div className="rounded-3xl bg-gradient-to-tr from-[#1F1D1A] via-[#272420] to-[#161412] text-white p-6 sm:p-8 shadow-xl border border-[#D4A373]/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 transition-colors">
         <div>
           <span className="text-xs uppercase font-semibold text-[#D4A373] dark:text-[#DEC6A5] tracking-wider">
-            Available Balance
+            Available Credits
           </span>
           <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight mt-1 text-white">
-            {formatPaise(wallet?.balancePaise || 0)}
+            ₹{formatPaise(wallet?.balancePaise || 0)} Credits
           </h2>
           <p className="text-xs text-[#DEC6A5]/80 mt-1">
-            Standard rate: ₹5 per 2 minutes. Deducted proportionally to active conversation time.
+            Standard rate: ₹2.50 per minute (₹5 per 2 mins). Deducted proportionally to conversation time.
           </p>
         </div>
 
@@ -98,7 +98,7 @@ export const TalkerWalletPage: React.FC = () => {
           className="shadow-md font-bold"
           leftIcon={<PlusCircle className="w-4 h-4 text-stone-900" />}
         >
-          Add Money via UPI
+          Add Credits via UPI
         </Button>
       </div>
 
@@ -188,12 +188,12 @@ export const TalkerWalletPage: React.FC = () => {
       {/* Transaction History Ledger */}
       <Card className="p-6 space-y-4">
         <h3 className="text-sm font-bold text-stone-900 dark:text-white border-b border-[#EFEBE4] dark:border-[#332E28] pb-3">
-          Wallet Transaction Ledger
+          Credits Transaction Ledger
         </h3>
 
         {ledger.length === 0 ? (
           <p className="text-xs text-stone-400 py-4 text-center">
-            No transactions recorded yet. Add money to get started!
+            No transactions recorded yet. Add credits to get started!
           </p>
         ) : (
           <div className="space-y-2.5">
