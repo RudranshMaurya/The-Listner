@@ -9,7 +9,7 @@ import { Button } from '../../components/common/Button';
 import { Badge } from '../../components/common/Badge';
 import { formatPaise } from '../../lib/upi';
 import { formatDuration } from '../../lib/billing';
-import { Activity, Clock, Phone, MessageSquare, LogOut } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 
 export const AdminSessionsPage: React.FC = () => {
   const { currentUser } = useAuth();
@@ -43,23 +43,23 @@ export const AdminSessionsPage: React.FC = () => {
   return (
     <div className="space-y-6 text-left">
       <div>
-        <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+        <h2 className="text-title text-text tracking-tight">
           Active & Historical Conversations ({sessions.length})
         </h2>
-        <p className="text-xs text-slate-500 dark:text-slate-400">
+        <p className="text-small text-text-muted mt-0.5">
           Supervise live active rooms, durations, and financial ledger settlement.
         </p>
       </div>
 
       <div className="space-y-3">
         {sessions.map((s) => (
-          <Card key={s.id} className="p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <Card key={s.id} padding="md" className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <div className="flex items-center gap-2">
-                <span className="font-bold text-sm text-slate-900 dark:text-white">
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="font-semibold text-small text-text">
                   Talker: {s.talkerName} ↔ Listener: {s.listenerName}
                 </span>
-                <Badge variant={s.status === 'active' ? 'listening' : 'neutral'} size="sm">
+                <Badge variant={s.status === 'active' ? 'success' : 'neutral'} size="sm">
                   {s.status}
                 </Badge>
                 <Badge variant="neutral" size="sm">
@@ -67,16 +67,16 @@ export const AdminSessionsPage: React.FC = () => {
                 </Badge>
               </div>
 
-              <div className="flex items-center gap-3 mt-1.5 text-xs text-slate-500">
+              <div className="flex items-center gap-3 mt-1.5 text-caption text-text-muted">
                 <span>Session ID: {s.id}</span>
                 <span>•</span>
                 <span>Duration: {formatDuration(s.billableSeconds || s.durationSeconds || 0)}</span>
                 <span>•</span>
-                <span className="font-bold text-slate-900 dark:text-white">
+                <span className="font-semibold text-text">
                   Charge: {formatPaise(s.totalChargePaise || 0)}
                 </span>
                 <span>•</span>
-                <span className="text-emerald-600 dark:text-emerald-400 font-semibold">
+                <span className="text-success font-medium">
                   Payout: {formatPaise(s.listenerEarningsPaise || 0)}
                 </span>
               </div>

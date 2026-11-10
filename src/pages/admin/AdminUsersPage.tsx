@@ -6,10 +6,9 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useNotifications } from '../../contexts/NotificationContext';
 import type { UserProfile, UserRole } from '../../types';
 import { Card } from '../../components/common/Card';
-import { Button } from '../../components/common/Button';
 import { Badge } from '../../components/common/Badge';
 import { Input } from '../../components/common/Input';
-import { Search, Shield, User, CheckCircle2 } from 'lucide-react';
+import { Search } from 'lucide-react';
 
 export const AdminUsersPage: React.FC = () => {
   const { currentUser } = useAuth();
@@ -60,34 +59,34 @@ export const AdminUsersPage: React.FC = () => {
     <div className="space-y-6 text-left">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+          <h2 className="text-title text-text tracking-tight">
             User Management Directory ({users.length})
           </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-small text-text-muted mt-0.5">
             View profiles, assign roles, and review account statuses.
           </p>
         </div>
 
-        <div className="flex gap-2">
+        <div className="w-full sm:w-64">
           <Input
-            placeholder="Search users by name/email..."
+            placeholder="Search users..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             leftIcon={<Search className="w-4 h-4" />}
-            className="w-64"
           />
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5 bg-surface p-1 rounded-pill border border-border w-fit text-caption">
         {(['all', 'talker', 'listener', 'admin'] as const).map((r) => (
           <button
+            type="button"
             key={r}
             onClick={() => setRoleFilter(r)}
-            className={`px-3 py-1 rounded-full text-xs font-semibold capitalize transition-all ${
+            className={`px-3 py-1.5 rounded-pill capitalize transition-all cursor-pointer ${
               roleFilter === r
-                ? 'bg-indigo-600 text-white shadow-xs'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
+                ? 'bg-surface-raised text-text font-semibold shadow-soft'
+                : 'text-text-muted hover:text-text'
             }`}
           >
             {r === 'all' ? 'All Roles' : `${r}s`}
@@ -95,10 +94,10 @@ export const AdminUsersPage: React.FC = () => {
         ))}
       </div>
 
-      <Card className="overflow-hidden">
+      <Card padding="none" className="overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 dark:bg-slate-800/60 border-b border-slate-200 dark:border-slate-800 uppercase text-[10px] text-slate-400 font-semibold tracking-wider">
+          <table className="w-full text-left text-small">
+            <thead className="bg-surface border-b border-border uppercase text-[10px] text-text-muted font-semibold tracking-wider">
               <tr>
                 <th className="py-3 px-4">User</th>
                 <th className="py-3 px-4">Role</th>
@@ -107,34 +106,34 @@ export const AdminUsersPage: React.FC = () => {
                 <th className="py-3 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+            <tbody className="divide-y divide-border">
               {filtered.map((u) => (
-                <tr key={u.uid} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/30">
+                <tr key={u.uid} className="hover:bg-surface/50 transition-colors">
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-3">
                       <img
                         src={u.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.uid}`}
                         alt={u.displayName}
-                        className="w-8 h-8 rounded-full object-cover"
+                        className="w-8 h-8 rounded-pill object-cover bg-surface border border-border"
                       />
                       <div>
-                        <p className="font-bold text-slate-900 dark:text-white">{u.displayName}</p>
-                        <p className="text-[10px] text-slate-400">{u.email}</p>
+                        <p className="font-semibold text-text">{u.displayName}</p>
+                        <p className="text-caption text-text-muted">{u.email}</p>
                       </div>
                     </div>
                   </td>
 
                   <td className="py-3 px-4">
-                    <Badge variant={u.role === 'admin' ? 'danger' : u.role === 'listener' ? 'listening' : 'neutral'} size="sm">
+                    <Badge variant={u.role === 'admin' ? 'danger' : u.role === 'listener' ? 'success' : 'neutral'} size="sm">
                       {u.role}
                     </Badge>
                   </td>
 
-                  <td className="py-3 px-4 text-slate-500">
+                  <td className="py-3 px-4 text-text-muted text-caption">
                     {u.age ? `${u.age} yrs` : '—'} • {u.location || 'India'}
                   </td>
 
-                  <td className="py-3 px-4 text-slate-400">
+                  <td className="py-3 px-4 text-text-muted text-caption">
                     {new Date(u.createdAt).toLocaleDateString()}
                   </td>
 
@@ -142,7 +141,7 @@ export const AdminUsersPage: React.FC = () => {
                     <select
                       value={u.role}
                       onChange={(e) => handleToggleRole(u, e.target.value as UserRole)}
-                      className="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-2 py-1 text-xs text-slate-700 dark:text-slate-300 focus:outline-none"
+                      className="rounded-input border border-border bg-surface px-2.5 py-1 text-caption text-text focus:outline-none focus:ring-2 focus:ring-accent/30"
                     >
                       <option value="talker">Talker</option>
                       <option value="listener">Listener</option>

@@ -8,6 +8,7 @@ import type { Review } from '../../types';
 import { Card } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
 import { StarRating } from '../../components/common/StarRating';
+import { EmptyState } from '../../components/common/EmptyState';
 import { Star, Trash2 } from 'lucide-react';
 
 export const AdminReviewsPage: React.FC = () => {
@@ -55,30 +56,32 @@ export const AdminReviewsPage: React.FC = () => {
   return (
     <div className="space-y-6 text-left">
       <div>
-        <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+        <h2 className="text-title text-text tracking-tight">
           Review Moderation Queue ({reviews.length})
         </h2>
-        <p className="text-xs text-slate-500 dark:text-slate-400">
+        <p className="text-small text-text-muted mt-0.5">
           Monitor feedback submitted by talkers. Inappropriate remarks can be moderated here.
         </p>
       </div>
 
       <div className="space-y-3">
         {reviews.length === 0 ? (
-          <Card className="p-8 text-center text-slate-400 text-xs">
-            No reviews submitted on platform yet.
-          </Card>
+          <EmptyState
+            icon={<Star className="w-5 h-5 text-text-muted" />}
+            title="No Reviews Submitted Yet"
+            description="Reviews submitted by talkers for listeners will appear here."
+          />
         ) : (
           reviews.map((rev) => (
-            <Card key={rev.id} className="p-5 flex items-start justify-between gap-4">
+            <Card key={rev.id} padding="md" className="flex items-start justify-between gap-4">
               <div className="space-y-1.5">
                 <div className="flex items-center gap-3">
-                  <span className="font-bold text-sm text-slate-900 dark:text-white">
+                  <span className="font-semibold text-small text-text">
                     {rev.talkerName}
                   </span>
                   <StarRating rating={rev.rating} size="sm" />
-                  <span className="text-slate-400 text-xs">•</span>
-                  <span className="text-[11px] text-slate-400">
+                  <span className="text-border">•</span>
+                  <span className="text-caption text-text-muted">
                     {new Date(rev.createdAt).toLocaleDateString()}
                   </span>
                 </div>
@@ -86,24 +89,23 @@ export const AdminReviewsPage: React.FC = () => {
                 {rev.tags && rev.tags.length > 0 && (
                   <div className="flex flex-wrap gap-1">
                     {rev.tags.map((t) => (
-                      <span key={t} className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium">
+                      <span key={t} className="text-caption px-2.5 py-0.5 rounded-pill bg-surface border border-border text-text-muted">
                         {t}
                       </span>
                     ))}
                   </div>
                 )}
 
-                <p className="text-xs text-slate-600 dark:text-slate-300 italic pt-1">
+                <p className="text-small text-text-muted italic pt-1">
                   "{rev.comment}"
                 </p>
               </div>
 
               <Button
                 size="sm"
-                variant="outline"
+                variant="ghost"
                 onClick={() => handleDeleteReview(rev)}
-                className="text-rose-600 hover:bg-rose-50"
-                leftIcon={<Trash2 className="w-3.5 h-3.5" />}
+                leftIcon={<Trash2 className="w-3.5 h-3.5 text-danger" />}
               >
                 Delete
               </Button>

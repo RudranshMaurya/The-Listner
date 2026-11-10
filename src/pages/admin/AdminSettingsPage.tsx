@@ -6,7 +6,7 @@ import type { AdminPlatformConfig } from '../../types';
 import { Card } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
 import { Input } from '../../components/common/Input';
-import { Save, Shield, Settings, Sliders } from 'lucide-react';
+import { Save } from 'lucide-react';
 
 export const AdminSettingsPage: React.FC = () => {
   const { currentUser } = useAuth();
@@ -61,7 +61,7 @@ export const AdminSettingsPage: React.FC = () => {
         details: JSON.stringify(updated)
       });
 
-      showToast('success', 'Platform settings successfully saved to trusted configuration.');
+      showToast('success', 'Platform settings successfully saved.');
     } catch (e: any) {
       showToast('error', e.message || 'Failed to update configuration.');
     } finally {
@@ -72,15 +72,15 @@ export const AdminSettingsPage: React.FC = () => {
   return (
     <div className="max-w-2xl space-y-6 text-left">
       <div>
-        <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+        <h2 className="text-title text-text tracking-tight">
           Platform Configuration & Rules
         </h2>
-        <p className="text-xs text-slate-500 dark:text-slate-400">
-          Centralized billing engine rates, commission rates, and safety parameters stored in backend configuration.
+        <p className="text-small text-text-muted mt-0.5">
+          Centralized billing engine rates, commission rates, and safety parameters.
         </p>
       </div>
 
-      <Card className="p-6 sm:p-8 space-y-5">
+      <Card padding="lg" className="space-y-5">
         <form onSubmit={handleSave} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input
@@ -138,12 +138,12 @@ export const AdminSettingsPage: React.FC = () => {
           />
 
           <div className="pt-2">
-            <label className="flex items-center justify-between p-4 rounded-2xl border border-slate-200 dark:border-slate-700 cursor-pointer">
+            <label className="flex items-center justify-between p-4 rounded-input border border-border bg-surface cursor-pointer">
               <div>
-                <p className="text-xs font-bold text-slate-900 dark:text-white">
+                <p className="text-small font-semibold text-text">
                   Maintenance Mode
                 </p>
-                <p className="text-[11px] text-slate-500">
+                <p className="text-caption text-text-muted">
                   Temporarily pause new conversation initiation for system maintenance.
                 </p>
               </div>
@@ -151,12 +151,12 @@ export const AdminSettingsPage: React.FC = () => {
                 type="checkbox"
                 checked={maintenance}
                 onChange={(e) => setMaintenance(e.target.checked)}
-                className="w-5 h-5 rounded text-indigo-600 focus:ring-indigo-500"
+                className="w-5 h-5 rounded-input text-accent focus:ring-accent accent-accent cursor-pointer"
               />
             </label>
           </div>
 
-          <div className="pt-3 flex justify-end">
+          <div className="pt-3 border-t border-border flex justify-end">
             <Button
               type="submit"
               variant="primary"

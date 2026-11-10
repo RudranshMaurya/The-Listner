@@ -11,12 +11,7 @@ import { Modal } from '../../components/common/Modal';
 import { DESTINATION_UPI_ID, formatRupees } from '../../lib/upi';
 import {
   BellRing,
-  Smartphone,
-  ShieldCheck,
-  CheckCircle2,
-  Clock,
-  ExternalLink,
-  Search
+  CheckCircle2
 } from 'lucide-react';
 
 export const AdminPaymentsPage: React.FC = () => {
@@ -71,63 +66,62 @@ export const AdminPaymentsPage: React.FC = () => {
     <div className="space-y-6 text-left">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-            <BellRing className="w-5 h-5 text-indigo-500" />
-            <span>MacroDroid Payment Notification Receiver</span>
+          <h2 className="text-title text-text tracking-tight flex items-center gap-2">
+            <BellRing className="w-5 h-5 text-accent" />
+            <span>UPI Payment Reconciliation</span>
           </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            Incoming UPI candidate notifications received at <code className="font-mono text-indigo-500">http://&lt;LOCAL_IP&gt;:5050/notify</code> for <code className="font-mono">{DESTINATION_UPI_ID}</code>.
+          <p className="text-small text-text-muted mt-0.5">
+            Incoming candidate notifications matched for <code className="font-mono text-accent">{DESTINATION_UPI_ID}</code>.
           </p>
         </div>
       </div>
 
-      {/* MacroDroid Server Connection Status Box */}
-      <Card className="p-5 bg-slate-900 text-white border-slate-800 space-y-3">
+      {/* Gateway Connection Status Box */}
+      <Card padding="md" className="space-y-2">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-xs font-semibold text-emerald-400">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <div className="flex items-center gap-2 text-caption font-semibold text-success">
+            <span className="w-2 h-2 rounded-pill bg-success animate-pulse" />
             <span>Python Gateway Listening (Port 5050)</span>
           </div>
-          <span className="text-[11px] text-slate-400 font-mono">rudransh-maurya@fam</span>
+          <span className="text-caption text-text-muted font-mono">rudransh-maurya@fam</span>
         </div>
-        <p className="text-xs text-slate-300 leading-relaxed">
-          Your MacroDroid macro points to: <code className="text-indigo-400 font-mono">http://&lt;IP&gt;:5050/notify?text={'{notification}'}</code>.
-          The gateway parses Indian bank SMS, Google Pay, PhonePe, and FamPay alerts, performs deduplication, and streams candidates to this reconciliation console.
+        <p className="text-small text-text-muted leading-relaxed">
+          The webhook gateway parses Indian bank SMS, Google Pay, PhonePe, and FamPay alerts, performs deduplication, and streams candidates to this reconciliation console.
         </p>
       </Card>
 
       {/* Pending Orders Reconciler */}
-      <Card className="p-6 space-y-4">
-        <h3 className="text-sm font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3">
+      <Card padding="md" className="space-y-4">
+        <h3 className="text-small font-semibold text-text border-b border-border pb-3">
           Awaiting Verification & Wallet Credit ({pendingList.length})
         </h3>
 
         {pendingList.length === 0 ? (
-          <p className="text-xs text-slate-400 py-4 text-center">
+          <p className="text-caption text-text-muted py-6 text-center">
             No pending top-up orders awaiting reconciliation.
           </p>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-2">
             {pendingList.map((topup) => (
               <div
                 key={topup.id}
-                className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-2xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200/80 dark:border-amber-900/50 text-xs"
+                className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-3.5 rounded-input bg-surface border border-border text-small"
               >
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-sm text-slate-900 dark:text-white">
+                    <span className="font-semibold text-text">
                       {formatRupees(topup.amountRupees)}
                     </span>
                     <Badge variant="warning" size="sm">Pending</Badge>
-                    <span className="font-mono text-indigo-600 dark:text-indigo-400 font-semibold">
+                    <span className="font-mono text-accent text-caption">
                       Ref: {topup.id}
                     </span>
                   </div>
 
-                  <p className="text-slate-600 dark:text-slate-300 mt-1">
-                    Talker: <strong>{topup.userName}</strong> ({topup.userEmail})
+                  <p className="text-caption text-text-muted mt-1">
+                    Talker: <strong className="text-text">{topup.userName}</strong> ({topup.userEmail})
                   </p>
-                  <p className="text-[11px] text-slate-400 mt-0.5">
+                  <p className="text-[11px] text-text-muted mt-0.5">
                     Created: {new Date(topup.createdAt).toLocaleTimeString()} ({new Date(topup.createdAt).toLocaleDateString()})
                   </p>
                 </div>
@@ -141,7 +135,7 @@ export const AdminPaymentsPage: React.FC = () => {
                   }}
                   leftIcon={<CheckCircle2 className="w-4 h-4" />}
                 >
-                  Verify & Credit Wallet
+                  Verify & Credit
                 </Button>
               </div>
             ))}
@@ -150,35 +144,35 @@ export const AdminPaymentsPage: React.FC = () => {
       </Card>
 
       {/* Credited History */}
-      <Card className="p-6 space-y-4">
-        <h3 className="text-sm font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3">
+      <Card padding="md" className="space-y-4">
+        <h3 className="text-small font-semibold text-text border-b border-border pb-3">
           Recently Confirmed & Credited ({creditedList.length})
         </h3>
 
         {creditedList.length === 0 ? (
-          <p className="text-xs text-slate-400 py-4 text-center">
+          <p className="text-caption text-text-muted py-6 text-center">
             No credited payments recorded yet.
           </p>
         ) : (
-          <div className="space-y-2.5">
+          <div className="space-y-2">
             {creditedList.slice(0, 5).map((topup) => (
               <div
                 key={topup.id}
-                className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 text-xs"
+                className="flex items-center justify-between p-3.5 rounded-input bg-surface border border-border text-small"
               >
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-slate-900 dark:text-white">
+                    <span className="font-semibold text-text">
                       ₹{topup.amountRupees.toFixed(2)}
                     </span>
                     <Badge variant="success" size="sm">Credited</Badge>
-                    <span className="font-mono text-slate-500">Ref: {topup.id}</span>
+                    <span className="font-mono text-text-muted text-caption">Ref: {topup.id}</span>
                   </div>
-                  <p className="text-slate-400 text-[11px] mt-0.5">
+                  <p className="text-caption text-text-muted mt-0.5">
                     Talker: {topup.userName} • Bank UTR: {topup.utrRef || 'Verified'} • Confirmed by: {topup.confirmedBy}
                   </p>
                 </div>
-                <span className="text-[11px] text-slate-400">
+                <span className="text-caption text-text-muted">
                   {topup.confirmedAt ? new Date(topup.confirmedAt).toLocaleDateString() : 'Done'}
                 </span>
               </div>
@@ -196,7 +190,7 @@ export const AdminPaymentsPage: React.FC = () => {
           description={`Verify that ₹${selectedTopup.amountRupees.toFixed(2)} was received on ${DESTINATION_UPI_ID}.`}
         >
           <div className="space-y-4 text-left">
-            <div className="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs space-y-1">
+            <div className="p-3.5 rounded-input bg-surface border border-border text-small text-text-muted space-y-1">
               <p><strong>Talker:</strong> {selectedTopup.userName} ({selectedTopup.userEmail})</p>
               <p><strong>Expected Amount:</strong> ₹{selectedTopup.amountRupees.toFixed(2)} ({selectedTopup.amountPaise} paise)</p>
               <p><strong>Target VPA:</strong> {DESTINATION_UPI_ID}</p>
@@ -210,7 +204,7 @@ export const AdminPaymentsPage: React.FC = () => {
               helperText="The 12-digit UPI reference number extracted from the banking SMS / notification."
             />
 
-            <div className="pt-2 flex justify-end gap-2 border-t border-slate-100 dark:border-slate-800">
+            <div className="pt-3 flex justify-end gap-2 border-t border-border">
               <Button variant="ghost" size="sm" onClick={() => setSelectedTopup(null)}>
                 Cancel
               </Button>
