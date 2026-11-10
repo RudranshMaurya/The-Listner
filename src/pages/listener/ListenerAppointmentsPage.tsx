@@ -7,7 +7,7 @@ import { Card } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
 import { Badge } from '../../components/common/Badge';
 import { EmptyState } from '../../components/common/EmptyState';
-import { Calendar, Clock, Check, X, PhoneCall, MessageSquare } from 'lucide-react';
+import { Calendar, Check } from 'lucide-react';
 
 export const ListenerAppointmentsPage: React.FC = () => {
   const { currentUser } = useAuth();
@@ -34,38 +34,38 @@ export const ListenerAppointmentsPage: React.FC = () => {
   return (
     <div className="space-y-6 text-left">
       <div>
-        <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+        <h2 className="text-title text-text tracking-tight">
           Client Appointments
         </h2>
-        <p className="text-xs text-slate-500 dark:text-slate-400">
+        <p className="text-small text-text-muted mt-0.5">
           Bookings made by talkers from your availability calendar.
         </p>
       </div>
 
       {appointments.length === 0 ? (
         <EmptyState
-          icon={<Calendar className="w-8 h-8" />}
+          icon={<Calendar className="w-5 h-5 text-text-muted" />}
           title="No Appointments Scheduled"
           description="When talkers book slots from your calendar, they will appear here."
         />
       ) : (
         <div className="space-y-3">
           {appointments.map((appt) => (
-            <Card key={appt.id} className="p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <Card key={appt.id} padding="md" className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-center gap-4">
                 <img
                   src={appt.talkerPhoto || `https://api.dicebear.com/7.x/avataaars/svg?seed=${appt.talkerId}`}
                   alt={appt.talkerName}
-                  className="w-12 h-12 rounded-2xl object-cover border border-slate-200 dark:border-slate-700"
+                  className="w-12 h-12 rounded-card object-cover bg-surface border border-border"
                 />
                 <div>
-                  <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                  <h4 className="text-small font-semibold text-text flex items-center gap-2">
                     <span>{appt.talkerName}</span>
                     <Badge variant={appt.status === 'confirmed' ? 'success' : 'neutral'} size="sm">
                       {appt.status}
                     </Badge>
                   </h4>
-                  <div className="flex items-center gap-3 mt-1 text-xs text-slate-500">
+                  <div className="flex items-center gap-3 mt-1 text-caption text-text-muted">
                     <span>{appt.date}</span>
                     <span>•</span>
                     <span>{appt.timeSlot}</span>
@@ -73,7 +73,7 @@ export const ListenerAppointmentsPage: React.FC = () => {
                     <span className="capitalize">{appt.sessionType}</span>
                   </div>
                   {appt.notes && (
-                    <p className="text-[11px] text-slate-400 mt-1 italic">
+                    <p className="text-caption text-text-muted mt-1 italic">
                       "{appt.notes}"
                     </p>
                   )}
@@ -93,9 +93,8 @@ export const ListenerAppointmentsPage: React.FC = () => {
                     </Button>
                     <Button
                       size="sm"
-                      variant="outline"
+                      variant="ghost"
                       onClick={() => handleStatus(appt.id, 'cancelled')}
-                      className="text-rose-600 hover:bg-rose-50"
                     >
                       Cancel
                     </Button>

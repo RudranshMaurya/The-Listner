@@ -5,7 +5,7 @@ import { getListenerSchedule, saveListenerSchedule } from '../../lib/database';
 import type { ListenerSchedule, DaySchedule } from '../../types';
 import { Card } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
-import { Clock, Save, Plus, Trash2, CheckCircle2 } from 'lucide-react';
+import { Save, Plus, Trash2 } from 'lucide-react';
 
 export const ListenerSchedulePage: React.FC = () => {
   const { currentUser } = useAuth();
@@ -80,10 +80,10 @@ export const ListenerSchedulePage: React.FC = () => {
     <div className="space-y-6 text-left">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+          <h2 className="text-title text-text tracking-tight">
             Availability & Calendar Schedule
           </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-small text-text-muted mt-0.5">
             Set your weekly working hours and time slots. Timezone: {schedule.timezone || 'Asia/Kolkata'}
           </p>
         </div>
@@ -101,12 +101,12 @@ export const ListenerSchedulePage: React.FC = () => {
 
       {/* Global preferences */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <Card className="p-4 flex items-center justify-between">
+        <Card padding="md" className="flex items-center justify-between">
           <div>
-            <p className="text-xs font-bold text-slate-900 dark:text-white">
+            <p className="text-small font-semibold text-text">
               Instant Conversations
             </p>
-            <p className="text-[11px] text-slate-500">
+            <p className="text-caption text-text-muted mt-0.5">
               Accept live incoming chat/call requests when marked online.
             </p>
           </div>
@@ -114,16 +114,16 @@ export const ListenerSchedulePage: React.FC = () => {
             type="checkbox"
             checked={schedule.acceptsImmediate}
             onChange={(e) => setSchedule({ ...schedule, acceptsImmediate: e.target.checked })}
-            className="w-5 h-5 rounded text-indigo-600 focus:ring-indigo-500"
+            className="w-5 h-5 rounded-input text-accent focus:ring-accent accent-accent cursor-pointer"
           />
         </Card>
 
-        <Card className="p-4 flex items-center justify-between">
+        <Card padding="md" className="flex items-center justify-between">
           <div>
-            <p className="text-xs font-bold text-slate-900 dark:text-white">
+            <p className="text-small font-semibold text-text">
               Appointment Scheduling
             </p>
-            <p className="text-[11px] text-slate-500">
+            <p className="text-caption text-text-muted mt-0.5">
               Allow talkers to book future time slots from this schedule.
             </p>
           </div>
@@ -131,59 +131,60 @@ export const ListenerSchedulePage: React.FC = () => {
             type="checkbox"
             checked={schedule.acceptsAppointments}
             onChange={(e) => setSchedule({ ...schedule, acceptsAppointments: e.target.checked })}
-            className="w-5 h-5 rounded text-indigo-600 focus:ring-indigo-500"
+            className="w-5 h-5 rounded-input text-accent focus:ring-accent accent-accent cursor-pointer"
           />
         </Card>
       </div>
 
       {/* Days Table */}
-      <Card className="p-6 space-y-4">
-        <h3 className="text-sm font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3">
+      <Card padding="md" className="space-y-4">
+        <h3 className="text-small font-semibold text-text border-b border-border pb-3">
           Weekly Working Hours
         </h3>
 
-        <div className="space-y-3">
+        <div className="space-y-2">
           {daysOfWeek.map((day) => {
             const dayConfig: DaySchedule = schedule.weekly[day] || { enabled: false, slots: [] };
 
             return (
               <div
                 key={day}
-                className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-800"
+                className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-3.5 rounded-input bg-surface border border-border"
               >
                 <div className="flex items-center gap-3 w-36">
                   <input
                     type="checkbox"
                     checked={dayConfig.enabled}
                     onChange={() => toggleDay(day)}
-                    className="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500"
+                    className="w-4 h-4 rounded-input text-accent focus:ring-accent accent-accent cursor-pointer"
                   />
-                  <span className="text-xs font-bold capitalize text-slate-900 dark:text-white">
+                  <span className="text-small font-semibold capitalize text-text">
                     {day}
                   </span>
                 </div>
 
                 <div className="flex-1 flex flex-wrap items-center gap-2">
                   {!dayConfig.enabled ? (
-                    <span className="text-xs text-slate-400 italic">Unavailable / Day off</span>
+                    <span className="text-caption text-text-muted italic">Unavailable / Day off</span>
                   ) : dayConfig.slots && dayConfig.slots.length > 0 ? (
                     dayConfig.slots.map((slot, sIdx) => (
                       <div
                         key={sIdx}
-                        className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs font-mono"
+                        className="flex items-center gap-1.5 px-3 py-1 rounded-pill bg-surface-raised border border-border text-caption font-mono text-text"
                       >
                         <span>{slot.start} - {slot.end}</span>
                         <button
                           type="button"
                           onClick={() => removeSlot(day, sIdx)}
-                          className="text-slate-400 hover:text-rose-500 p-0.5"
+                          className="text-text-muted hover:text-danger p-0.5 cursor-pointer"
+                          aria-label="Remove slot"
                         >
-                          <Trash2 className="w-3 h-3" />
+                          <Trash2 className="w-3.5 h-3.5" />
                         </button>
                       </div>
                     ))
                   ) : (
-                    <span className="text-xs text-slate-400">No slots defined</span>
+                    <span className="text-caption text-text-muted">No slots defined</span>
                   )}
                 </div>
 
@@ -193,7 +194,6 @@ export const ListenerSchedulePage: React.FC = () => {
                     variant="ghost"
                     onClick={() => addSlot(day)}
                     leftIcon={<Plus className="w-3.5 h-3.5" />}
-                    className="text-xs"
                   >
                     Add Slot
                   </Button>

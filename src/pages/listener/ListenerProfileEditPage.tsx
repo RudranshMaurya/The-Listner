@@ -6,13 +6,13 @@ import type { ListenerProfile } from '../../types';
 import { Card } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
 import { Input, Textarea } from '../../components/common/Input';
-import { Save, User, ShieldCheck } from 'lucide-react';
+import { Save } from 'lucide-react';
 
 export const ListenerProfileEditPage: React.FC = () => {
   const { currentUser } = useAuth();
   const { showToast } = useNotifications();
 
-  const [listener, setListener] = useState<ListenerProfile | null>(null);
+  const [, setListener] = useState<ListenerProfile | null>(null);
   const [displayName, setDisplayName] = useState('');
   const [bio, setBio] = useState('');
   const [age, setAge] = useState('25');
@@ -92,15 +92,15 @@ export const ListenerProfileEditPage: React.FC = () => {
   return (
     <div className="max-w-2xl space-y-6 text-left">
       <div>
-        <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+        <h2 className="text-title text-text tracking-tight">
           Edit Public Listener Profile
         </h2>
-        <p className="text-xs text-slate-500 dark:text-slate-400">
+        <p className="text-small text-text-muted mt-0.5">
           Update the profile details shown to talkers in the listener directory.
         </p>
       </div>
 
-      <Card className="p-6 sm:p-8 space-y-5">
+      <Card padding="lg" className="space-y-5">
         <form onSubmit={handleSave} className="space-y-4">
           <Input
             label="Display Name"
@@ -120,13 +120,13 @@ export const ListenerProfileEditPage: React.FC = () => {
             />
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+              <label className="block text-caption font-medium text-text mb-1.5">
                 Gender
               </label>
               <select
                 value={gender}
                 onChange={(e) => setGender(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                className="w-full h-11 rounded-input border border-border bg-surface px-3 text-small text-text focus:outline-none focus:ring-2 focus:ring-accent/30"
               >
                 <option value="Female">Female</option>
                 <option value="Male">Male</option>
@@ -153,7 +153,7 @@ export const ListenerProfileEditPage: React.FC = () => {
           />
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">
+            <label className="block text-caption font-semibold uppercase tracking-wider text-text-muted mb-2">
               Listening Topics
             </label>
             <div className="flex flex-wrap gap-2">
@@ -164,10 +164,10 @@ export const ListenerProfileEditPage: React.FC = () => {
                     key={topic}
                     type="button"
                     onClick={() => toggleTopic(topic)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                    className={`px-3 py-1.5 rounded-pill text-caption font-medium border transition-all cursor-pointer ${
                       isSelected
-                        ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 ring-1 ring-indigo-500'
-                        : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50'
+                        ? 'border-accent bg-accent/10 text-accent font-semibold shadow-soft'
+                        : 'border-border bg-surface text-text-muted hover:text-text'
                     }`}
                   >
                     {topic}
@@ -177,7 +177,7 @@ export const ListenerProfileEditPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="pt-2 flex justify-end">
+          <div className="pt-3 border-t border-border flex justify-end">
             <Button
               type="submit"
               variant="primary"

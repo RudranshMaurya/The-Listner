@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
 import { useNotifications } from '../../contexts/NotificationContext';
 import { Card } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
 import { Input } from '../../components/common/Input';
-import { Save, ShieldCheck, Lock } from 'lucide-react';
+import { Save, ShieldCheck } from 'lucide-react';
 
 export const ListenerSettingsPage: React.FC = () => {
-  const { currentUser, profile, updateProfileData } = useAuth();
   const { showToast } = useNotifications();
 
   const [upiId, setUpiId] = useState('');
@@ -32,15 +30,15 @@ export const ListenerSettingsPage: React.FC = () => {
   return (
     <div className="max-w-2xl space-y-6 text-left">
       <div>
-        <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+        <h2 className="text-title text-text tracking-tight">
           Listener Preferences & Payout Details
         </h2>
-        <p className="text-xs text-slate-500 dark:text-slate-400">
+        <p className="text-small text-text-muted mt-0.5">
           Configure your private payout address and account settings.
         </p>
       </div>
 
-      <Card className="p-6 sm:p-8 space-y-5">
+      <Card padding="lg" className="space-y-5">
         <form onSubmit={handleSave} className="space-y-4">
           <Input
             label="Default Payout UPI ID"
@@ -50,17 +48,17 @@ export const ListenerSettingsPage: React.FC = () => {
             helperText="This UPI ID remains strictly confidential and is only visible to the system administrator when processing withdrawals."
           />
 
-          <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-400 space-y-1">
-            <div className="flex items-center gap-1.5 font-semibold text-slate-900 dark:text-slate-200">
-              <ShieldCheck className="w-4 h-4 text-emerald-500" />
+          <div className="p-4 rounded-input bg-surface border border-border text-small text-text-muted space-y-1">
+            <div className="flex items-center gap-1.5 font-semibold text-text">
+              <ShieldCheck className="w-4 h-4 text-success" />
               <span>Confidentiality Guarantee</span>
             </div>
-            <p className="text-[11px] text-slate-500">
+            <p className="text-caption">
               Talkers never see your bank details, real phone number, or UPI address. All payouts are disbursed privately.
             </p>
           </div>
 
-          <div className="pt-2 flex justify-end">
+          <div className="pt-3 border-t border-border flex justify-end">
             <Button
               type="submit"
               variant="primary"

@@ -14,23 +14,13 @@ import type { ListenerProfile, Wallet, Appointment, Session, Review, ListenerSta
 import { Card } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
 import { Badge, StatusBadge } from '../../components/common/Badge';
-import { StarRating } from '../../components/common/StarRating';
 import { WithdrawalModal } from '../../components/listener/WithdrawalModal';
 import { formatPaise } from '../../lib/upi';
 import {
   CheckCircle2,
   AlertCircle,
-  Clock,
-  TrendingUp,
-  Star,
   Calendar,
-  MessageSquare,
-  ArrowDownToLine,
-  Sparkles,
-  ShieldCheck,
-  UserCheck,
-  Eye,
-  Users
+  Eye
 } from 'lucide-react';
 
 export const ListenerDashboardPage: React.FC = () => {
@@ -40,8 +30,8 @@ export const ListenerDashboardPage: React.FC = () => {
   const [listener, setListener] = useState<ListenerProfile | null>(null);
   const [wallet, setWallet] = useState<Wallet | null>(null);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [sessions, setSessions] = useState<Session[]>([]);
-  const [reviews, setReviews] = useState<Review[]>([]);
+  const [, setSessions] = useState<Session[]>([]);
+  const [, setReviews] = useState<Review[]>([]);
   const [analytics, setAnalytics] = useState<ListenerAnalytics | null>(null);
   const [isWithdrawalOpen, setIsWithdrawalOpen] = useState(false);
 
@@ -80,16 +70,16 @@ export const ListenerDashboardPage: React.FC = () => {
     <div className="space-y-6 text-left">
       {/* Verification Status Banner if Unverified */}
       {listener && !listener.isVerified && (
-        <Card className="p-5 bg-[#FAF6F0] dark:bg-[#272420] border border-[#DEC6A5] dark:border-[#332E28] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <Card padding="md" className="border-warning/40 bg-surface flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#D4A373]/20 text-[#875C34] dark:text-[#DEC6A5] flex items-center justify-center shrink-0">
-              <AlertCircle className="w-5 h-5 text-[#D4A373]" />
+            <div className="w-10 h-10 rounded-pill bg-warning/10 text-warning flex items-center justify-center shrink-0">
+              <AlertCircle className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-sm font-bold text-stone-900 dark:text-stone-100">
+              <h4 className="text-small font-semibold text-text">
                 Listener Qualification Assessment Pending
               </h4>
-              <p className="text-xs text-stone-600 dark:text-stone-300">
+              <p className="text-caption text-text-muted">
                 Complete the 5-question active listening test to earn your green "Platform-verified listener" badge and receive paid conversations.
               </p>
             </div>
@@ -107,9 +97,9 @@ export const ListenerDashboardPage: React.FC = () => {
 
       {/* Verification Success Pill if Verified */}
       {listener?.isVerified && (
-        <div className="flex items-center justify-between p-3.5 rounded-2xl bg-[#DCFCE7]/70 dark:bg-[#166534]/25 border border-[#166534]/40 text-xs text-[#166534] dark:text-[#4ADE80]">
+        <div className="flex items-center justify-between p-3.5 rounded-input bg-success/10 border border-success/30 text-caption text-success">
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-[#166534] dark:text-[#4ADE80]" />
+            <CheckCircle2 className="w-4 h-4" />
             <span className="font-semibold">Platform-Verified Listener Status Active</span>
           </div>
           <span>Verification Score: {listener.verificationScore || 100}%</span>
@@ -117,147 +107,149 @@ export const ListenerDashboardPage: React.FC = () => {
       )}
 
       {/* Metrics Row */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-        <Card hover className="p-4 flex flex-col justify-between">
-          <p className="text-[11px] uppercase font-semibold text-stone-400">Profile Visitors</p>
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+        <Card padding="md" className="flex flex-col justify-between">
+          <p className="text-[11px] uppercase font-semibold text-text-muted">Profile Visitors</p>
           <div className="flex items-baseline gap-1 mt-1">
-            <span className="text-2xl font-extrabold text-stone-900 dark:text-white font-mono">
+            <span className="text-2xl font-bold text-text font-mono">
               {analytics?.totalViews || 0}
             </span>
           </div>
-          <p className="text-[10px] text-stone-400 mt-1">{analytics?.uniqueVisitorsCount || 0} unique talkers</p>
+          <p className="text-[11px] text-text-muted mt-1">{analytics?.uniqueVisitorsCount || 0} unique talkers</p>
         </Card>
 
-        <Card hover className="p-4 flex flex-col justify-between">
-          <p className="text-[11px] uppercase font-semibold text-stone-400">Star Rating</p>
+        <Card padding="md" className="flex flex-col justify-between">
+          <p className="text-[11px] uppercase font-semibold text-text-muted">Star Rating</p>
           <div className="flex items-baseline gap-1 mt-1">
-            <span className="text-2xl font-extrabold text-stone-900 dark:text-white">
+            <span className="text-2xl font-bold text-text">
               {(listener?.rating || 5.0).toFixed(1)}
             </span>
-            <span className="text-xs text-amber-500">★</span>
+            <span className="text-xs text-warning">★</span>
           </div>
-          <p className="text-[10px] text-stone-400 mt-1">{listener?.totalReviews || 0} reviews</p>
+          <p className="text-[11px] text-text-muted mt-1">{listener?.totalReviews || 0} reviews</p>
         </Card>
 
-        <Card hover className="p-4 flex flex-col justify-between">
-          <p className="text-[11px] uppercase font-semibold text-stone-400">Conversations</p>
+        <Card padding="md" className="flex flex-col justify-between">
+          <p className="text-[11px] uppercase font-semibold text-text-muted">Conversations</p>
           <div className="mt-1">
-            <span className="text-2xl font-extrabold text-stone-900 dark:text-white">
+            <span className="text-2xl font-bold text-text">
               {listener?.totalSessions || 0}
             </span>
           </div>
-          <p className="text-[10px] text-stone-400 mt-1">Completed sessions</p>
+          <p className="text-[11px] text-text-muted mt-1">Completed sessions</p>
         </Card>
 
-        <Card hover className="p-4 flex flex-col justify-between">
-          <p className="text-[11px] uppercase font-semibold text-stone-400">Listening Time</p>
+        <Card padding="md" className="flex flex-col justify-between">
+          <p className="text-[11px] uppercase font-semibold text-text-muted">Listening Time</p>
           <div className="mt-1">
-            <span className="text-2xl font-extrabold text-stone-900 dark:text-white">
+            <span className="text-2xl font-bold text-text">
               {listener?.totalListeningMinutes || 0}
             </span>
-            <span className="text-xs text-stone-500 ml-1">mins</span>
+            <span className="text-caption text-text-muted ml-1">mins</span>
           </div>
-          <p className="text-[10px] text-stone-400 mt-1">Active conversation</p>
+          <p className="text-[11px] text-text-muted mt-1">Active conversation</p>
         </Card>
 
-        <Card hover className="p-4 flex flex-col justify-between">
-          <p className="text-[11px] uppercase font-semibold text-stone-400">Total Earned</p>
+        <Card padding="md" className="flex flex-col justify-between">
+          <p className="text-[11px] uppercase font-semibold text-text-muted">Total Earned</p>
           <div className="mt-1">
-            <span className="text-xl sm:text-2xl font-extrabold text-[#166534] dark:text-[#4ADE80] font-mono">
+            <span className="text-xl sm:text-2xl font-bold text-success font-mono">
               {formatPaise(wallet?.totalEarnedPaise || 0)}
             </span>
           </div>
-          <p className="text-[10px] text-stone-400 mt-1">Rate: ₹2.50 / min</p>
+          <p className="text-[11px] text-text-muted mt-1">Rate: ₹2.50 / min</p>
         </Card>
       </div>
 
       {/* Main Grid: Status Control + Today's Appointments */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Availability Control Card */}
-        <Card className="p-6 space-y-4">
-          <h3 className="text-sm font-bold text-stone-900 dark:text-white border-b border-[#EFEBE4] dark:border-[#332E28] pb-3">
+        <Card padding="md" className="space-y-4">
+          <h3 className="text-small font-semibold text-text border-b border-border pb-3">
             Real-Time Availability
           </h3>
 
-          <div className="flex items-center justify-between p-3 rounded-2xl bg-[#FAF6F0] dark:bg-[#272420] border border-[#EFEBE4] dark:border-[#332E28]">
+          <div className="flex items-center justify-between p-3 rounded-input bg-surface border border-border">
             <div>
-              <p className="text-xs font-semibold text-stone-900 dark:text-white">Current Status</p>
-              <p className="text-[11px] text-stone-500">Live in Talker directory</p>
+              <p className="text-caption font-semibold text-text">Current Status</p>
+              <p className="text-[11px] text-text-muted">Live in Talker directory</p>
             </div>
             <StatusBadge status={listener?.status || 'idle'} />
           </div>
 
-          <div className="grid grid-cols-2 gap-2 pt-2">
+          <div className="grid grid-cols-2 gap-2 pt-1">
             <button
+              type="button"
               onClick={() => handleStatusChange('idle')}
-              className={`p-3 rounded-2xl border text-xs font-bold transition-all duration-200 active:scale-[0.97] ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col items-center gap-1.5 ${
+              className={`p-3 rounded-input border text-caption font-semibold transition-all cursor-pointer flex flex-col items-center gap-1.5 ${
                 listener?.status === 'idle'
-                  ? 'border-[#166534] bg-[#DCFCE7]/70 dark:bg-[#166534]/30 text-[#166534] dark:text-[#4ADE80] ring-2 ring-[#166534]/25 shadow-xs'
-                  : 'border-[#EFEBE4] dark:border-[#332E28] text-stone-600 dark:text-stone-400 hover:bg-[#FAF6F0] dark:hover:bg-[#272420]'
+                  ? 'border-success bg-success/10 text-success shadow-soft'
+                  : 'border-border bg-surface text-text-muted hover:text-text'
               }`}
             >
-              <span className="w-2.5 h-2.5 rounded-full bg-[#166534] dark:bg-[#4ADE80] animate-pulse" />
+              <span className="w-2.5 h-2.5 rounded-pill bg-success animate-pulse" />
               <span>Available (Online)</span>
             </button>
 
             <button
+              type="button"
               onClick={() => handleStatusChange('busy')}
-              className={`p-3 rounded-2xl border text-xs font-bold transition-all duration-200 active:scale-[0.97] ease-[cubic-bezier(0.16,1,0.3,1)] flex flex-col items-center gap-1.5 ${
+              className={`p-3 rounded-input border text-caption font-semibold transition-all cursor-pointer flex flex-col items-center gap-1.5 ${
                 listener?.status === 'busy'
-                  ? 'border-amber-600 bg-amber-50 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300 ring-2 ring-amber-500/20 shadow-xs'
-                  : 'border-[#EFEBE4] dark:border-[#332E28] text-stone-600 dark:text-stone-400 hover:bg-[#FAF6F0] dark:hover:bg-[#272420]'
+                  ? 'border-warning bg-warning/10 text-warning shadow-soft'
+                  : 'border-border bg-surface text-text-muted hover:text-text'
               }`}
             >
-              <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+              <span className="w-2.5 h-2.5 rounded-pill bg-warning" />
               <span>Busy / Offline</span>
             </button>
           </div>
 
-          <p className="text-[11px] text-stone-400 leading-relaxed pt-2">
+          <p className="text-[11px] text-text-muted leading-relaxed pt-1">
             When you enter an active conversation, your status automatically switches to "In Conversation".
           </p>
         </Card>
 
         {/* Today's Appointments */}
-        <Card className="lg:col-span-2 p-6 space-y-4">
-          <div className="flex items-center justify-between border-b border-[#EFEBE4] dark:border-[#332E28] pb-3">
-            <h3 className="text-sm font-bold text-stone-900 dark:text-white flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-[#0891B2]" />
+        <Card padding="md" className="lg:col-span-2 space-y-4">
+          <div className="flex items-center justify-between border-b border-border pb-3">
+            <h3 className="text-small font-semibold text-text flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-accent" />
               <span>Appointments</span>
             </h3>
-            <Link to="/listener/appointments" className="text-xs text-[#0891B2] hover:underline font-medium">
+            <Link to="/listener/appointments" className="text-caption text-accent hover:underline font-medium">
               View Calendar
             </Link>
           </div>
 
           {todayAppointments.length === 0 ? (
-            <p className="text-xs text-stone-400 py-6 text-center">
+            <p className="text-caption text-text-muted py-8 text-center">
               No appointments scheduled. Talkers can book available slots from your schedule.
             </p>
           ) : (
-            <div className="space-y-2.5">
+            <div className="space-y-2">
               {todayAppointments.slice(0, 3).map((appt) => (
                 <div
                   key={appt.id}
-                  className="flex items-center justify-between p-3.5 rounded-2xl bg-[#FAF6F0]/60 dark:bg-[#272420]/50 border border-[#EFEBE4] dark:border-[#332E28]"
+                  className="flex items-center justify-between p-3.5 rounded-input bg-surface border border-border"
                 >
                   <div className="flex items-center gap-3">
                     <img
                       src={appt.talkerPhoto || `https://api.dicebear.com/7.x/avataaars/svg?seed=${appt.talkerId}`}
                       alt={appt.talkerName}
-                      className="w-10 h-10 rounded-2xl object-cover border border-[#EFEBE4] dark:border-[#332E28]"
+                      className="w-10 h-10 rounded-input object-cover bg-surface border border-border"
                     />
                     <div>
-                      <h4 className="text-xs font-bold text-stone-900 dark:text-white">
+                      <h4 className="text-caption font-semibold text-text">
                         {appt.talkerName}
                       </h4>
-                      <p className="text-[11px] text-stone-500">
+                      <p className="text-[11px] text-text-muted">
                         {appt.date} • {appt.timeSlot} • {appt.sessionType}
                       </p>
                     </div>
                   </div>
 
-                  <Badge variant="verified" size="sm">Confirmed</Badge>
+                  <Badge variant="success" size="sm">Confirmed</Badge>
                 </div>
               ))}
             </div>
@@ -266,17 +258,17 @@ export const ListenerDashboardPage: React.FC = () => {
       </div>
 
       {/* Profile Visitors Analytics Preview */}
-      <Card className="p-5 sm:p-6 space-y-4">
-        <div className="flex items-center justify-between border-b border-gray-100 dark:border-stone-800 pb-3">
+      <Card padding="md" className="space-y-4">
+        <div className="flex items-center justify-between border-b border-border pb-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-pill bg-accent/10 text-accent flex items-center justify-center">
               <Eye className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-stone-900 dark:text-white">
+              <h3 className="text-small font-semibold text-text">
                 Who Visited Your Profile ({analytics?.totalViews || 0} Total Visits)
               </h3>
-              <p className="text-[11px] text-stone-500">
+              <p className="text-[11px] text-text-muted">
                 {analytics?.uniqueVisitorsCount || 0} unique talkers viewed your listener profile
               </p>
             </div>
@@ -284,14 +276,14 @@ export const ListenerDashboardPage: React.FC = () => {
 
           <Link
             to="/listener/analytics"
-            className="text-xs font-semibold text-amber-600 dark:text-amber-400 hover:underline"
+            className="text-caption font-medium text-accent hover:underline"
           >
             View Full Analytics →
           </Link>
         </div>
 
         {(!analytics?.visitors || Object.keys(analytics.visitors).length === 0) ? (
-          <p className="text-xs text-stone-400 py-4 text-center">
+          <p className="text-caption text-text-muted py-6 text-center">
             No profile visits recorded yet. When talkers explore or open your profile, their visits appear here in real time.
           </p>
         ) : (
@@ -302,24 +294,24 @@ export const ListenerDashboardPage: React.FC = () => {
               .map((v, i) => (
                 <div
                   key={v.visitorId + i}
-                  className="flex items-center justify-between p-3 rounded-2xl bg-[#FAF6F0]/60 dark:bg-[#272420]/50 border border-[#EFEBE4] dark:border-[#332E28]"
+                  className="flex items-center justify-between p-3 rounded-input bg-surface border border-border"
                 >
                   <div className="flex items-center gap-2.5">
                     <img
                       src={v.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${v.visitorId}`}
                       alt={v.visitorName}
-                      className="w-8 h-8 rounded-full object-cover bg-amber-100 ring-1 ring-amber-300"
+                      className="w-8 h-8 rounded-pill object-cover bg-surface border border-border"
                     />
                     <div>
-                      <p className="text-xs font-bold text-stone-900 dark:text-white">
+                      <p className="text-caption font-semibold text-text">
                         {v.visitorName}
                       </p>
-                      <p className="text-[10px] text-stone-400">
+                      <p className="text-[10px] text-text-muted">
                         {new Date(v.lastVisitedAt).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                       </p>
                     </div>
                   </div>
-                  <Badge variant="warning" size="sm">
+                  <Badge variant="neutral" size="sm">
                     {v.visitCount} {v.visitCount === 1 ? 'view' : 'views'}
                   </Badge>
                 </div>

@@ -7,7 +7,7 @@ import { Input } from '../common/Input';
 import { requestWithdrawal } from '../../lib/database';
 import { formatPaise } from '../../lib/upi';
 import type { Wallet } from '../../types';
-import { ArrowDownToLine, ShieldCheck, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { ArrowDownToLine, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 export interface WithdrawalModalProps {
   isOpen: boolean;
@@ -89,14 +89,14 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({
     >
       {isSuccess ? (
         <div className="space-y-4 text-center py-4">
-          <div className="w-14 h-14 rounded-2xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 flex items-center justify-center mx-auto">
+          <div className="w-14 h-14 rounded-pill bg-success/10 text-success flex items-center justify-center mx-auto">
             <CheckCircle2 className="w-8 h-8" />
           </div>
-          <h4 className="text-lg font-bold text-slate-900 dark:text-white">
+          <h4 className="text-body font-semibold text-text">
             ₹{parseFloat(amountInput).toFixed(2)} Reserved for Payout
           </h4>
-          <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto leading-relaxed">
-            Target UPI: <span className="font-mono font-semibold">{upiId}</span>.
+          <p className="text-small text-text-muted max-w-sm mx-auto leading-relaxed">
+            Target UPI: <span className="font-mono font-semibold text-text">{upiId}</span>.
             The administrator will review the request and disburse the funds via UPI. You will receive an in-app notification with the bank UTR as soon as it's completed.
           </p>
           <div className="pt-3">
@@ -108,16 +108,16 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({
       ) : (
         <div className="space-y-5 text-left">
           {/* Available balance indicator */}
-          <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 flex items-center justify-between">
+          <div className="p-3.5 rounded-input bg-surface border border-border flex items-center justify-between">
             <div>
-              <p className="text-[10px] uppercase font-semibold text-slate-400">Available to Withdraw</p>
-              <p className="text-base font-bold text-slate-900 dark:text-white">
+              <p className="text-[10px] uppercase font-semibold text-text-muted">Available to Withdraw</p>
+              <p className="text-base font-bold text-text font-mono">
                 {formatPaise(wallet?.withdrawablePaise || 0)}
               </p>
             </div>
             <div className="text-right">
-              <p className="text-[10px] uppercase font-semibold text-slate-400">Min. Threshold</p>
-              <p className="text-xs font-semibold text-slate-600 dark:text-slate-300">₹200.00</p>
+              <p className="text-[10px] uppercase font-semibold text-text-muted">Min. Threshold</p>
+              <p className="text-small font-semibold text-text font-mono">₹200.00</p>
             </div>
           </div>
 
@@ -145,15 +145,15 @@ export const WithdrawalModal: React.FC<WithdrawalModalProps> = ({
           </div>
 
           {withdrawableRupees < 200 && (
-            <div className="p-3 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/40 text-xs text-amber-800 dark:text-amber-300 flex items-start gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-amber-600" />
+            <div className="p-3 rounded-input bg-warning/10 border border-warning/30 text-caption text-warning flex items-start gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
               <span>
                 Your current withdrawable earnings ({formatPaise(wallet?.withdrawablePaise || 0)}) are below the ₹200 minimum threshold. Complete more sessions to unlock payouts.
               </span>
             </div>
           )}
 
-          <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-2">
+          <div className="pt-3 border-t border-border flex items-center justify-end gap-2">
             <Button variant="ghost" size="sm" onClick={handleClose}>
               Cancel
             </Button>
