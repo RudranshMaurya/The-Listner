@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { Button } from '../../components/common/Button';
 import { Card } from '../../components/common/Card';
@@ -23,8 +23,23 @@ import {
 
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
-  const { currentUser, role } = useAuth();
+  const { currentUser, role, profile, loading } = useAuth();
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+
+  // If user is already authenticated, immediately route them to their respective dashboard
+  if (loading) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-amber-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (currentUser) {
+    const effectiveRole = role || profile?.role || (localStorage.getItem('tl_selected_role') as 'talker' | 'listener' | null) || 'talker';
+    const targetDashboard = effectiveRole === 'listener' ? '/listener/dashboard' : '/talker/dashboard';
+    return <Navigate to={targetDashboard} replace />;
+  }
 
   const faqs = [
     {
@@ -41,10 +56,10 @@ export const LandingPage: React.FC = () => {
     },
     {
       q: 'How do I pay for sessions?',
-      a: 'You can instantly top up your Talker wallet using any Indian UPI app (Google Pay, PhonePe, Paytm, BHIM, FamPay) by scanning a dynamic QR code. Your wallet is updated in real time.'
+      a: 'You can instantly add conversation credits using any Indian UPI app (Google Pay, PhonePe, Paytm, BHIM, FamPay) by scanning a dynamic QR code. Your credits are updated in real time.'
     },
     {
-      q: 'How do Listeners earn and withdraw money?',
+      q: 'How do Listeners earn and withdraw earnings?',
       a: 'Listeners earn for every minute spent actively listening. When your withdrawable balance reaches ₹200 or more, you can request an instant payout directly to your personal UPI ID.'
     },
     {

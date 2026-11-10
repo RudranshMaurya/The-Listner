@@ -42,13 +42,13 @@ export const Navbar: React.FC = () => {
     }
   };
 
+  const dashboardPath = role === 'listener' ? '/listener/dashboard' : '/talker/dashboard';
+
   const navLinks = [
-    { label: 'Home', path: '/' },
+    { label: 'Home', path: currentUser ? dashboardPath : '/' },
     { label: 'How it works', path: '/how-it-works' },
     { label: 'Become a Listener', path: '/become-a-listener' }
   ];
-
-  const dashboardPath = role === 'listener' ? '/listener/dashboard' : '/talker/dashboard';
   const firstName =
     (profile?.displayName || currentUser?.displayName || 'Friend')
       .trim()
@@ -79,14 +79,14 @@ export const Navbar: React.FC = () => {
                   <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-stone-900" />
                 </Link>
 
-                <div className="flex flex-col">
+                <Link to={dashboardPath} className="flex flex-col hover:opacity-85 transition-opacity" title="Go to Dashboard">
                   <span className="text-sm sm:text-base font-extrabold text-gray-900 dark:text-white leading-tight">
                     Hi {firstName}
                   </span>
                   <span className="text-[10px] text-stone-500 dark:text-stone-400 font-medium hidden sm:inline">
                     Speak freely. Be heard.
                   </span>
-                </div>
+                </Link>
               </div>
             ) : (
               <Link to="/" className="flex items-center gap-2.5 group">
