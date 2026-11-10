@@ -7,11 +7,7 @@ import { Button } from '../../components/common/Button';
 import { Input, Textarea } from '../../components/common/Input';
 import { saveListenerProfile, saveListenerSchedule, DEFAULT_WEEKLY_SCHEDULE } from '../../lib/database';
 import {
-  User,
-  Heart,
-  Clock,
   ShieldCheck,
-  CheckCircle2,
   ArrowRight,
   ArrowLeft,
   Sparkles
@@ -30,7 +26,7 @@ export const ListenerOnboardingPage: React.FC = () => {
   const [age, setAge] = useState<string>(profile?.age ? String(profile.age) : '25');
   const [gender, setGender] = useState<string>('Female');
   const [yearsExperience, setYearsExperience] = useState<number>(2);
-  const [languages, setLanguages] = useState<string[]>(['English', 'Hindi']);
+  const [languages] = useState<string[]>(['English', 'Hindi']);
   const [bio, setBio] = useState<string>(
     'Patient, empathetic listener ready to hear your stories and feelings without judgment.'
   );
@@ -167,19 +163,19 @@ export const ListenerOnboardingPage: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10 text-left">
+    <div className="max-w-xl mx-auto px-4 sm:px-6 py-10 text-left">
       {/* Progress Bar */}
-      <div className="mb-8">
+      <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
           {steps.map((s) => (
-            <div key={s.num} className="flex items-center gap-1.5 text-xs font-semibold">
+            <div key={s.num} className="flex items-center gap-1.5 text-caption font-medium">
               <span
-                className={`w-6 h-6 rounded-full flex items-center justify-center text-xs transition-colors duration-200 ${
+                className={`w-5 h-5 rounded-pill flex items-center justify-center text-[11px] font-semibold transition-colors ${
                   currentStep === s.num
-                    ? 'bg-[#D4A373] text-stone-900 font-bold shadow-xs'
+                    ? 'bg-accent text-accent-contrast shadow-soft'
                     : currentStep > s.num
-                    ? 'bg-[#166534] text-white'
-                    : 'bg-[#FAF6F0] text-stone-400 dark:bg-[#272420] dark:text-stone-500 border border-[#EFEBE4] dark:border-[#332E28]'
+                    ? 'bg-success text-white'
+                    : 'bg-surface text-text-muted border border-border'
                 }`}
               >
                 {currentStep > s.num ? '✓' : s.num}
@@ -187,8 +183,8 @@ export const ListenerOnboardingPage: React.FC = () => {
               <span
                 className={
                   currentStep === s.num
-                    ? 'text-[#875C34] dark:text-[#E9D9C3] font-bold'
-                    : 'text-stone-400'
+                    ? 'text-text font-semibold'
+                    : 'text-text-muted'
                 }
               >
                 {s.title}
@@ -196,23 +192,23 @@ export const ListenerOnboardingPage: React.FC = () => {
             </div>
           ))}
         </div>
-        <div className="w-full bg-[#FAF6F0] dark:bg-[#272420] border border-[#EFEBE4] dark:border-[#332E28] h-2 rounded-full overflow-hidden p-0.5">
+        <div className="w-full bg-surface border border-border h-1.5 rounded-pill overflow-hidden">
           <div
-            className="bg-[#D4A373] h-full rounded-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]"
+            className="bg-accent h-full rounded-pill transition-all duration-300"
             style={{ width: `${(currentStep / 4) * 100}%` }}
           />
         </div>
       </div>
 
-      <Card className="p-6 sm:p-10 shadow-lg space-y-6">
+      <Card padding="lg" className="space-y-6">
         {/* Step 1: Personal Profile */}
         {currentStep === 1 && (
-          <div className="space-y-5 animate-in fade-in">
+          <div className="space-y-4 animate-apple-fade-in">
             <div>
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+              <h2 className="text-title font-semibold text-text tracking-tight">
                 Step 1: Your Listener Profile
               </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              <p className="text-small text-text-muted mt-1">
                 This information is displayed on your public listener card so talkers can find you.
               </p>
             </div>
@@ -237,13 +233,13 @@ export const ListenerOnboardingPage: React.FC = () => {
               />
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+                <label className="block text-caption font-medium text-text mb-1.5">
                   Gender
                 </label>
                 <select
                   value={gender}
                   onChange={(e) => setGender(e.target.value)}
-                  className="w-full rounded-xl border border-[#EFEBE4] dark:border-[#332E28] bg-white dark:bg-[#1F1D1A] px-3.5 py-2.5 text-sm text-stone-900 dark:text-stone-100 focus:outline-none focus:border-[#D4A373] focus:ring-2 focus:ring-[#D4A373]/20 transition-colors"
+                  className="w-full h-11 rounded-input border border-border bg-surface px-3 text-small text-text focus:outline-none focus:ring-2 focus:ring-accent/30"
                 >
                   <option value="Female">Female</option>
                   <option value="Male">Male</option>
@@ -274,12 +270,12 @@ export const ListenerOnboardingPage: React.FC = () => {
 
         {/* Step 2: Topics */}
         {currentStep === 2 && (
-          <div className="space-y-5 animate-in fade-in">
+          <div className="space-y-4 animate-apple-fade-in">
             <div>
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+              <h2 className="text-title font-semibold text-text tracking-tight">
                 Step 2: Listening Preferences
               </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              <p className="text-small text-text-muted mt-1">
                 Select the life situations and topics you feel comfortable listening to.
               </p>
             </div>
@@ -292,10 +288,10 @@ export const ListenerOnboardingPage: React.FC = () => {
                     key={topic}
                     type="button"
                     onClick={() => toggleTopic(topic)}
-                    className={`px-3.5 py-2 rounded-2xl text-xs font-medium border transition-all duration-200 active:scale-[0.97] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                    className={`px-3 py-1.5 rounded-pill text-caption font-medium border transition-all cursor-pointer ${
                       isSelected
-                        ? 'border-[#D4A373] bg-[#FAF6F0] dark:bg-[#272420] text-[#875C34] dark:text-[#E9D9C3] ring-1 ring-[#D4A373] font-semibold shadow-xs'
-                        : 'border-[#EFEBE4] dark:border-[#332E28] text-stone-600 dark:text-stone-300 hover:bg-[#FAF6F0] dark:hover:bg-[#272420]'
+                        ? 'border-accent bg-accent/10 text-accent font-semibold shadow-soft'
+                        : 'border-border bg-surface text-text-muted hover:text-text'
                     }`}
                   >
                     {topic}
@@ -308,23 +304,23 @@ export const ListenerOnboardingPage: React.FC = () => {
 
         {/* Step 3: Availability Schedule */}
         {currentStep === 3 && (
-          <div className="space-y-5 animate-in fade-in">
+          <div className="space-y-4 animate-apple-fade-in">
             <div>
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+              <h2 className="text-title font-semibold text-text tracking-tight">
                 Step 3: Availability Schedule
               </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              <p className="text-small text-text-muted mt-1">
                 Configure how talkers can reach you. You can adjust your detailed weekly calendar anytime.
               </p>
             </div>
 
             <div className="space-y-3">
-              <label className="flex items-center justify-between p-4 rounded-2xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/40">
+              <label className="flex items-center justify-between p-4 rounded-input border border-border bg-surface cursor-pointer">
                 <div>
-                  <p className="text-sm font-semibold text-slate-900 dark:text-white">
+                  <p className="text-small font-semibold text-text">
                     Accept Immediate Conversations
                   </p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                  <p className="text-caption text-text-muted">
                     Receive direct chat and call requests when you are online.
                   </p>
                 </div>
@@ -332,16 +328,16 @@ export const ListenerOnboardingPage: React.FC = () => {
                   type="checkbox"
                   checked={acceptsImmediate}
                   onChange={(e) => setAcceptsImmediate(e.target.checked)}
-                  className="rounded text-indigo-600 w-5 h-5 focus:ring-indigo-500"
+                  className="rounded-input text-accent w-5 h-5 focus:ring-accent accent-accent cursor-pointer"
                 />
               </label>
 
-              <label className="flex items-center justify-between p-4 rounded-2xl border border-slate-200 dark:border-slate-700 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/40">
+              <label className="flex items-center justify-between p-4 rounded-input border border-border bg-surface cursor-pointer">
                 <div>
-                  <p className="text-sm font-semibold text-slate-900 dark:text-white">
+                  <p className="text-small font-semibold text-text">
                     Accept Scheduled Appointments
                   </p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                  <p className="text-caption text-text-muted">
                     Allow talkers to reserve future time slots in your calendar.
                   </p>
                 </div>
@@ -349,7 +345,7 @@ export const ListenerOnboardingPage: React.FC = () => {
                   type="checkbox"
                   checked={acceptsAppointments}
                   onChange={(e) => setAcceptsAppointments(e.target.checked)}
-                  className="rounded text-indigo-600 w-5 h-5 focus:ring-indigo-500"
+                  className="rounded-input text-accent w-5 h-5 focus:ring-accent accent-accent cursor-pointer"
                 />
               </label>
             </div>
@@ -358,12 +354,12 @@ export const ListenerOnboardingPage: React.FC = () => {
 
         {/* Step 4: Confidential UPI ID */}
         {currentStep === 4 && (
-          <div className="space-y-5 animate-in fade-in">
+          <div className="space-y-4 animate-apple-fade-in">
             <div>
-              <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+              <h2 className="text-title font-semibold text-text tracking-tight">
                 Step 4: Confidential Payout Details
               </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              <p className="text-small text-text-muted mt-1">
                 Earnings are transferred via UPI. Your UPI ID is strictly confidential and never displayed to talkers.
               </p>
             </div>
@@ -377,11 +373,11 @@ export const ListenerOnboardingPage: React.FC = () => {
               required
             />
 
-            <div className="p-4 rounded-2xl bg-[#FAF6F0] dark:bg-[#272420]/70 border border-[#EFEBE4] dark:border-[#332E28] text-xs text-stone-800 dark:text-stone-200 flex items-start gap-2.5">
-              <ShieldCheck className="w-5 h-5 text-[#D4A373] shrink-0 mt-0.5" />
+            <div className="p-4 rounded-input bg-surface border border-border text-small text-text flex items-start gap-3">
+              <ShieldCheck className="w-5 h-5 text-accent shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold text-stone-900 dark:text-white">Next Step: Verification Questionnaire</p>
-                <p className="text-[11px] text-stone-500 dark:text-stone-400 mt-0.5">
+                <p className="font-semibold text-text">Next Step: Verification Questionnaire</p>
+                <p className="text-caption text-text-muted mt-0.5">
                   To complete registration and earn your green "Platform-verified listener" badge, you will answer a short scenario questionnaire.
                 </p>
               </div>
@@ -390,7 +386,7 @@ export const ListenerOnboardingPage: React.FC = () => {
         )}
 
         {/* Navigation buttons */}
-        <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+        <div className="pt-4 border-t border-border flex items-center justify-between">
           {currentStep > 1 ? (
             <Button
               variant="outline"

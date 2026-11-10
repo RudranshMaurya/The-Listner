@@ -5,7 +5,7 @@ import { useNotifications } from '../../contexts/NotificationContext';
 import { Card } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
 import { Input, Textarea } from '../../components/common/Input';
-import { ArrowRight, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 export const TalkerOnboardingPage: React.FC = () => {
   const { currentUser, profile, updateProfileData } = useAuth();
@@ -84,18 +84,18 @@ export const TalkerOnboardingPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10 text-left">
-      <Card className="p-6 sm:p-10 shadow-lg space-y-6">
+    <div className="max-w-xl mx-auto px-4 sm:px-6 py-10 text-left">
+      <Card padding="lg" className="space-y-6">
         <div>
-          <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">
-            Complete Your Talker Profile
+          <h1 className="text-title font-semibold text-text tracking-tight">
+            Complete Your Profile
           </h1>
-          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+          <p className="mt-1 text-small text-text-muted">
             Tell us a little about your conversational preferences. Your private data is never sold or shared.
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <Input
             label="Display Name or Pseudonym"
             value={displayName}
@@ -118,13 +118,13 @@ export const TalkerOnboardingPage: React.FC = () => {
             />
 
             <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+              <label className="block text-caption font-medium text-text mb-1.5">
                 Gender (Optional)
               </label>
               <select
                 value={gender}
                 onChange={(e) => setGender(e.target.value)}
-                className="w-full rounded-xl border border-[#EFEBE4] dark:border-[#332E28] bg-white dark:bg-[#1F1D1A] px-3.5 py-2.5 text-sm text-stone-900 dark:text-stone-100 focus:outline-none focus:border-[#D4A373] focus:ring-2 focus:ring-[#D4A373]/20 transition-colors"
+                className="w-full h-11 rounded-input border border-border bg-surface px-3 text-small text-text focus:outline-none focus:ring-2 focus:ring-accent/30"
               >
                 <option value="Prefer not to say">Prefer not to say</option>
                 <option value="Female">Female</option>
@@ -135,13 +135,13 @@ export const TalkerOnboardingPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-stone-700 dark:text-stone-300 mb-1.5">
+            <label className="block text-caption font-medium text-text mb-1.5">
               Preferred Language
             </label>
             <select
               value={preferredLanguage}
               onChange={(e) => setPreferredLanguage(e.target.value)}
-              className="w-full rounded-xl border border-[#EFEBE4] dark:border-[#332E28] bg-white dark:bg-[#1F1D1A] px-3.5 py-2.5 text-sm text-stone-900 dark:text-stone-100 focus:outline-none focus:border-[#D4A373] focus:ring-2 focus:ring-[#D4A373]/20 transition-colors"
+              className="w-full h-11 rounded-input border border-border bg-surface px-3 text-small text-text focus:outline-none focus:ring-2 focus:ring-accent/30"
             >
               <option value="English">English</option>
               <option value="Hindi">Hindi</option>
@@ -154,7 +154,7 @@ export const TalkerOnboardingPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-stone-700 dark:text-stone-300 mb-2">
+            <label className="block text-caption font-semibold uppercase tracking-wider text-text-muted mb-2">
               Topics you like to talk about
             </label>
             <div className="flex flex-wrap gap-2">
@@ -165,10 +165,10 @@ export const TalkerOnboardingPage: React.FC = () => {
                     key={topic}
                     type="button"
                     onClick={() => toggleTopic(topic)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all duration-200 active:scale-[0.97] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                    className={`px-3 py-1.5 rounded-pill text-caption font-medium border transition-all cursor-pointer ${
                       isSelected
-                        ? 'border-[#D4A373] bg-[#FAF6F0] dark:bg-[#272420] text-[#875C34] dark:text-[#E9D9C3] ring-1 ring-[#D4A373]'
-                        : 'border-[#EFEBE4] dark:border-[#332E28] text-stone-600 dark:text-stone-300 hover:bg-[#FAF6F0] dark:hover:bg-[#272420]'
+                        ? 'border-accent bg-accent/10 text-accent font-semibold shadow-soft'
+                        : 'border-border bg-surface text-text-muted hover:text-text'
                     }`}
                   >
                     {topic}
@@ -179,36 +179,36 @@ export const TalkerOnboardingPage: React.FC = () => {
           </div>
 
           <Textarea
-            label="Short Bio / Note (Optional)"
-            placeholder="A short sentence about you or what you're seeking..."
+            label="Short Bio or Note (Optional)"
+            placeholder="Share what brings you here or what kind of conversation you appreciate..."
             value={bio}
             onChange={(e) => setBio(e.target.value)}
-            rows={2}
+            rows={3}
           />
 
           <div className="pt-2">
-            <label className="flex items-start gap-2.5 cursor-pointer">
+            <label className="flex items-center gap-2.5 text-caption text-text-muted cursor-pointer">
               <input
                 type="checkbox"
                 checked={termsAccepted}
                 onChange={(e) => setTermsAccepted(e.target.checked)}
-                className="mt-0.5 rounded-md border-[#EFEBE4] text-[#D4A373] focus:ring-[#D4A373] accent-[#D4A373]"
+                className="w-4 h-4 rounded-input text-accent focus:ring-accent accent-accent cursor-pointer"
               />
-              <span className="text-xs text-slate-500 dark:text-slate-400">
-                I am at least 18 years old and agree to the platform Terms of Service, Community Guidelines, and acknowledge this is an informal conversation service (not medical care).
+              <span>
+                I agree to the Terms of Service and acknowledge The Listener is not a medical or clinical crisis service.
               </span>
             </label>
           </div>
 
-          <div className="pt-4 flex justify-end">
+          <div className="pt-3 border-t border-border flex justify-end">
             <Button
               type="submit"
               variant="primary"
-              size="lg"
+              size="md"
               isLoading={isSubmitting}
               rightIcon={<ArrowRight className="w-4 h-4" />}
             >
-              Complete & Find Listeners
+              Start Exploring Listeners
             </Button>
           </div>
         </form>

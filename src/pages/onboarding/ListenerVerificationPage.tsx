@@ -8,10 +8,8 @@ import { Button } from '../../components/common/Button';
 import { Badge } from '../../components/common/Badge';
 import { saveListenerProfile } from '../../lib/database';
 import {
-  ShieldCheck,
   CheckCircle2,
   AlertCircle,
-  HelpCircle,
   ArrowRight,
   RotateCcw,
   Sparkles
@@ -161,7 +159,7 @@ export const ListenerVerificationPage: React.FC = () => {
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [scorePercent, setScorePercent] = useState<number>(0);
   const [passed, setPassed] = useState<boolean>(false);
-  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [, setIsSaving] = useState<boolean>(false);
 
   const handleSelectOption = (questionId: number, label: string) => {
     if (submitted) return;
@@ -224,43 +222,43 @@ export const ListenerVerificationPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-10 text-left space-y-8">
+    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10 text-left space-y-6">
       <div>
-        <Badge variant="verified" size="md" className="mb-2">
-          Step 5: Listener Qualification Questionnaire
+        <Badge variant="success" size="sm" className="mb-2">
+          Step 5: Qualification Assessment
         </Badge>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
-          Active Listening & Platform Safety Assessment
+        <h1 className="text-title font-semibold text-text tracking-tight">
+          Active Listening Assessment
         </h1>
-        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+        <p className="mt-1 text-small text-text-muted">
           To earn your verified badge and receive talkers, score at least <strong>80% (4/5)</strong> on empathy, boundaries, and safety protocols.
         </p>
       </div>
 
       {submitted ? (
-        <Card className="p-8 text-center space-y-6 shadow-xl animate-in zoom-in-95">
+        <Card variant="raised" padding="lg" className="text-center space-y-5 animate-apple-fade-in">
           {passed ? (
             <>
-              <div className="w-16 h-16 rounded-3xl bg-teal-100 dark:bg-teal-950/60 text-teal-600 flex items-center justify-center mx-auto shadow-inner">
-                <CheckCircle2 className="w-10 h-10" />
+              <div className="w-14 h-14 rounded-pill bg-success/10 text-success flex items-center justify-center mx-auto">
+                <CheckCircle2 className="w-8 h-8" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+                <h2 className="text-title font-semibold text-text">
                   Congratulations! You Passed ({scorePercent}%)
                 </h2>
-                <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 text-teal-700 dark:bg-teal-950/60 dark:text-teal-300 font-semibold text-xs border border-teal-200 dark:border-teal-800">
-                  <CheckCircle2 className="w-4 h-4 text-teal-600 dark:text-teal-400" />
+                <div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-pill bg-success/10 text-success text-caption font-semibold">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
                   <span>Platform-Verified Listener Badge Awarded</span>
                 </div>
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto leading-relaxed">
+              <p className="text-small text-text-muted max-w-md mx-auto leading-relaxed">
                 You have demonstrated empathy, active listening, and safe boundary awareness.
                 Your listener profile is now live and eligible for conversations and UPI payouts.
               </p>
               <div className="pt-2">
                 <Button
                   variant="primary"
-                  size="lg"
+                  size="md"
                   onClick={() => navigate('/listener/dashboard')}
                   rightIcon={<ArrowRight className="w-4 h-4" />}
                 >
@@ -270,14 +268,14 @@ export const ListenerVerificationPage: React.FC = () => {
             </>
           ) : (
             <>
-              <div className="w-16 h-16 rounded-3xl bg-amber-100 dark:bg-amber-950/60 text-amber-600 flex items-center justify-center mx-auto">
-                <AlertCircle className="w-10 h-10" />
+              <div className="w-14 h-14 rounded-pill bg-warning/10 text-warning flex items-center justify-center mx-auto">
+                <AlertCircle className="w-8 h-8" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+                <h2 className="text-title font-semibold text-text">
                   Score: {scorePercent}% (Threshold: 80%)
                 </h2>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">
+                <p className="text-small text-text-muted mt-2">
                   A few answers did not align with our non-judgmental and boundary guidelines. Review the explanations below and try again.
                 </p>
               </div>
@@ -295,27 +293,27 @@ export const ListenerVerificationPage: React.FC = () => {
       ) : null}
 
       {/* Questions List */}
-      <div className="space-y-6">
+      <div className="space-y-4">
         {questions.map((q, idx) => (
-          <Card key={q.id} className="p-6 space-y-4">
+          <Card key={q.id} padding="md" className="space-y-3.5">
             <div className="flex items-center gap-2">
-              <span className="w-6 h-6 rounded-full bg-[#FAF6F0] dark:bg-[#272420] text-[#875C34] dark:text-[#DEC6A5] flex items-center justify-center font-bold text-xs border border-[#EFEBE4] dark:border-[#332E28]">
+              <span className="w-5 h-5 rounded-pill bg-surface border border-border text-text-muted flex items-center justify-center font-bold text-[11px]">
                 {idx + 1}
               </span>
-              <span className="text-xs font-semibold uppercase tracking-wider text-stone-400">
+              <span className="text-caption font-semibold uppercase tracking-wider text-text-muted">
                 Scenario {idx + 1}
               </span>
             </div>
 
-            <p className="text-xs bg-[#FAF6F0]/70 dark:bg-[#272420]/50 p-3 rounded-xl text-stone-700 dark:text-stone-300 italic border border-[#EFEBE4] dark:border-[#332E28]">
+            <p className="text-caption bg-surface p-3 rounded-input text-text-muted italic border border-border">
               "{q.scenario}"
             </p>
 
-            <h3 className="text-sm font-bold text-stone-900 dark:text-white">
+            <h3 className="text-small font-semibold text-text">
               {q.question}
             </h3>
 
-            <div className="space-y-2.5">
+            <div className="space-y-2">
               {q.options.map((opt) => {
                 const isSelected = answers[q.id] === opt.label;
                 const showFeedback = submitted;
@@ -327,23 +325,23 @@ export const ListenerVerificationPage: React.FC = () => {
                     type="button"
                     disabled={submitted}
                     onClick={() => handleSelectOption(q.id, opt.label)}
-                    className={`w-full text-left p-3.5 rounded-2xl border text-xs transition-all duration-200 active:scale-[0.98] ease-[cubic-bezier(0.16,1,0.3,1)] flex items-start gap-3 ${
+                    className={`w-full text-left p-3 rounded-input border text-caption transition-all cursor-pointer flex items-start gap-3 ${
                       isSelected
                         ? showFeedback
                           ? isCorrectOption
-                            ? 'border-[#166534] bg-[#DCFCE7]/70 dark:bg-[#166534]/30 text-[#166534] dark:text-[#4ADE80] ring-1 ring-[#166534]'
-                            : 'border-rose-500 bg-rose-50/60 dark:bg-rose-950/40 text-rose-900 dark:text-rose-200'
-                          : 'border-[#D4A373] bg-[#FAF6F0] dark:bg-[#272420] text-[#875C34] dark:text-[#DEC6A5] font-semibold ring-1 ring-[#D4A373]'
-                        : 'border-[#EFEBE4] dark:border-[#332E28] text-stone-700 dark:text-stone-300 hover:bg-[#FAF6F0] dark:hover:bg-[#272420]'
+                            ? 'border-success bg-success/10 text-success'
+                            : 'border-danger bg-danger/10 text-danger'
+                          : 'border-accent bg-accent/10 text-accent font-semibold shadow-soft'
+                        : 'border-border bg-surface text-text-muted hover:text-text'
                     }`}
                   >
-                    <span className="w-5 h-5 rounded-full border border-current flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">
+                    <span className="w-5 h-5 rounded-pill border border-current flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">
                       {opt.label}
                     </span>
                     <div className="flex-1">
                       <span>{opt.text}</span>
                       {showFeedback && isSelected && (
-                        <p className={`mt-1.5 text-[11px] font-normal ${isCorrectOption ? 'text-[#166534] dark:text-[#4ADE80]' : 'text-rose-600 dark:text-rose-300'}`}>
+                        <p className={`mt-1.5 text-[11px] font-normal ${isCorrectOption ? 'text-success' : 'text-danger'}`}>
                           {opt.explanation}
                         </p>
                       )}
@@ -357,9 +355,9 @@ export const ListenerVerificationPage: React.FC = () => {
       </div>
 
       {!submitted && (
-        <div className="flex items-center justify-end pt-4">
+        <div className="flex items-center justify-end pt-2">
           <Button
-            size="lg"
+            size="md"
             variant="primary"
             onClick={handleEvaluate}
             rightIcon={<Sparkles className="w-4 h-4" />}
