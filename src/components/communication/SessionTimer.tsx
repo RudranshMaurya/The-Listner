@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import type { Session, Wallet } from '../../types';
 import { calculateCharge, formatDuration, DEFAULT_RATE_PAISE_PER_MIN } from '../../lib/billing';
-import { formatPaise } from '../../lib/upi';
 import { Clock, AlertTriangle } from 'lucide-react';
 
 export interface SessionTimerProps {
@@ -18,7 +17,7 @@ export const SessionTimer: React.FC<SessionTimerProps> = ({
   onAutoEndSession
 }) => {
   const [elapsedSeconds, setElapsedSeconds] = useState<number>(0);
-  const [estimatedChargePaise, setEstimatedChargePaise] = useState<number>(0);
+  const [, setEstimatedChargePaise] = useState<number>(0);
   const [lowBalanceAlerted, setLowBalanceAlerted] = useState<boolean>(false);
 
   useEffect(() => {
@@ -65,21 +64,21 @@ export const SessionTimer: React.FC<SessionTimerProps> = ({
 
   return (
     <div className="flex items-center gap-2">
-      <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/60 shadow-xs text-xs font-semibold">
-        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-        <Clock className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+      <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-pill bg-surface border border-border text-text shadow-soft text-caption font-semibold">
+        <span className="w-2 h-2 rounded-pill bg-success animate-pulse" />
+        <Clock className="w-3.5 h-3.5 text-text-muted" />
         <span className="font-mono tracking-wide">
           {formatDuration(elapsedSeconds)}
         </span>
-        <span className="text-[11px] text-emerald-700/80 dark:text-emerald-400/80 font-normal">
+        <span className="text-[11px] text-text-muted font-normal">
           ({minutesPassed} {minutesPassed === 1 ? 'min' : 'mins'} passed)
         </span>
       </div>
 
       {lowBalanceAlerted && session.status === 'active' && (
-        <div className="flex items-center gap-1 text-[11px] text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800/60 px-2.5 py-1 rounded-full animate-pulse">
-          <AlertTriangle className="w-3.5 h-3.5 shrink-0 text-amber-600" />
-          <span>Low balance: less than 2 mins left</span>
+        <div className="flex items-center gap-1 text-[11px] text-warning bg-warning/10 border border-warning/30 px-2.5 py-1 rounded-pill animate-pulse">
+          <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+          <span>Low balance: &lt; 2 mins left</span>
         </div>
       )}
     </div>
