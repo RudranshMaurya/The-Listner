@@ -7,7 +7,7 @@ import { Modal } from '../common/Modal';
 import { Button } from '../common/Button';
 import { Input } from '../common/Input';
 import { generateOrderId, generateUpiUri, DESTINATION_UPI_ID, formatRupees } from '../../lib/upi';
-import { createTopupOrder, subscribeToTopup, subscribeToWallet } from '../../lib/database';
+import { createTopupOrder, subscribeToTopup, subscribeToWallet, confirmTopupPayment } from '../../lib/database';
 import type { TopupOrder } from '../../types';
 import {
   CheckCircle2,
@@ -36,6 +36,7 @@ export const TopupModal: React.FC<TopupModalProps> = ({
   const [step, setStep] = useState<'select' | 'pay' | 'success'>('select');
   const [currentOrder, setCurrentOrder] = useState<TopupOrder | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isConfirming, setIsConfirming] = useState<boolean>(false);
   const [baselineBalance, setBaselineBalance] = useState<number | null>(null);
 
   // Watch topup order status in real time
@@ -126,6 +127,27 @@ export const TopupModal: React.FC<TopupModalProps> = ({
       showToast('error', e.message || 'Failed to initiate payment.');
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleConfirmPaid = async () => {
+    if (!currentOrder) return;
+    try {
+      setIsConfirming(true);
+      await confirmTopupPayment(currentOrder.id, `UPI-${Date.now()}`, 'Instant Confirmation');
+      showToast('success', `Payment verified! ₹${currentOrder.amountRupees} added to your credits.`);
+      setStep('success');
+      try {
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+      } catch {}
+    } catch (e: any) {
+      showToast('error', e.message || 'Failed to verify payment. Please try again.');
+    } finally {
+      setIsConfirming(false);
     }
   };
 
@@ -250,21 +272,34 @@ export const TopupModal: React.FC<TopupModalProps> = ({
             Scan using Google Pay, PhonePe, Paytm, BHIM, or any UPI app
           </p>
 
-          {/* Mobile Direct Intent Link */}
-          <div className="flex justify-center">
-            <a
-              href={currentOrder.upiUri}
-              className="inline-flex items-center justify-center font-bold rounded-2xl text-xs px-5 py-2.5 gap-2 bg-[#F5C518] hover:bg-[#E5B508] text-stone-950 transition-all active:scale-95 shadow-sm"
+          {/* Action Buttons: Confirm or Open UPI */}
+          <div className="space-y-2 pt-1 max-w-xs mx-auto">
+            <Button
+              variant="primary"
+              size="md"
+              className="w-full font-bold shadow-md cursor-pointer text-stone-950"
+              onClick={handleConfirmPaid}
+              isLoading={isConfirming}
+              leftIcon={<CheckCircle2 className="w-4 h-4 text-stone-900" />}
             >
-              <Smartphone className="w-4 h-4" />
-              <span>Open in UPI App</span>
-            </a>
+              I've Paid — Add ₹{currentOrder.amountRupees} Credits
+            </Button>
+
+            <div className="flex justify-center">
+              <a
+                href={currentOrder.upiUri}
+                className="inline-flex items-center justify-center font-medium rounded-xl text-xs px-3.5 py-1.5 gap-1.5 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 transition-all"
+              >
+                <Smartphone className="w-3.5 h-3.5" />
+                <span>Open in UPI App</span>
+              </a>
+            </div>
           </div>
 
           {/* Real-time Checking Status Indicator */}
           <div className="flex items-center justify-center gap-2 text-xs text-stone-500 dark:text-stone-400 pt-1">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-            <span>Waiting for payment confirmation... Credits update automatically</span>
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>Credits will be added instantly upon confirmation</span>
           </div>
 
           <div className="pt-3 border-t border-gray-100 dark:border-stone-800 flex items-center justify-between">

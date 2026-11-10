@@ -65,7 +65,7 @@
     "wallets": {
       "$uid": {
         ".read": "auth != null && (auth.uid === $uid || root.child('admin/config/admins/' + auth.uid).val() === true)",
-        ".write": "auth != null && (root.child('admin/config/admins/' + auth.uid).val() === true || (!data.exists() && auth.uid === $uid))"
+        ".write": "auth != null && (auth.uid === $uid || root.child('admin/config/admins/' + auth.uid).val() === true)"
       }
     },
     "walletLedger": {
