@@ -17,7 +17,7 @@ interface AuthContextType {
   wallet: Wallet | null;
   isAdmin: boolean;
   loading: boolean;
-  loginWithGoogle: () => Promise<void>;
+  loginWithGoogle: () => Promise<UserProfile>;
   logout: () => Promise<void>;
   updateProfileData: (data: Partial<UserProfile>) => Promise<void>;
   refreshProfile: () => Promise<void>;
@@ -94,7 +94,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const loginWithGoogle = async () => {
+  const loginWithGoogle = async (): Promise<UserProfile> => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
@@ -113,8 +113,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         };
         await saveUserProfile(initialProfile);
         setProfile(initialProfile);
+        return initialProfile;
       } else {
         setProfile(existing);
+        return existing;
       }
     } catch (error) {
       console.error("Google sign-in error:", error);

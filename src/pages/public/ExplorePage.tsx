@@ -1,28 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 import { subscribeToListeners } from '../../lib/database';
 import type { ListenerProfile, SessionType } from '../../types';
 import { ListenerCard } from '../../components/talker/ListenerCard';
 import { TopupModal } from '../../components/talker/TopupModal';
-import { EmptyState } from '../../components/common/EmptyState';
-import { Skeleton } from '../../components/common/Skeleton';
 import {
   Search,
   Filter,
   Sparkles,
   Users,
-  Coins,
-  Heart,
-  Briefcase,
-  CloudRain,
-  Sun,
-  Coffee,
-  CheckCircle2
+  Coins
 } from 'lucide-react';
 
 export const ExplorePage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { currentUser, role } = useAuth();
 
   const [listeners, setListeners] = useState<ListenerProfile[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -89,37 +83,61 @@ export const ExplorePage: React.FC = () => {
 
   return (
     <div className="max-w-5xl mx-auto px-3 sm:px-6 lg:px-8 py-5 sm:py-8 space-y-5 text-left">
-      {/* 1. Astrotalk Promotional Cashback Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#FFF6E5] via-[#FFFDF7] to-[#FFF0D4] dark:from-[#26221B] dark:via-[#1F1C18] dark:to-[#26221B] border border-amber-200/70 dark:border-amber-900/40 p-5 sm:p-7 text-center shadow-xs">
-        {/* Floating coins illustrations */}
-        <div className="absolute -left-4 -top-4 w-16 h-16 rounded-full bg-amber-200/50 dark:bg-amber-500/10 blur-xl pointer-events-none" />
-        <div className="absolute -right-4 -bottom-4 w-16 h-16 rounded-full bg-amber-300/40 dark:bg-amber-500/10 blur-xl pointer-events-none" />
+      {/* 1. Header Banner: Only show top-up / recharge banner if LOGGED IN as Talker */}
+      {currentUser && role !== 'listener' ? (
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#FFF6E5] via-[#FFFDF7] to-[#FFF0D4] dark:from-[#26221B] dark:via-[#1F1C18] dark:to-[#26221B] border border-amber-200/70 dark:border-amber-900/40 p-5 sm:p-7 text-center shadow-xs">
+          <div className="relative z-10 flex flex-col items-center">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-xl">🪙</span>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-stone-900 dark:text-amber-100 tracking-tight">
+                50% Cashback!
+              </h2>
+              <span className="text-xl">🪙</span>
+            </div>
 
-        <div className="relative z-10 flex flex-col items-center">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-xl">🪙</span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-stone-900 dark:text-amber-100 tracking-tight">
-              50% Cashback!
-            </h2>
-            <span className="text-xl">🪙</span>
-          </div>
+            <p className="text-[11px] sm:text-xs uppercase tracking-widest font-bold text-stone-600 dark:text-stone-300">
+              ON NEXT RECHARGE
+            </p>
 
-          <p className="text-[11px] sm:text-xs uppercase tracking-widest font-bold text-stone-600 dark:text-stone-300">
-            ON NEXT RECHARGE
-          </p>
-
-          <div className="mt-3">
-            <button
-              onClick={() => setIsTopupOpen(true)}
-              className="px-6 py-2 rounded-full bg-[#F5C518] hover:bg-[#E5B508] active:scale-95 text-stone-950 font-extrabold text-xs sm:text-sm tracking-wide shadow-sm hover:shadow-md transition-all cursor-pointer"
-            >
-              RECHARGE NOW
-            </button>
+            <div className="mt-3">
+              <button
+                onClick={() => setIsTopupOpen(true)}
+                className="px-6 py-2 rounded-full bg-[#F5C518] hover:bg-[#E5B508] active:scale-95 text-stone-950 font-extrabold text-xs sm:text-sm tracking-wide shadow-sm hover:shadow-md transition-all cursor-pointer"
+              >
+                RECHARGE NOW
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        /* Clean Intro Banner for Unauthenticated Visitors / Listeners (NO Topup) */
+        <div className="rounded-3xl bg-white dark:bg-[#1F1D1A] border border-gray-200/90 dark:border-stone-800 p-5 sm:p-6 shadow-2xs text-left">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200/70 dark:border-amber-900/40 text-[11px] font-bold mb-2">
+                <Sparkles className="w-3 h-3 text-amber-500" />
+                <span>Compassionate & Empathetic Listeners</span>
+              </div>
+              <h1 className="text-xl sm:text-2xl font-extrabold text-stone-900 dark:text-white tracking-tight">
+                Find Someone Ready to Listen
+              </h1>
+              <p className="text-xs sm:text-sm text-stone-500 dark:text-stone-400 mt-1 max-w-xl leading-relaxed">
+                A private, respectful space to talk through anything on your mind with verified human listeners.
+              </p>
+            </div>
+            {!currentUser && (
+              <button
+                onClick={() => navigate('/login')}
+                className="px-5 py-2.5 rounded-full bg-[#F5C518] hover:bg-[#E5B508] text-stone-950 font-extrabold text-xs uppercase tracking-wider shadow-sm transition-all shrink-0 cursor-pointer"
+              >
+                Sign In to Connect
+              </button>
+            )}
+          </div>
+        </div>
+      )}
 
-      {/* 2. Search & Quick Mode (All / Chat / Call) */}
+      {/* 2. Search & Mode (All / Chat / Call) */}
       <div className="flex items-center gap-2">
         <div className="relative flex-1">
           <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -167,7 +185,7 @@ export const ExplorePage: React.FC = () => {
         </div>
       </div>
 
-      {/* 3. Horizontal Scrollable Category Pills Bar (Astrotalk Style) */}
+      {/* 3. Horizontal Scrollable Category Pills Bar */}
       <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
         <button
           onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
@@ -200,7 +218,7 @@ export const ExplorePage: React.FC = () => {
         })}
       </div>
 
-      {/* Optional Advanced Filter Drawer */}
+      {/* Advanced Filter Drawer */}
       {showAdvancedFilters && (
         <div className="rounded-2xl border border-gray-200 dark:border-stone-800 bg-white dark:bg-[#1F1D1A] p-4 text-xs space-y-3 animate-apple-fade-in">
           <div className="flex items-center justify-between">
@@ -220,11 +238,11 @@ export const ExplorePage: React.FC = () => {
         </div>
       )}
 
-      {/* 4. Listeners Cards List (Full width row cards matching reference) */}
+      {/* 4. Listeners Cards List */}
       <div className="space-y-3 sm:space-y-4">
         {loading ? (
           <div className="space-y-3">
-            {[1, 2, 3, 4].map((i) => (
+            {[1, 2, 3].map((i) => (
               <div
                 key={i}
                 className="rounded-2xl border border-gray-200 dark:border-stone-800 bg-white dark:bg-[#1F1D1A] p-4 h-28 animate-pulse"
@@ -232,16 +250,27 @@ export const ExplorePage: React.FC = () => {
             ))}
           </div>
         ) : filteredListeners.length === 0 ? (
-          <EmptyState
-            icon={<Users className="w-8 h-8 text-stone-400" />}
-            title="No listeners found"
-            description="Try clearing your search keyword or switching category tabs."
-            actionLabel="Reset Filters"
-            onAction={() => {
-              setSearchTerm('');
-              setSelectedCategory('all');
-            }}
-          />
+          <div className="rounded-3xl border border-gray-200/90 dark:border-stone-800 bg-white dark:bg-[#1F1D1A] p-8 sm:p-12 text-center max-w-lg mx-auto space-y-4 shadow-2xs">
+            <div className="w-14 h-14 rounded-full bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto">
+              <Users className="w-7 h-7" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold text-stone-900 dark:text-white">
+                No Listeners Online Right Now
+              </h3>
+              <p className="text-xs text-stone-500 dark:text-stone-400 mt-1.5 leading-relaxed">
+                Listeners become available throughout the day. Check back soon, or earn by becoming a verified listener yourself.
+              </p>
+            </div>
+            <div className="pt-2 flex justify-center">
+              <button
+                onClick={() => navigate('/become-a-listener')}
+                className="px-6 py-2.5 rounded-full bg-[#F5C518] hover:bg-[#E5B508] text-stone-950 font-bold text-xs uppercase tracking-wider shadow-sm transition-all cursor-pointer"
+              >
+                Become a Listener & Earn
+              </button>
+            </div>
+          </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
             {filteredListeners.map((listener) => (
@@ -255,11 +284,14 @@ export const ExplorePage: React.FC = () => {
         )}
       </div>
 
-      <TopupModal
-        isOpen={isTopupOpen}
-        onClose={() => setIsTopupOpen(false)}
-        initialAmount={100}
-      />
+      {/* TopupModal only if user is logged in */}
+      {currentUser && (
+        <TopupModal
+          isOpen={isTopupOpen}
+          onClose={() => setIsTopupOpen(false)}
+          initialAmount={100}
+        />
+      )}
     </div>
   );
 };

@@ -356,6 +356,21 @@ export const SessionRoomPage: React.FC = () => {
             Send
           </Button>
         </form>
+      ) : session.status === 'requested' ? (
+        <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-900/40 text-center text-xs text-amber-900 dark:text-amber-200 flex items-center justify-between gap-3 animate-apple-fade-in">
+          <div className="flex items-center gap-2.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping" />
+            <span className="font-medium">Connecting... Waiting for {partnerName} to accept session</span>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleEndConversation}
+            className="text-amber-900 dark:text-amber-200 hover:bg-amber-100 dark:hover:bg-amber-900/50"
+          >
+            Cancel Request
+          </Button>
+        </div>
       ) : (
         <div className="p-4 rounded-2xl bg-[#FAF6F0] dark:bg-[#272420] text-center text-xs text-stone-500 border border-[#EFEBE4] dark:border-[#332E28]">
           This conversation is completed.

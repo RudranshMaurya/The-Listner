@@ -125,28 +125,24 @@ export const Navbar: React.FC = () => {
               })}
             </div>
 
-            {/* Right: Wallet Pill + Search + Notifications + Theme */}
+            {/* Right: Actions */}
             <div className="flex items-center gap-2 sm:gap-3">
-              {/* Astrotalk Style Live Wallet Pill (Visible on Phone, Tablet & Desktop) */}
-              <button
-                onClick={() => {
-                  if (!currentUser) {
-                    navigate('/login');
-                  } else {
-                    setIsTopupOpen(true);
-                  }
-                }}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-300 dark:border-stone-700 bg-white dark:bg-stone-900/90 text-gray-900 dark:text-white hover:border-amber-400 dark:hover:border-amber-400 transition-all shadow-xs cursor-pointer active:scale-95 group"
-                title="Wallet Balance - Click to Recharge"
-              >
-                <span className="text-sm">💼</span>
-                <span className="text-xs sm:text-sm font-bold tracking-tight">
-                  ₹{formatPaise(wallet?.balancePaise || 0)}
-                </span>
-                <span className="w-4 h-4 rounded-full bg-amber-400 group-hover:bg-amber-500 text-stone-900 text-xs font-bold flex items-center justify-center leading-none">
-                  +
-                </span>
-              </button>
+              {/* Only show Wallet Pill when USER IS LOGGED IN and is Talker */}
+              {currentUser && role !== 'listener' && (
+                <button
+                  onClick={() => setIsTopupOpen(true)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-300 dark:border-stone-700 bg-white dark:bg-stone-900/90 text-gray-900 dark:text-white hover:border-amber-400 dark:hover:border-amber-400 transition-all shadow-xs cursor-pointer active:scale-95 group"
+                  title="Wallet Balance - Click to Recharge"
+                >
+                  <span className="text-sm">💼</span>
+                  <span className="text-xs sm:text-sm font-bold tracking-tight">
+                    ₹{formatPaise(wallet?.balancePaise || 0)}
+                  </span>
+                  <span className="w-4 h-4 rounded-full bg-amber-400 group-hover:bg-amber-500 text-stone-900 text-xs font-bold flex items-center justify-center leading-none">
+                    +
+                  </span>
+                </button>
+              )}
 
               {/* Search Shortcut */}
               <Link
@@ -157,7 +153,7 @@ export const Navbar: React.FC = () => {
                 <Search className="w-4 h-4 sm:w-5 sm:h-5" />
               </Link>
 
-              {/* Notification Bell */}
+              {/* Notification Bell (Only when logged in) */}
               {currentUser && (
                 <Link
                   to={role === 'listener' ? '/listener/dashboard' : '/talker/notifications'}
@@ -180,7 +176,7 @@ export const Navbar: React.FC = () => {
                 {isDark ? <Sun className="w-4 h-4 sm:w-5 sm:h-5" /> : <Moon className="w-4 h-4 sm:w-5 sm:h-5" />}
               </button>
 
-              {/* Desktop Profile / Dashboard Menu */}
+              {/* Desktop Profile / Dashboard Menu OR Log In / Sign Up */}
               {currentUser ? (
                 <div className="relative hidden md:block">
                   <button
@@ -274,28 +270,31 @@ export const Navbar: React.FC = () => {
                   )}
                 </div>
               ) : (
-                <div className="hidden sm:flex items-center gap-2">
+                /* When NOT logged in: Direct Log In & Sign Up buttons (Clean on both Phone & Desktop) */
+                <div className="flex items-center gap-1.5 sm:gap-2">
                   <Button
                     onClick={() => navigate('/login')}
                     variant="ghost"
                     size="sm"
+                    className="text-xs px-2.5 sm:px-3.5"
                   >
                     Log In
                   </Button>
                   <Button
-                    onClick={() => navigate('/signup')}
+                    onClick={() => navigate('/login')}
                     variant="primary"
                     size="sm"
+                    className="text-xs px-3 sm:px-4"
                   >
                     Sign Up
                   </Button>
                 </div>
               )}
 
-              {/* Hamburger for extra links on mobile */}
+              {/* Hamburger for mobile extra links */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-1.5 rounded-xl text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 md:hidden"
+                className="p-1.5 rounded-xl text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 lg:hidden"
                 aria-label="Menu"
               >
                 {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -304,9 +303,9 @@ export const Navbar: React.FC = () => {
           </div>
         </div>
 
-        {/* Mobile Dropdown Menu for secondary links */}
+        {/* Mobile Dropdown Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 dark:border-stone-800 bg-white/98 dark:bg-[#1A1815]/98 backdrop-blur-xl px-4 pt-3 pb-6 space-y-3 animate-apple-fade-in text-left">
+          <div className="lg:hidden border-t border-gray-200 dark:border-stone-800 bg-white/98 dark:bg-[#1A1815]/98 backdrop-blur-xl px-4 pt-3 pb-6 space-y-3 animate-apple-fade-in text-left">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
@@ -369,7 +368,7 @@ export const Navbar: React.FC = () => {
                   <Button
                     onClick={() => {
                       setMobileMenuOpen(false);
-                      navigate('/signup');
+                      navigate('/login');
                     }}
                     variant="primary"
                     className="w-full justify-center"
@@ -383,12 +382,14 @@ export const Navbar: React.FC = () => {
         )}
       </nav>
 
-      {/* Global Topup Modal accessible anywhere via Navbar Wallet Pill */}
-      <TopupModal
-        isOpen={isTopupOpen}
-        onClose={() => setIsTopupOpen(false)}
-        initialAmount={100}
-      />
+      {/* Global Topup Modal (Only mounts when user is logged in) */}
+      {currentUser && (
+        <TopupModal
+          isOpen={isTopupOpen}
+          onClose={() => setIsTopupOpen(false)}
+          initialAmount={100}
+        />
+      )}
     </>
   );
 };
